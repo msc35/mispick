@@ -1,0 +1,79 @@
+name: snapshot
+
+# Captures tool lists from third-party MCP servers on a disposable runner.
+#
+# This is deliberately separate from `benchmark`. Capturing means launching other people's
+# packages through npx/uvx, which is arbitrary code execution - fine on an ephemeral VM,
+# not something to ask a contributor to do on their laptop. Measuring afterwards reads only
+# the captured JSON, so it is safe to run anywhere.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'How many registry servers to add on top of the reference servers'
+        default: '26'
+      per-owner:
+        description: 'Cap per GitHub owner, so one publisher cannot dominate'
+        default: '2'
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - run: uv sync
+
+      - name: Pick servers
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run python benchmark/pick.py \
+            --limit "${{ inputs.limit }}" \
+            --per-owner "${{ inputs.per-owner }}" \
+            --out benchmark/servers.json
+
+      # Only `initialize` and `tools/list` are ever sent. mispick cannot call a tool - that is
+      # enforced in mispick.sources.server and by tests/test_never_calls_tools.py.
+      - name: Capture tool lists
+        run: uv run python benchmark/capture.py --out benchmark/snapshots
+
+      - name: Summarise
+        run: |
+          uv run python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          index = json.loads(pathlib.Path("benchmark/snapshots/index.json").read_text())
+          rows = index["servers"]
+          by = {}
+          for r in rows:
+              by.setdefault(r["status"], []).append(r)
+          print("## Capture results\n")
+          print(f"| status | count |\n|---|---|")
+          for status, items in sorted(by.items()):
+              print(f"| {status} | {len(items)} |")
+          print("\n### Captured\n")
+          print("| server | tools |\n|---|---|")
+          for r in sorted(by.get("captured", []), key=lambda r: -r.get("tool_count", 0)):
+              print(f"| `{r['name']}` | {r.get('tool_count')} |")
+          skipped = [r for s, v in by.items() if s != "captured" for r in v]
+          if skipped:
+              print("\n### Not captured\n")
+              print("| server | status | reason |\n|---|---|---|")
+              for r in skipped:
+                  print(f"| `{r['name']}` | {r['status']} | {(r.get('reason') or '')[:120]} |")
+          PY
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: snapshots
+          path: benchmark/snapshots
+          if-no-files-found: error
