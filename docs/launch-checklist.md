@@ -1,8 +1,11 @@
 # Launch checklist (M8)
 
-**Status, 2026-09-24.** The GitHub side is done: `msc35/mispick` exists, private, `main`, CI green
-on 3.11/3.12/3.13 across Linux and macOS plus the action and workflow-lint jobs. Nothing is
-published anywhere else.
+**Status, 2026-09-24.** Released. `msc35/mispick` is public, `v0.1.0` is tagged, and
+[`mispick` 0.1.0 is on PyPI](https://pypi.org/project/mispick/) — `uvx mispick` verified working
+from a clean environment. CI green on 3.11/3.12/3.13 across Linux and macOS.
+
+Still unpublished by choice: npm name reservation, awesome-list PRs, the benchmark site (Pages),
+and the MCP registry (declined - mispick is a client, not a server).
 
 Remaining items publish something under a name, to an audience, and need a human to press them.
 
@@ -25,9 +28,7 @@ Remaining items publish something under a name, to an audience, and need a human
 
 ## PyPI
 
-- [ ] **Remove the "Not on PyPI yet" banner from the README's Install section** once the release
-      lands. It is there because `uvx mispick` does not work until then, and a first-screen
-      command that fails is worse than an extra sentence.
+- [x] **Removed the "Not on PyPI yet" banner** on release.
 
 The wheel and sdist build cleanly and the wheel has been verified end to end:
 
@@ -36,14 +37,18 @@ uv build
 uvx --from dist/mispick-0.1.0-py3-none-any.whl mispick run --snapshot tools.json --model mock
 ```
 
-- [ ] **You:** register the pending publisher at <https://pypi.org/manage/account/publishing/> —
-      project `mispick`, owner `msc35`, repository `mispick`, workflow `release.yml`,
-      environment `pypi`. Then the same at test.pypi.org with environment `testpypi`.
-      The GitHub environments `pypi` and `testpypi` already exist.
-- [ ] Run `release.yml` against `testpypi`, install from TestPyPI, run it once.
-- [ ] Flip the repository public.
-- [ ] Tag `v0.1.0`; `release.yml` publishes to PyPI on the tag.
-- [ ] Cut a GitHub release.
+- [x] Pending publishers registered on PyPI and TestPyPI (Trusted Publishing, no token in repo).
+- [x] Ran `release.yml` against `testpypi`, installed from TestPyPI into a clean environment and
+      exercised every command, including capturing a live stdio server.
+- [x] Repository flipped public.
+- [x] Tagged `v0.1.0`; `release.yml` published to PyPI. `uvx mispick` verified working from real
+      PyPI.
+- [x] GitHub release cut.
+
+One gotcha worth remembering: a Trusted Publishing entry is **per index**. The first TestPyPI
+attempt failed `invalid-publisher` because the test.pypi.org entry carried environment `pypi`
+rather than `testpypi`. The error output prints the exact claims GitHub sent, which is the fastest
+way to diff them against the registration.
 
 Pre-flighted on 2026-09-24, so the release run should not be the place these are discovered:
 the wheel builds, `uvx --from ./dist/*.whl mispick version` works, `pyproject.version` and
@@ -51,8 +56,7 @@ the wheel builds, `uvx --from ./dist/*.whl mispick version` works, `pyproject.ve
 
 ## The Action
 
-- [ ] The README and examples reference `msc35/mispick@v0.1.0`. That tag does not exist yet, so
-      the CI snippet does not resolve until the release is tagged.
+- [x] `msc35/mispick@v0.1.0` now exists, so the README and example workflows resolve.
 - [ ] Publish to the GitHub Marketplace (optional; the `uses:` path works without it).
 
 ## Benchmark and Pages

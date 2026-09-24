@@ -44,15 +44,6 @@ with what each one actually does, is in [docs/research.md](docs/research.md).
 
 ## Install
 
-> **Not on PyPI yet.** `mispick` has not been released, so the commands below do not work
-> today. Until then, run it from a checkout:
->
-> ```bash
-> git clone https://github.com/msc35/mispick && cd mispick
-> uv sync --all-extras
-> uv run mispick --help
-> ```
-
 ```bash
 uvx mispick --help          # no install
 uv tool install mispick     # or keep it
