@@ -96,7 +96,7 @@ runs:
   using: composite
   steps:
     - name: Set up uv
-      uses: astral-sh/setup-uv@v10
+      uses: astral-sh/setup-uv@v10.2.0
       with:
         python-version: ${{ inputs.python-version }}
         # This action runs mispick through `uvx` and never calls `uv sync`, so there is
@@ -142,7 +142,7 @@ runs:
 
     - name: Comment on the PR
       if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
-      uses: marocchino/sticky-pull-request-comment@v3
+      uses: marocchino/sticky-pull-request-comment@v3.0.5
       with:
         header: mispick
         path: mispick-comment.md

@@ -18,7 +18,7 @@ jobs:
         python: ['3.11', '3.12', '3.13']
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.2.0
         with:
           python-version: ${{ matrix.python }}
           enable-cache: true
@@ -43,14 +43,19 @@ jobs:
           HTTPS_PROXY: 'http://127.0.0.1:9'
 
   workflows:
-    # A workflow file with a duplicate env key is rejected wholesale by GitHub, and the
-    # failure arrives with no job and no log. Lint them here instead.
+    # Two failure modes that arrive with no job and no log, so they are checked here:
+    # a workflow file GitHub rejects outright (e.g. two env keys differing only in case),
+    # and a `uses:` pin whose tag does not exist, which fails job setup.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: docker://rhysd/actionlint:latest
         with:
           args: -color
+      - name: Every action pin resolves
+        run: python3 scripts/check_action_pins.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   action:
     # Proves action.yml at least parses and skips cleanly with no model key.

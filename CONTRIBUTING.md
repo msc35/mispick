@@ -15,11 +15,19 @@ local run. CI uses `--all-extras` and caught it on the first push.
 Workflows are linted too; `ruff` does not read them:
 
 ```bash
-actionlint                    # brew install actionlint
+actionlint                              # brew install actionlint
+python3 scripts/check_action_pins.py    # every `uses:` tag actually exists
 ```
 
-A workflow with two `env` keys that differ only in case is rejected by GitHub wholesale, and the
-failure arrives as a zero-second run with no job and no log.
+Both guard against failures that arrive with **no job and no log**, which are miserable to debug:
+
+- A workflow with two `env` keys differing only in case is rejected by GitHub wholesale, giving a
+  zero-second run and the message "likely a workflow file issue".
+- A `uses:` pin whose tag does not exist fails *job setup*, before any step runs. Note that not
+  every repository publishes moving major tags — `actions/*` do, but `astral-sh/setup-uv` and
+  `marocchino/sticky-pull-request-comment` publish only exact versions, so reading the latest
+  release name is not enough. `release.yml` and `pages.yml` only run at release time, so a stale
+  pin there would surface at the worst possible moment.
 
 ## Things the tests enforce, so a reviewer does not have to
 
