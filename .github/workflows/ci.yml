@@ -36,8 +36,21 @@ jobs:
         env:
           OPENAI_API_KEY: ''
           ANTHROPIC_API_KEY: ''
-          no_proxy: '*'
-          NO_PROXY: '*'
+          # Point outbound HTTP at a dead port, so a test that reaches the network fails
+          # here instead of passing quietly because the runner happens to be online.
+          # NO_PROXY='*' would do the opposite: it permits direct connections.
+          HTTP_PROXY: 'http://127.0.0.1:9'
+          HTTPS_PROXY: 'http://127.0.0.1:9'
+
+  workflows:
+    # A workflow file with a duplicate env key is rejected wholesale by GitHub, and the
+    # failure arrives with no job and no log. Lint them here instead.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker://rhysd/actionlint:latest
+        with:
+          args: -color
 
   action:
     # Proves action.yml at least parses and skips cleanly with no model key.
