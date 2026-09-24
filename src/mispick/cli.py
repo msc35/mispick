@@ -12,12 +12,14 @@ from rich.console import Console
 from rich.table import Table
 
 from mispick import __version__
+from mispick.fix import as_patch, run_fix_mode
 from mispick.generate import DEFAULT_N, DEFAULT_NO_TOOL, QueryCache, build_query_set
 from mispick.loader import Target, TargetError, load, write_snapshot
 from mispick.metrics import Metrics, compute
 from mispick.models.base import DEFAULT_MAX_TOKENS, BackendError
 from mispick.models.registry import DEFAULT_MODEL, get_backend
 from mispick.report import badge as badge_report
+from mispick.report import fixes as fixes_report
 from mispick.report import html as html_report
 from mispick.report import json as json_report
 from mispick.report import markdown as markdown_report
@@ -371,6 +373,127 @@ def run(
             f"\n[red]score {metrics.score} is below --fail-under {fail_under}[/red]"
         )
         raise typer.Exit(EXIT_BELOW_THRESHOLD)
+
+
+PatchOpt = Annotated[
+    str | None, typer.Option("--patch", help="Write the accepted rewrites here as a diff.")
+]
+PairsOpt = Annotated[int, typer.Option("--pairs", help="How many confused pairs to try to fix.")]
+
+
+@app.command()
+def fix(
+    cmd: CmdOpt = None,
+    url: UrlOpt = None,
+    config: ConfigOpt = None,
+    snapshot: SnapshotOpt = None,
+    timeout: TimeoutOpt = 20.0,
+    only: OnlyOpt = None,
+    model: ModelOpt = DEFAULT_MODEL,
+    queries: NOpt = DEFAULT_N,
+    runs: KOpt = DEFAULT_K,
+    temperature: TempOpt = 0.7,
+    seed: SeedOpt = None,
+    regenerate: RegenOpt = False,
+    cache_dir: CacheDirOpt = ".mispick",
+    concurrency: ConcurrencyOpt = DEFAULT_CONCURRENCY,
+    max_tokens: MaxTokensOpt = DEFAULT_MAX_TOKENS,
+    think: ThinkOpt = False,
+    pairs: PairsOpt = 3,
+    patch: PatchOpt = None,
+    fmt: FormatOpt = Format.terminal,
+    out: OutOpt = None,
+) -> None:
+    """Propose description rewrites for the worst confused pairs, and prove they help.
+
+    Every rewrite is re-tested against the same queries. Rewrites that do not measurably
+    improve selection are reported as rejected rather than hidden. Your source is never
+    modified.
+    """
+    target = _target(cmd, url, config, snapshot, timeout, only)
+    tool_set, _ = _load_or_exit(target)
+
+    async def go() -> tuple[RunResult, Metrics, object]:
+        backend = get_backend(model, think=think)
+        cache = QueryCache.open(cache_dir)
+        try:
+            with console.status("[dim]generating test queries…[/dim]"):
+                query_list = await build_query_set(
+                    backend,
+                    tool_set,
+                    n=queries,
+                    cache=cache,
+                    regenerate=regenerate,
+                    seed=seed,
+                    max_tokens=max_tokens,
+                )
+            cache.save(generator=backend.name)
+
+            with console.status("[dim]measuring the baseline…[/dim]"):
+                baseline = await run_selection(
+                    backend,
+                    tool_set,
+                    query_list,
+                    config=RunConfig(
+                        n=queries,
+                        k=runs,
+                        temperature=temperature,
+                        seed=seed,
+                        concurrency=concurrency,
+                    ),
+                )
+            base_metrics = compute(baseline)
+
+            with console.status("[dim]proposing and re-testing rewrites…[/dim]") as status:
+
+                def on_pair(pair: object) -> None:
+                    status.update(f"[dim]re-testing a rewrite for {pair}…[/dim]")
+
+                report = await run_fix_mode(
+                    backend,
+                    tool_set,
+                    baseline,
+                    base_metrics,
+                    limit=pairs,
+                    on_progress=on_pair,
+                )
+        finally:
+            await backend.aclose()
+        return baseline, base_metrics, report
+
+    try:
+        baseline, _base_metrics, report = asyncio.run(go())
+    except BackendError as exc:
+        err_console.print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_ERROR) from exc
+
+    if not [c for c in baseline.choices if not c.error]:
+        err_console.print("[red]error:[/red] every selection call failed; nothing to fix.")
+        for error in baseline.errors[:3]:
+            err_console.print(f"  {error}")
+        raise typer.Exit(EXIT_ERROR)
+
+    from mispick.fix import FixReport
+
+    assert isinstance(report, FixReport)
+
+    if fmt is Format.md or out:
+        text = fixes_report.render_markdown(report, tool_set)
+        if out:
+            path = Path(out)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text)
+            err_console.print(f"[dim]wrote {path}[/dim]")
+        else:
+            print(text, end="")
+    else:
+        fixes_report.render_terminal(report, tool_set, console)
+
+    if patch:
+        patch_path = Path(patch)
+        patch_path.parent.mkdir(parents=True, exist_ok=True)
+        patch_path.write_text(as_patch(report, tool_set))
+        err_console.print(f"[dim]wrote {patch_path}[/dim]")
 
 
 @app.command()

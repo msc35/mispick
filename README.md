@@ -10,7 +10,8 @@ It never calls a tool. Only `initialize` and `tools/list`, so it is safe to poin
 
 ## Status
 
-**Pre-alpha, under active construction.** M0–M4 are done, including cross-server mode.
+**Pre-alpha, under active construction.** M0–M5 are done, including cross-server mode and
+proven fixes.
 
 - [`SPEC.md`](SPEC.md) — the source of truth for what this is
 - [`docs/research.md`](docs/research.md) — Phase 0 research: competitors, naming, MCP spec
@@ -40,6 +41,9 @@ uv run mispick run --snapshot tools.json --fail-under 80   # exit 1 for CI
 
 # every server in your config at once, and what they do to each other
 uv run mispick run --config ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# propose description rewrites for the worst pairs, and prove they help
+uv run mispick fix --cmd "python -m my_server" --patch fix.diff
 ```
 
 `run` generates test queries per tool, caches them in `.mispick/queries.yaml` (edit them — they
@@ -54,6 +58,19 @@ Measured on the fixture server with `ollama/qwen3.5:4b`: the two tools that shar
 description "Search for information." get confused 42% of the time, and `search_docs` ends up
 with 35% precision — it attracts work belonging to four other tools. That is the finding a
 static linter cannot give you.
+
+### Proven fixes
+
+`mispick fix` asks the model to rewrite both descriptions in a confused pair, then **re-runs
+the same queries against the rewrite** and reports the before/after with a paired significance
+test (exact McNemar — the trials are paired, so an unpaired test would be the wrong one).
+Rewrites that fail are shown too, because a rewrite nobody checked is a guess.
+
+This matters more than it sounds. Hasan et al. rewrote tool descriptions with an LLM across 231
+tasks and found success rose by a median 5.85 points — but **regressed in 16.67% of cases**. A
+tool that hands you an unmeasured rewrite is handing you a one-in-six chance of making things
+worse. mispick also caps rewrite length, so a rewrite cannot win by crowding out its neighbours,
+and never modifies your source — it prints a suggestion.
 
 ### Across servers
 
