@@ -23,12 +23,50 @@ from mispick.sources.server import ServerError, load_stdio
 #: Per-server budget. npx/uvx may need to download the package first.
 TIMEOUT = 120.0
 
-#: Signals in a failure that mean "this needs a credential", so it is skipped rather than failed.
-KEY_HINTS = re.compile(
-    r"(api[_ -]?key|token|unauthorized|401|403|credential|not authenticated|"
-    r"missing environment|must be set)",
-    re.IGNORECASE,
-)
+#: Why a server would not start. Ordered: the first pattern that matches wins.
+#
+# Worth classifying properly rather than lumping everything under "failed". Of 14 real
+# failures, five were servers asking for a credential, one was a registry entry pointing at
+# an npm version that does not exist, and two printed their usage because the registry's
+# install command was missing an argument. "Failed" would have hidden all of that, and the
+# breakdown is more useful to the maintainers than the label.
+FAILURE_KINDS: list[tuple[str, re.Pattern[str]]] = [
+    (
+        "needs_credentials",
+        re.compile(
+            r"(api[_ -]?key|\btoken\b|\bsecret\b|credential|oauth|unauthorized|\b401\b|"
+            r"\b403\b|not authenticated|environment variable|is not set|must be set|"
+            r"is required|no matching credentials)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "package_unavailable",
+        re.compile(
+            r"(etarget|no matching version|notarget|404 not found|could not find a version|"
+            r"no such package|is not in the npm registry)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "needs_arguments",
+        re.compile(r"(usage:|missing required argument|the following arguments are required)",
+                   re.IGNORECASE),
+    ),
+    (
+        "needs_a_browser",
+        re.compile(r"(open the browser|opening browser|visit this url to authorize)",
+                   re.IGNORECASE),
+    ),
+]
+
+
+def classify(message: str) -> str:
+    """Turn a startup failure into something a maintainer can act on."""
+    for kind, pattern in FAILURE_KINDS:
+        if pattern.search(message):
+            return kind
+    return "failed"
 
 
 def slug(name: str) -> str:
@@ -46,7 +84,7 @@ async def capture_one(server: dict[str, Any], out_dir: Path) -> dict[str, Any]:
         tool_set = await load_stdio(server["cmd"], label=server["name"], timeout=TIMEOUT)
     except ServerError as exc:
         message = str(exc)
-        record["status"] = "needs_credentials" if KEY_HINTS.search(message) else "failed"
+        record["status"] = classify(message)
         # Keep the whole message, not just its first line: the diagnostic value is in the
         # unwrapped cause and the server's own stderr, both of which come after it.
         record["reason"] = " | ".join(
