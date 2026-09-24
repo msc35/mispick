@@ -1,0 +1,649 @@
+{
+  "protocolVersion": "2025-11-25",
+  "serverInfo": {
+    "name": "vaaya",
+    "version": "1.0.0"
+  },
+  "tools": [
+    {
+      "name": "buy",
+      "title": "Buy Something for the User",
+      "description": "Find and buy products, tickets, bookings and subscriptions for the user at supported stores. Start with `search` { query } to find the item and merchant page using Vaaya OneSearch (5\u00a2 per search); the user can describe what they need without supplying a link. Before checkout, use `setup` to check payment and shipping readiness; resolve missing setup once. Persistent merchant accounts are managed at /store-connections. Use store_connection_id to select an account. Passwords and verification codes belong only on the merchant page, never in chat. PRODUCT DISCOVERY: if the user describes what to buy but provides no URL, use `search` { query: <product, variant, budget and preferred merchant if specified> } to locate it under the existing tool spending permissions; do not ask them to paste a link or say search for it first. Search is not purchase authorization. Respect search fees and spending limits; if search is unavailable, explain the actual error and then ask for a link. Verify the merchant, item and variant from the result; ask only when matches are ambiguous or details cannot be verified. Never invent a product URL, final total or delivery date from a search snippet. THE SEAMLESS PATH: once the user has told you what to buy and you have the exact item, merchant page URL and total, call `purchase` { item, merchant, url, total_cents, confirmed: true, confirmation: <the user's own words> } \u2014 it approves from their message (under the chat limit), starts buying in the user's cloud browser in the background and returns `message` (\"Hold on \u2014 buying it now.\"): RELAY IT, then poll `status` { approval_id } every ~10 seconds and relay its `message` when the status is completed (\"Done \u2014 \u2026\"), requires_action (read action_required.reason for the exact blocker) or failed. If `status` says the user's shipping address is missing, ask for it and call `address` { name, line1, line2?, city, state?, postal_code, country, phone? } then `checkout` { approval_id } to resume; if merchant authentication is pending, relay handoff_url and handoff_deadline. The durable worker checks authentication and resumes the same authorized purchase automatically. Do not ask the user to send done or submit codes in chat. If the handoff expires, relay the recovery page; it does not clear order or payment uncertainty. Other sub-commands: `search` { query } (protocol merchants plus a real web search; the web half bills 5\u00a2), `propose` { item, merchant, total_cents, url?, notes?, confirmed?, confirmation? } (creates an approval; without `confirmed` it returns an approval link the user opens \u2014 show its `message` VERBATIM), `checkout` { approval_id, params? } (buys an approved purchase; for a browser merchant it runs in the background like `purchase`). Use the user's existing authorization of the exact item and total; do not ask them to confirm twice. Ask only for missing purchase details. Nothing is ever bought without the user's yes: `checkout` refuses anything else. Use `reconcile` { approval_id } after an uncertain submission: it only inspects the existing checkout and never submits payment. For an unavailable checkout or inconclusive reconciliation, relay recovery_url and recovery_instructions from status. The user can resolve the attempt on its approval page only after checking both merchant orders and payment records. A chat statement alone does not clear the lock, and expiration does not clear it. If status or replay says purchase_resolved, never reuse checkout on that approval. When the user requests another attempt, call propose with retry_of set to that resolved ID, current item/price and no confirmed flag, then show the new approval link. Check setup browser_allowance first; a daily_browser_limit requires waiting until resets_at, not reconnecting or changing request text. For a handoff, return action_required.url and the deadline. The user fixes 2FA, CAPTCHA, payment, address or booking issues on that authenticated page and uses Return control to Vaaya; do not call checkout to bypass a pending handoff. Status polling never creates a replacement. Resume only the same approval_id; do not recreate a purchase to bypass an unresolved attempt. `charged_cents` is the Vaaya tool fee, NOT a merchant charge; read merchant_payment separately, and never infer a hold or capture from Link approval. Never open `browserbase` sessions yourself to buy something \u2014 only `buy` can.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "enum": [
+              "setup",
+              "search",
+              "purchase",
+              "propose",
+              "status",
+              "checkout",
+              "reconcile",
+              "address",
+              "credentials"
+            ],
+            "description": "Use `search` to find an item with OneSearch, `purchase` to buy an authorized item, and `status` to track it."
+          },
+          "query": {
+            "type": "string",
+            "description": "Describe the product, variant, budget and preferred store if any. `search` uses OneSearch to find matching items and merchant pages (5\u00a2)."
+          },
+          "item": {
+            "type": "string",
+            "description": "What exactly is being bought, in the user's words \u2014 variant, size, quantity (`purchase`, `propose`)."
+          },
+          "merchant": {
+            "type": "string",
+            "description": "Merchant host or URL, e.g. bombas.com (`purchase`, `propose`, `credentials`)."
+          },
+          "retry_of": {
+            "type": "string",
+            "format": "uuid",
+            "description": "For propose only: the previous approval ID resolved by the owner as no order/payment. Use only when the user requests a new attempt; omit confirmed and show the fresh approval link. Never vary item text or confirmation to bypass replay or locks."
+          },
+          "store_connection_id": {
+            "type": "string",
+            "description": "Merchant account connection ID from /store-connections. Required when multiple accounts are connected to the same store. Sign in and enter verification codes directly on that page, never in chat."
+          },
+          "booking": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "flight"
+                  },
+                  "travelers": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9
+                  },
+                  "segments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "origin": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        },
+                        "destination": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        },
+                        "departureDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "departureTime": {
+                          "type": "string",
+                          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                        },
+                        "flightNumber": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        },
+                        "cabin": {
+                          "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                        },
+                        "fare": {
+                          "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                        }
+                      },
+                      "required": [
+                        "origin",
+                        "destination",
+                        "departureDate",
+                        "departureTime",
+                        "flightNumber",
+                        "cabin",
+                        "fare"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 8
+                  },
+                  "baggage": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  },
+                  "changeCancellationTerms": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "travelers",
+                  "segments",
+                  "baggage",
+                  "changeCancellationTerms"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "hotel"
+                  },
+                  "property": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  },
+                  "address": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  },
+                  "checkIn": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/departureDate"
+                  },
+                  "checkOut": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/departureDate"
+                  },
+                  "rooms": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9
+                  },
+                  "adults": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 30
+                  },
+                  "children": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 30
+                  },
+                  "roomType": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  },
+                  "ratePlan": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  },
+                  "cancellationTerms": {
+                    "$ref": "#/anyOf/0/properties/segments/items/properties/flightNumber"
+                  },
+                  "paymentTiming": {
+                    "type": "string",
+                    "enum": [
+                      "pay_now",
+                      "pay_at_property",
+                      "deposit"
+                    ]
+                  },
+                  "mandatoryFeesCents": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "kind",
+                  "property",
+                  "address",
+                  "checkIn",
+                  "checkOut",
+                  "rooms",
+                  "adults",
+                  "children",
+                  "roomType",
+                  "ratePlan",
+                  "cancellationTerms",
+                  "paymentTiming",
+                  "mandatoryFeesCents"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "description": "Required for Expedia flights and Booking.com hotels: exact itinerary/stay, counts, fare/room, baggage/cancellation and payment terms. These are shown for approval and cannot be substituted. Traveler identity documents are entered directly on the merchant page, never in chat. Final booking review requires the authenticated handoff page."
+          },
+          "total_cents": {
+            "type": "number",
+            "description": "The full total the user will pay, in cents (`purchase`, `propose`)."
+          },
+          "currency": {
+            "type": "string",
+            "description": "ISO currency, default 'usd'."
+          },
+          "url": {
+            "type": "string",
+            "description": "The exact product page the item came from \u2014 the driver starts there (`purchase`, `propose`)."
+          },
+          "notes": {
+            "type": "string",
+            "description": "One line for the driver/user: variant, size, colour, quantity, delivery window."
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "true when the user has said yes to this exact item and total in the conversation (`purchase`, `propose`)."
+          },
+          "confirmation": {
+            "type": "string",
+            "description": "The user's own words approving it, verbatim (`purchase`, `propose`)."
+          },
+          "approval_id": {
+            "type": "string",
+            "description": "The approval returned by purchase/propose (`status`, `checkout`)."
+          },
+          "params": {
+            "type": "object",
+            "description": "The merchant's own purchase body (product id, quantity, email, shipping) for a protocol merchant (`purchase`, `checkout`).",
+            "additionalProperties": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name for shipping (`address`)."
+          },
+          "line1": {
+            "type": "string",
+            "description": "Street address (`address`)."
+          },
+          "line2": {
+            "type": "string",
+            "description": "Apartment / unit (`address`)."
+          },
+          "city": {
+            "type": "string",
+            "description": "City (`address`)."
+          },
+          "state": {
+            "type": "string",
+            "description": "State / region (`address`)."
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "Postal / ZIP code (`address`)."
+          },
+          "country": {
+            "type": "string",
+            "description": "Two-letter country code, e.g. US (`address`)."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone for delivery (`address`)."
+          },
+          "email": {
+            "type": "string",
+            "description": "Contact email for the order; defaults to the account email (`address`)."
+          },
+          "username": {
+            "type": "string",
+            "description": "Email/username at the merchant (`credentials`)."
+          },
+          "password": {
+            "type": "string",
+            "description": "Password at the merchant \u2014 stored encrypted, never returned (`credentials`)."
+          }
+        },
+        "required": [
+          "command"
+        ]
+      },
+      "annotations": {
+        "title": "Buy Something for the User",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "close",
+      "title": "Close a Sandbox Session",
+      "description": "Close an E2B sandbox session and stop its billing. Pass the `session_id`. Captures the final metered uptime cost and releases the hold. ALWAYS call this when finished with a session \u2014 an open session keeps billing per second of uptime. Safe to call repeatedly (idempotent).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "The session_id to close."
+          }
+        },
+        "required": [
+          "session_id"
+        ]
+      },
+      "annotations": {
+        "title": "Close a Sandbox Session",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "consult",
+      "title": "Consult Vaaya \u2014 Plan Any Capability",
+      "description": "Vaaya's consultant. Describe ANY external capability you or the user might want \u2014 generate an image/video, search or scrape the web, run code in a sandbox, send/receive email, enrich a contact \u2014 and it helps figure out the best way, teaching the user what Vaaya can do. It is CONVERSATIONAL and remembers prior turns. It returns: mode='converse' (a reply to RELAY to the user verbatim \u2014 questions, options, ideas; get the user's response and call consult again with it, so the conversation continues), mode='call' (an ordered list of calls to run via `use`, with a message explaining the preferred choice + alternatives + why; multi-step results may contain placeholders like '<from step 1: sandbox_id>' \u2014 run earlier steps first and substitute), or mode='unsupported'. Every reply includes `suggestions` (2-3 things to do next) \u2014 surface these to the user. AFTER you run a `call` result's calls via `use`, call consult ONE more time with a short note on the outcome (what was produced / any failures) \u2014 it returns result-aware, Vaaya-grounded next steps to offer the user (the `call` result's `after_running` field reminds you). Call consult whenever you hit a capability gap or the user wants to know what's possible. It does NOT execute or bill \u2014 you run returned calls via `use`. ALWAYS show the user consult's `message` and `suggestions` and let them steer.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "intent": {
+            "type": "string",
+            "description": "Plain-English description of what you want, or your answer to a previous clarify question. Be concrete \u2014 include the prompt text, URL, budget, or target the task implies."
+          }
+        },
+        "required": [
+          "intent"
+        ]
+      },
+      "annotations": {
+        "title": "Consult Vaaya \u2014 Plan Any Capability",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "docs",
+      "title": "Read Vaaya Deep Reference",
+      "description": "Vaaya's deep reference, FREE and instant. Pass `topic` to get the full playbook for a capability area \u2014 exact services, actions, params, prices, model lists, and gotchas \u2014 the same reference files the vaaya skill ships. Topics: 'setup' (connecting an agent, a chat app, or an unattended process), 'tools' (exact params of every Vaaya tool, GTM suite included), 'media' (image/video/audio models + product-demo videos), 'gtm' (leads, enrichment, outreach, signals, email), 'research' (OneSearch lanes, deep research, company/market research playbooks), 'data' (scraping, people, social platforms, public records, onchain, compliance), 'compute' (sandboxes, browser automation, files, memory, workers, phone calls, llm). Read the matching topic BEFORE non-trivial work in that area \u2014 it is cheaper than a wrong call. Never bills; safe to call any time.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "enum": [
+              "setup",
+              "tools",
+              "media",
+              "gtm",
+              "research",
+              "data",
+              "compute"
+            ],
+            "description": "Which reference to fetch."
+          }
+        },
+        "required": [
+          "topic"
+        ]
+      },
+      "annotations": {
+        "title": "Read Vaaya Deep Reference",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "llm",
+      "title": "Ask Another LLM",
+      "description": "Ask a DIFFERENT LLM a question and get its answer, billed per token from the Vaaya wallet (model cost + 3%, usually a fraction of a cent). Use it to get a second opinion from a rival model, cross-check an answer, summarize a huge blob cheaply, or query a specific model the user names (Kimi, GPT, Gemini, Claude, DeepSeek, and 300+ more). `model` accepts 'auto' (default: short prompts go cheap, long go mid), 'cheap' | 'mid' | 'best' tiers, or any exact OpenRouter slug like 'moonshotai/kimi-k3'. Typical costs: cheap tier well under 0.1 cents, best tier 1-3 cents per call. Not for the conversation you are already having \u2014 it is a one-shot ask to another model.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The question or task for the other model."
+          },
+          "model": {
+            "type": "string",
+            "description": "'auto' (default), 'cheap', 'mid', 'best', or an exact OpenRouter model slug (e.g. 'moonshotai/kimi-k3', 'anthropic/claude-opus-5')."
+          },
+          "system": {
+            "type": "string",
+            "description": "Optional system prompt for the other model."
+          },
+          "max_tokens": {
+            "type": "number",
+            "description": "Optional cap on the response length in tokens (default 4096, max 16384)."
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "annotations": {
+        "title": "Ask Another LLM",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "logout",
+      "description": "Disconnect this Vaaya connection \u2014 deletes local credentials.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "reauthorize",
+      "description": "Re-run the authorization flow against the Vaaya backend.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "result",
+      "title": "Poll an Async Job",
+      "description": "Fetch the status + output of an async job started by `use` (e.g. a video render). Pass the `job_id` that `use` returned with `{ async: true }`. Returns `{ status, result?, progress?, charged_cents }`: `running` (still working \u2014 when the job reports it, `progress` carries `{ phase, percent, rendered_frames, total_frames, eta_sec }` and `hint` is a one-line summary like \"rendering 42% (380/900 frames, ~120s left)\", so you can tell real progress from a hang; wait a bit and call again), `succeeded` (`result` holds the output, e.g. the video URL; the call is charged now), or `failed`/`cancelled` (no charge; on `failed`, read `error` AND `hint` \u2014 `hint` carries the service's usage notes, which usually explain how to fix the call). Safe to call repeatedly \u2014 it never starts new work or double-charges. ALWAYS use this to retrieve an async result instead of re-running `use` (re-running starts a new paid job).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "The job_id returned by an async `use` call."
+          }
+        },
+        "required": [
+          "job_id"
+        ]
+      },
+      "annotations": {
+        "title": "Poll an Async Job",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "session",
+      "title": "Run Code in a Sandbox Session",
+      "description": "Run a command or code in an open E2B sandbox session (started by `use` with action `create_session`, which returns a `session_id`). Pass `session_id` plus either `command` (a shell command) or `code` (+ optional `language`: python/javascript/bash). Returns stdout/stderr/exit_code (or the code result). The sandbox stays alive \u2014 and billed per second of uptime \u2014 until you `close` it; re-running reuses the SAME box, so filesystem + process state persist between calls. ALWAYS `close` when done.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "The session_id returned by create_session."
+          },
+          "command": {
+            "type": "string",
+            "description": "Shell command to run in the sandbox."
+          },
+          "code": {
+            "type": "string",
+            "description": "Code to execute (alternative to `command`)."
+          },
+          "language": {
+            "type": "string",
+            "description": "Language for `code`: python (default), javascript, or bash."
+          }
+        },
+        "required": [
+          "session_id"
+        ]
+      },
+      "annotations": {
+        "title": "Run Code in a Sandbox Session",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "stocks",
+      "title": "Buy Tokenized Stocks",
+      "description": "Buy tokenized stocks on Base using only the user\u2019s prepaid Vaaya balance, never the welcome credit or the GitHub credit line. Commands: list (supported token tickers), portfolio (owned stocks and buying power), quote {symbol, amount_cents}, buy {symbol, amount_cents, idempotency_key}, order {order_id}. When the user asks to buy a specified stock and dollar amount, resolve its supported token ticker (Apple = AAPLc) and call buy directly; no activation or additional approval step. amount_cents is the maximum total prepaid spend including provider fees. Use a unique idempotency_key for each intended purchase and reuse it on retries. Query order until confirmed/failed; queued/submitted is not success. Do not increase the user\u2019s spend or retry a failed purchase as a new order without instruction. Ask only for missing or ambiguous purchase details. If prepaid_required or buyingPowerCents is insufficient, offer a $10/$30/$100 prepaid pack: POST /api/v1/topup with pack_cents 1000/3000/10000 and the same account bearer token returns a Stripe Checkout url. With authorization for that pack amount, the user\u2019s Instinct agent can pay the URL in its browser using the card saved in Instinct; otherwise give the URL to the user. Vaaya cannot charge Instinct\u2019s card directly. Do not include card details or tokens in a handoff. Check GET /api/v1/wallet wallet.prepaid_cents, then portfolio buyingPowerCents before resuming the same purchase key. A share purchase alone does not authorize a top-up. Stop on needs_review as well as failed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "enum": [
+              "list",
+              "portfolio",
+              "quote",
+              "buy",
+              "order"
+            ],
+            "description": "list (supported tickers), portfolio (holdings + buying power), quote, buy, or order (status by id)."
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Token ticker from list, e.g. AAPLc. Required for quote and buy."
+          },
+          "amount_cents": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 1000000,
+            "description": "Maximum prepaid spend in cents, pool fees included. Required for quote and buy."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "description": "Unique per intended purchase; reuse it on retries. Required for buy."
+          },
+          "order_id": {
+            "type": "string",
+            "description": "Order id returned by buy. Required for order."
+          }
+        },
+        "required": [
+          "command"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Buy Tokenized Stocks",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "use",
+      "title": "Execute a Paid Service Call",
+      "description": "Execute a single external call, and bill on success. Used for any external capability (image/video/audio generation, web search, scraping, email, document parsing, code sandbox, browser automation, embeddings, etc.). The server validates params against a registered schema and proxies to the upstream \u2014 you never pass URLs or API keys. Call it directly when you know the exact (service, action, params, max_cost_cents) \u2014 from the vaaya skill's catalog or a call you've made before; when unsure, get the call from `consult` rather than guessing.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "description": "Service identifier, taken verbatim from the call `consult` returned."
+          },
+          "action": {
+            "type": "string",
+            "description": "Action within the service (e.g. \"search\", \"generate\", \"create_session\"), taken from the call `consult` returned."
+          },
+          "params": {
+            "type": "object",
+            "description": "Parameters from the call `consult` returned, validated against the service's registered schema.",
+            "additionalProperties": true
+          },
+          "max_cost_cents": {
+            "type": "number",
+            "description": "Hard ceiling in cents on what you will be charged. `use` refuses if the registry price exceeds this. Pick at least 2\u00d7 the listed price so retries work."
+          },
+          "intent": {
+            "type": "string",
+            "description": "Optional: the one-line `why` from the consult call you're running (or the user's goal for it). Used only for internal transaction visibility \u2014 it never affects validation, billing, or execution. Pass it through when you have it."
+          }
+        },
+        "required": [
+          "service",
+          "action",
+          "params",
+          "max_cost_cents"
+        ]
+      },
+      "annotations": {
+        "title": "Execute a Paid Service Call",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "vaaya_account",
+      "title": "Show Connected Account & Balance",
+      "description": "Show which Vaaya account this connection is linked to and its money state. Returns { email, name, user_id, connected_client, scopes, balance_cents, credit_line, available_cents, credits_url, switch_account }. Call it whenever the user asks \"which account is connected\", \"what's my balance\", \"how much credit is left\", or \"how do I switch accounts\" \u2014 and relay the answer. `credit_line` is the credit the account can spend past its prepaid balance (the welcome credit plus any GitHub-score line); `available_cents` = balance + active line, the number calls are gated on.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Show Connected Account & Balance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "vaaya_logout",
+      "title": "Disconnect / Switch Vaaya Account",
+      "description": "Disconnect this client from the current Vaaya account: revokes this connection's authorization server-side, so every later call fails with 401 until the user reconnects. Call it when the user asks to log out, sign out, disconnect, or switch Vaaya accounts \u2014 then relay the returned switch steps VERBATIM (the browser sign-out step is what actually enables switching accounts).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Disconnect / Switch Vaaya Account",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "vaaya_onboard",
+      "title": "Get Onboarding Instructions",
+      "description": "Public onboarding hint for an agent whose user isn't linked to Vaaya yet. Returns where the human should go to connect (and sign up if new). Call this when vaaya_test_connection reports needs_auth, or any tool returns unauthorized, then relay the instructions to the user. If the user IS already linked it returns `first_call` instead \u2014 show `first_call.show_to_user` as written so they know what to try.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get Onboarding Instructions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "vaaya_test_connection",
+      "title": "Test Vaaya Connection",
+      "description": "Round-trip ping that confirms the agent \u2192 Vaaya connection and whether the user is linked. Returns { ok:true, userId, scope, version, server_time, first_call } when linked \u2014 SHOW `first_call.show_to_user` to the user as written, it is the same set of starter examples the website and installer give them. Returns { ok:false, needs_auth:true, verification_uri, signup_uri, instructions } when not linked yet \u2014 relay that to the user so they can connect (and sign up if new).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Test Vaaya Connection",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

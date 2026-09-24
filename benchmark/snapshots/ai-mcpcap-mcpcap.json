@@ -1,0 +1,222 @@
+{
+  "protocolVersion": "2025-11-25",
+  "serverInfo": {
+    "name": "mcpcap",
+    "version": "2.14.7"
+  },
+  "tools": [
+    {
+      "name": "analyze_capinfos",
+      "description": "Return metadata from a PCAP file, similar to Wireshark's capinfos utility.\n\nIMPORTANT: This tool expects a FILE PATH or URL, not file content.\n- For local files: \"/path/to/capture.pcap\"\n- For remote files: \"https://example.com/capture.pcap\"\n- File uploads are NOT supported - save the file locally first\n\nArgs:\n    pcap_file: Path to local PCAP file or HTTP URL to remote PCAP file\n              (NOT file content - must be a path or URL)\n\nReturns:\n    A structured dictionary containing PCAP metadata including:\n    - File information (size, name, encapsulation type)\n    - Packet statistics (count, data size, average sizes)\n    - Temporal data (duration, timestamps, rates)",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_dhcp_packets",
+      "description": "Analyze DHCP packets from a PCAP file and return comprehensive analysis results.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing DHCP packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_dns_packets",
+      "description": "Analyze DNS packets from a PCAP file and return comprehensive analysis results.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing DNS packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_icmp_packets",
+      "description": "Analyze ICMP packets from a PCAP file and return comprehensive analysis results.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing ICMP packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_sip_packets",
+      "description": "Analyze SIP packets from a PCAP file and return structured signaling details.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing SIP packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_tcp_anomalies",
+      "description": "Detect TCP traffic patterns through statistical analysis.\n\nThis tool analyzes TCP traffic to identify observable patterns without\nmaking assumptions about root causes. It provides factual metrics and\npattern detection that can be used for further investigation.\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Optional filter for server IP address\n    server_port: Optional filter for server port\n\nReturns:\n    A structured dictionary containing:\n    - statistics: Comprehensive TCP metrics (handshakes, flags, RST distribution, etc.)\n    - patterns: Observable patterns detected in the traffic\n    - summary: High-level summary of findings\n\nDetected pattern categories:\n- connection_establishment: Handshake success/failure rates, SYN response ratios\n- connection_termination: RST distribution, normal vs abnormal closes\n- reliability: Retransmission rates, packet loss indicators\n- connection_lifecycle: Connection state transitions\n\nThe analysis is purely observational - it reports what is seen in the traffic\nwithout attempting to diagnose specific issues like \"firewall block\" or\n\"network congestion\". This allows the data to be interpreted in context.",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "server_port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_tcp_connections",
+      "description": "Analyze TCP connection states and lifecycle.\n\nThis is the core tool for TCP connection analysis, solving 80% of TCP-related issues.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Optional filter for server IP address\n    server_port: Optional filter for server port\n    detailed: Whether to return detailed connection information\n\nReturns:\n    A structured dictionary containing TCP connection analysis results including:\n    - summary: Overall connection statistics\n    - connections: List of individual connections with states\n    - issues: Detected problems",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "server_port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "detailed": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_tcp_retransmissions",
+      "description": "Analyze TCP retransmission patterns.\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Optional filter for server IP address\n    threshold: Retransmission rate threshold (default: 2%)\n\nReturns:\n    A structured dictionary containing:\n    - total_retransmissions: Total number of retransmissions\n    - retransmission_rate: Overall retransmission rate\n    - by_connection: Per-connection retransmission statistics\n    - summary: Worst connections and threshold violations",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "threshold": {
+            "default": 0.02,
+            "type": "number"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "analyze_traffic_flow",
+      "description": "Analyze bidirectional traffic flow characteristics.\n\nIdentifies traffic direction, asymmetry, RST sources, and data transfer patterns.\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Server IP address (required)\n    server_port: Optional filter for server port\n\nReturns:\n    A structured dictionary containing:\n    - client_to_server: Client-to-server traffic statistics\n    - server_to_client: Server-to-client traffic statistics\n    - analysis: Asymmetry analysis and interpretations",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "type": "string"
+          },
+          "server_port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "pcap_file",
+          "server_ip"
+        ],
+        "type": "object"
+      }
+    }
+  ]
+}

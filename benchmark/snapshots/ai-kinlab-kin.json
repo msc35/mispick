@@ -1,0 +1,1689 @@
+{
+  "protocolVersion": "2024-11-05",
+  "serverInfo": {
+    "name": "kin-mcp",
+    "version": "0.7.21"
+  },
+  "tools": [
+    {
+      "name": "find_references",
+      "description": "Find who depends on one entity: callers, importers and references, one row each with id, name, kind and file. One hop only; use trace_data_flow for a chain.",
+      "inputSchema": {
+        "properties": {
+          "entity_id": {
+            "description": "Exact entity UUID. Optional if query is provided.",
+            "type": "string"
+          },
+          "max_chars": {
+            "default": 12000,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "query": {
+            "description": "Symbol name. `Owner.member` is exact; a bare name shared by declarations is ranked.",
+            "type": "string"
+          },
+          "relation_kinds": {
+            "description": "Filter to calls, imports or references. Defaults to all three.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Find references",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_context_pack",
+      "description": "Assemble a token-bounded context bundle from one entity, several entities or a question: focal bodies plus signatures and routes, instead of several get_entity_source reads.",
+      "inputSchema": {
+        "anyOf": [
+          {
+            "required": [
+              "entity_id"
+            ]
+          },
+          {
+            "required": [
+              "entities"
+            ]
+          },
+          {
+            "required": [
+              "question"
+            ]
+          }
+        ],
+        "properties": {
+          "depth": {
+            "default": 2,
+            "description": "Dependency traversal depth",
+            "type": "integer"
+          },
+          "entities": {
+            "description": "Several focal entity names or UUIDs when the question is about how they connect.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "type": "array"
+          },
+          "entity_id": {
+            "description": "Focal entity UUID",
+            "type": "string"
+          },
+          "max_chars": {
+            "default": 24576,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "question": {
+            "description": "A plain-language question resolved to one or more focal entities before packing.",
+            "type": "string"
+          },
+          "token_budget": {
+            "default": 2500,
+            "description": "Token budget (8000, 16000, or 32000)",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get context pack",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_entity_source",
+      "description": "Return one entity's exact graph-owned body by id, when a snippet is not enough.",
+      "inputSchema": {
+        "properties": {
+          "entity_id": {
+            "description": "Entity UUID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Get entity source",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "graph_neighborhood",
+      "description": "Get what one entity depends on and what depends on it, to a depth you choose. Callers only? Use find_references. An ordered path? Use trace_data_flow.",
+      "inputSchema": {
+        "properties": {
+          "depth": {
+            "default": 2,
+            "description": "Traversal depth",
+            "type": "integer"
+          },
+          "direction": {
+            "default": "both",
+            "description": "`out` for what the focal depends on, `in` for what depends on it, `both` merges.",
+            "type": "string"
+          },
+          "entity_id": {
+            "description": "Entity UUID",
+            "type": "string"
+          },
+          "limit": {
+            "default": 30,
+            "description": "Max entities to return (default 30)",
+            "type": "integer"
+          },
+          "max_chars": {
+            "default": 12000,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "entity_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Graph neighborhood",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "impact_analysis",
+      "description": "Walk the graph from a change to every entity it could affect, targeted one way at a time by entity_ids, files, base and head, or change_ids.",
+      "inputSchema": {
+        "properties": {
+          "base": {
+            "description": "Base semantic change ID (hex)",
+            "type": "string"
+          },
+          "change_ids": {
+            "description": "Change ID hexes to combine and analyze impact",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "entity_ids": {
+            "description": "Entity UUIDs to analyze impact for",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "files": {
+            "description": "Deprecated, answered through 0.7.16; use entity_ids. File paths resolved to entities.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "head": {
+            "description": "Head semantic change ID (hex)",
+            "type": "string"
+          },
+          "max_chars": {
+            "default": 12000,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Impact analysis",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_artifact_list",
+      "description": "List the repository's tracked files at one semantic change, code and non-code alike, whether or not the parsers made entities for them.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "default": 200,
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "source_change_id": {
+            "description": "Exact semantic change ID. Defaults to the current branch head.",
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "List artifacts",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_artifact_read",
+      "description": "Read one tracked file's exact content by artifact_id or repo-relative path: text when valid UTF-8, else base64.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "artifact_id"
+            ]
+          },
+          {
+            "required": [
+              "path"
+            ]
+          }
+        ],
+        "properties": {
+          "artifact_id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "include_bytes": {
+            "default": false,
+            "description": "Also return content_base64 for a UTF-8 body. Non-UTF-8 bytes always come as base64.",
+            "type": "boolean"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "bytes_hex": {
+                    "pattern": "^(?:[0-9a-f]{2})+$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "bytes_hex"
+                ],
+                "type": "object"
+              }
+            ],
+            "description": "Repo-relative path as in path_label (a leading / is fine), or {bytes_hex} for non-UTF-8"
+          },
+          "source_change_id": {
+            "description": "Exact semantic change ID. Defaults to the current branch head.",
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Read artifact",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_graph_status",
+      "description": "Counts for the graph this call is answered from, and how many entities are embedded, pending or unindexed. `sampling=last_settled_selected_graph` is the last settled reading.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Graph status",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_mutate",
+      "description": "Validate and commit a batch of graph mutations in one atomic call, naming the entity or file each operation changes and the new body it gets.",
+      "inputSchema": {
+        "properties": {
+          "operations": {
+            "description": "Changes applied together or not at all.",
+            "items": {
+              "properties": {
+                "body": {
+                  "description": "Complete new UTF-8 text, never a fragment or a diff. Required by update, create and replace.",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "One sentence saying what this operation changes.",
+                  "type": "string"
+                },
+                "destination": {
+                  "description": "Repository-relative path the file moves to. Required by rename.",
+                  "type": "string"
+                },
+                "target": {
+                  "description": "Entity UUID or exact entity name for update; repository-relative path for the file verbs.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "verb": {
+                  "description": "update an entity body; create, replace, rename or delete a tracked file.",
+                  "enum": [
+                    "update",
+                    "create",
+                    "replace",
+                    "rename",
+                    "delete"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "verb",
+                "target",
+                "description"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "summary": {
+            "description": "One sentence a human reads in history. Omitted, the change records only its id.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operations"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Atomically mutate graph",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_provenance_query",
+      "description": "Answer who changed an entity and whether it was approved: change count, latest change, approvals, a page of changes and recent audit events.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "entity_id": {
+            "description": "Entity UUID to query provenance for",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max changes per page. Default 20.",
+            "maximum": 200,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "entity_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Query provenance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_session_end",
+      "description": "Session plumbing for writes. Close an open session and release what it holds, once your writing is done.",
+      "inputSchema": {
+        "properties": {
+          "session_id": {
+            "description": "Session UUID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "End agent session",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_session_heartbeat",
+      "description": "Session plumbing for writes. Renew an open session during long work so it does not lapse at its idle TTL.",
+      "inputSchema": {
+        "properties": {
+          "session_id": {
+            "description": "Session UUID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Heartbeat agent session",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_session_start",
+      "description": "Session plumbing for writes. Open a session and get a session_id, before your first transaction, so the work is attributed.",
+      "inputSchema": {
+        "properties": {
+          "capabilities": {
+            "description": "Agent capabilities",
+            "properties": {
+              "can_branch": {
+                "default": false,
+                "type": "boolean"
+              },
+              "can_commit": {
+                "default": false,
+                "type": "boolean"
+              },
+              "can_execute": {
+                "default": false,
+                "type": "boolean"
+              },
+              "can_read": {
+                "default": true,
+                "type": "boolean"
+              },
+              "can_write": {
+                "default": false,
+                "type": "boolean"
+              },
+              "max_concurrent_intents": {
+                "default": 1,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "client_name": {
+            "description": "Human-readable client name",
+            "type": "string"
+          },
+          "cwd": {
+            "description": "Working directory of the agent",
+            "type": "string"
+          },
+          "pid": {
+            "description": "OS process ID of the agent (optional)",
+            "type": "integer"
+          },
+          "session_id": {
+            "description": "Owning session UUID. In enforce mode it must match the authenticated caller.",
+            "type": "string"
+          },
+          "transport": {
+            "default": "mcp",
+            "description": "Connection type: mcp, cli, wrapper, or ui",
+            "type": "string"
+          },
+          "vendor": {
+            "description": "Vendor identifier (claude-code, codex, gemini-cli, etc.)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "vendor",
+          "client_name",
+          "cwd"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Start agent session",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_transaction_abort",
+      "description": "Transaction plumbing for writes. Discard everything staged on an open transaction and close it. Refused once kin_transaction_commit has fenced it.",
+      "inputSchema": {
+        "properties": {
+          "session_id": {
+            "description": "Owning session UUID. In enforce mode it must match the authenticated caller.",
+            "type": "string"
+          },
+          "transaction_id": {
+            "description": "Transaction UUID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "transaction_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Abort transaction",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_transaction_begin",
+      "description": "Transaction plumbing for writes. Open a transaction and get a transaction_id. Nothing staged on it lands until kin_transaction_commit.",
+      "inputSchema": {
+        "properties": {
+          "scope": {
+            "description": "Target scope (e.g. filename, module, etc.)",
+            "type": "string"
+          },
+          "session_id": {
+            "description": "Session UUID owning the transaction",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "scope"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Begin transaction",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_transaction_commit",
+      "description": "Transaction plumbing for writes. Publish everything staged on one transaction atomically, all of it or none. Re-sending a fenced commit is safe.",
+      "inputSchema": {
+        "properties": {
+          "message": {
+            "description": "Optional change message: one sentence in your own words saying what this change does, which becomes the subject a human reads in history. Omit it and the change records only the transaction id, which names the call and not the work.",
+            "type": "string"
+          },
+          "operations": {
+            "description": "Optional exact mutation operations to stage atomically in this commit request",
+            "items": {
+              "oneOf": [
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path of the file to retire, such as \"src/parser.py\". It must be a path repository authority already tracks; a path the graph has never seen is refused.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Retire a tracked file. This is the only operation that removes a file, along with every entity derived from it and every edge incident to those entities.",
+                      "enum": [
+                        "delete",
+                        "remove"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "description"
+                  ],
+                  "title": "Retired source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "destination": {
+                      "description": "Repository-relative path the file moves to. It must not be tracked already, and it follows the same path rules as `target`: no leading slash, no \"..\", and no Kin or Git control component.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path the file lives at now. It must be a path repository authority already tracks.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Relocate a tracked file. Entity identity, history, and incoming edges survive the move, which is what separates this from a delete followed by a create.",
+                      "enum": [
+                        "rename",
+                        "move"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "destination",
+                    "description"
+                  ],
+                  "title": "Renamed source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "The file's complete UTF-8 source text. Kin parses it with the same extractor the ingest path uses, so every entity in it enters the graph, and writes the file into the working directory when the transaction commits. You do not need to write the file yourself first.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path of the new file, such as \"src/parser.py\". No leading slash, no \"..\", and no Kin or Git control component. A path the graph already tracks is refused; rewrite that one with verb 'replace' instead.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Admit a source file the graph has never seen. This is the only operation that introduces a new file.",
+                      "enum": [
+                        "create",
+                        "add",
+                        "insert"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "description"
+                  ],
+                  "title": "New source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "The file's complete new UTF-8 source text, never a fragment or a diff. Kin reparses it with the same extractor the ingest path uses, so entities the new text adds enter the graph, entities it drops leave it, and the rest keep their identity. A body identical to the tracked contents is refused as an empty change.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path of the file to rewrite, such as \"src/parser.py\". It must be a path repository authority already tracks; a path the graph has never seen is refused, and 'create' is the verb for it.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Rewrite a tracked file from its complete new text. This is the operation to use when you hold a path and the file's new contents, which is what a local edit or write leaves you holding.",
+                      "enum": [
+                        "replace",
+                        "overwrite"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "description"
+                  ],
+                  "title": "Replaced source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "The entity's complete new UTF-8 source text, including its own leading indentation. Do not submit a truncated retrieval body.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Exact repository entity UUID or unambiguous exact entity name.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Update an existing source entity.",
+                      "enum": [
+                        "update",
+                        "modify"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "description"
+                  ],
+                  "title": "Entity source body edit",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "payload": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "EntitySourceBase": {
+                          "$schema": "https://json-schema.org/draft/2020-12/schema",
+                          "additionalProperties": false,
+                          "properties": {
+                            "artifact_id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "body_hash": {
+                              "pattern": "^[0-9a-f]{64}$",
+                              "type": "string"
+                            },
+                            "context": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "repository_id": {
+                                  "minLength": 1,
+                                  "type": "string"
+                                },
+                                "workspace_generation": {
+                                  "minimum": 0,
+                                  "type": "integer"
+                                },
+                                "workspace_head_hash": {
+                                  "pattern": "^[0-9a-f]{64}$",
+                                  "type": "string"
+                                },
+                                "workspace_id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "workspace_tree_hash": {
+                                  "pattern": "^[0-9a-f]{64}$",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "repository_id",
+                                "workspace_id",
+                                "workspace_generation",
+                                "workspace_head_hash",
+                                "workspace_tree_hash"
+                              ],
+                              "type": "object"
+                            },
+                            "end_byte": {
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "entity_id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "schema": {
+                              "const": "kin.entity.source_base.v1"
+                            },
+                            "source_blob_hash": {
+                              "pattern": "^[0-9a-f]{64}$",
+                              "type": "string"
+                            },
+                            "start_byte": {
+                              "minimum": 0,
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "schema",
+                            "context",
+                            "entity_id",
+                            "artifact_id",
+                            "source_blob_hash",
+                            "start_byte",
+                            "end_byte",
+                            "body_hash"
+                          ],
+                          "title": "Exact entity source base v1",
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "EntitySourceBase"
+                      ],
+                      "type": "object"
+                    },
+                    "target": {
+                      "description": "The exact entity UUID in source_base.",
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "verb": {
+                      "enum": [
+                        "update",
+                        "modify"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "payload",
+                    "description"
+                  ],
+                  "title": "Guarded entity source body edit",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "Full new UTF-8 source text for a source-bound Entity update. Omit for Relation operations.",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "payload": {
+                      "description": "Exact mutation payload: {\"Entity\": { ...existing entity identity... }} or {\"Relation\": {\"from\": \"...\", \"to\": \"...\", \"kind\": \"...\"}}.",
+                      "oneOf": [
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "Entity": {
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "Entity"
+                          ]
+                        },
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "Relation": {
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "Relation"
+                          ]
+                        }
+                      ],
+                      "type": "object"
+                    },
+                    "target": {
+                      "description": "Exact repository entity UUID for an Entity payload; empty string for a Relation payload.",
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Entity or relation mutation verb.",
+                      "enum": [
+                        "create",
+                        "add",
+                        "upsert",
+                        "insert",
+                        "update",
+                        "modify",
+                        "delete",
+                        "remove"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "payload",
+                    "description"
+                  ],
+                  "title": "Structured entity or relation mutation",
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "description": "Optional owning session UUID mirror; when present in enforce mode it must match the authenticated caller and transaction owner",
+            "type": "string"
+          },
+          "transaction_id": {
+            "description": "Transaction UUID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "transaction_id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Commit transaction",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "kin_transaction_stage",
+      "description": "Transaction plumbing for writes. Stage a create, update, delete or rename onto an open transaction. An update replaces the whole body, so send the complete new text.",
+      "inputSchema": {
+        "properties": {
+          "operations": {
+            "description": "Array of mutation operations to stage",
+            "items": {
+              "oneOf": [
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path of the file to retire, such as \"src/parser.py\". It must be a path repository authority already tracks; a path the graph has never seen is refused.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Retire a tracked file. This is the only operation that removes a file, along with every entity derived from it and every edge incident to those entities.",
+                      "enum": [
+                        "delete",
+                        "remove"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "description"
+                  ],
+                  "title": "Retired source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "destination": {
+                      "description": "Repository-relative path the file moves to. It must not be tracked already, and it follows the same path rules as `target`: no leading slash, no \"..\", and no Kin or Git control component.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path the file lives at now. It must be a path repository authority already tracks.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Relocate a tracked file. Entity identity, history, and incoming edges survive the move, which is what separates this from a delete followed by a create.",
+                      "enum": [
+                        "rename",
+                        "move"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "destination",
+                    "description"
+                  ],
+                  "title": "Renamed source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "The file's complete UTF-8 source text. Kin parses it with the same extractor the ingest path uses, so every entity in it enters the graph, and writes the file into the working directory when the transaction commits. You do not need to write the file yourself first.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path of the new file, such as \"src/parser.py\". No leading slash, no \"..\", and no Kin or Git control component. A path the graph already tracks is refused; rewrite that one with verb 'replace' instead.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Admit a source file the graph has never seen. This is the only operation that introduces a new file.",
+                      "enum": [
+                        "create",
+                        "add",
+                        "insert"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "description"
+                  ],
+                  "title": "New source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "The file's complete new UTF-8 source text, never a fragment or a diff. Kin reparses it with the same extractor the ingest path uses, so entities the new text adds enter the graph, entities it drops leave it, and the rest keep their identity. A body identical to the tracked contents is refused as an empty change.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Repository-relative path of the file to rewrite, such as \"src/parser.py\". It must be a path repository authority already tracks; a path the graph has never seen is refused, and 'create' is the verb for it.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Rewrite a tracked file from its complete new text. This is the operation to use when you hold a path and the file's new contents, which is what a local edit or write leaves you holding.",
+                      "enum": [
+                        "replace",
+                        "overwrite"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "description"
+                  ],
+                  "title": "Replaced source file",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "The entity's complete new UTF-8 source text, including its own leading indentation. Do not submit a truncated retrieval body.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "target": {
+                      "description": "Exact repository entity UUID or unambiguous exact entity name.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Update an existing source entity.",
+                      "enum": [
+                        "update",
+                        "modify"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "description"
+                  ],
+                  "title": "Entity source body edit",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "payload": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "EntitySourceBase": {
+                          "$schema": "https://json-schema.org/draft/2020-12/schema",
+                          "additionalProperties": false,
+                          "properties": {
+                            "artifact_id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "body_hash": {
+                              "pattern": "^[0-9a-f]{64}$",
+                              "type": "string"
+                            },
+                            "context": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "repository_id": {
+                                  "minLength": 1,
+                                  "type": "string"
+                                },
+                                "workspace_generation": {
+                                  "minimum": 0,
+                                  "type": "integer"
+                                },
+                                "workspace_head_hash": {
+                                  "pattern": "^[0-9a-f]{64}$",
+                                  "type": "string"
+                                },
+                                "workspace_id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "workspace_tree_hash": {
+                                  "pattern": "^[0-9a-f]{64}$",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "repository_id",
+                                "workspace_id",
+                                "workspace_generation",
+                                "workspace_head_hash",
+                                "workspace_tree_hash"
+                              ],
+                              "type": "object"
+                            },
+                            "end_byte": {
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            "entity_id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "schema": {
+                              "const": "kin.entity.source_base.v1"
+                            },
+                            "source_blob_hash": {
+                              "pattern": "^[0-9a-f]{64}$",
+                              "type": "string"
+                            },
+                            "start_byte": {
+                              "minimum": 0,
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "schema",
+                            "context",
+                            "entity_id",
+                            "artifact_id",
+                            "source_blob_hash",
+                            "start_byte",
+                            "end_byte",
+                            "body_hash"
+                          ],
+                          "title": "Exact entity source base v1",
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "EntitySourceBase"
+                      ],
+                      "type": "object"
+                    },
+                    "target": {
+                      "description": "The exact entity UUID in source_base.",
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "verb": {
+                      "enum": [
+                        "update",
+                        "modify"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "body",
+                    "payload",
+                    "description"
+                  ],
+                  "title": "Guarded entity source body edit",
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "body": {
+                      "description": "Full new UTF-8 source text for a source-bound Entity update. Omit for Relation operations.",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "Human-readable explanation of this change.",
+                      "type": "string"
+                    },
+                    "payload": {
+                      "description": "Exact mutation payload: {\"Entity\": { ...existing entity identity... }} or {\"Relation\": {\"from\": \"...\", \"to\": \"...\", \"kind\": \"...\"}}.",
+                      "oneOf": [
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "Entity": {
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "Entity"
+                          ]
+                        },
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "Relation": {
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "Relation"
+                          ]
+                        }
+                      ],
+                      "type": "object"
+                    },
+                    "target": {
+                      "description": "Exact repository entity UUID for an Entity payload; empty string for a Relation payload.",
+                      "type": "string"
+                    },
+                    "verb": {
+                      "description": "Entity or relation mutation verb.",
+                      "enum": [
+                        "create",
+                        "add",
+                        "upsert",
+                        "insert",
+                        "update",
+                        "modify",
+                        "delete",
+                        "remove"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "verb",
+                    "target",
+                    "payload",
+                    "description"
+                  ],
+                  "title": "Structured entity or relation mutation",
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "description": "Optional owning session UUID mirror; when present in enforce mode it must match the authenticated caller and transaction owner",
+            "type": "string"
+          },
+          "transaction_id": {
+            "description": "Transaction UUID",
+            "type": "string"
+          }
+        },
+        "required": [
+          "transaction_id",
+          "operations"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Stage transaction operations",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_file_entities",
+      "description": "List every entity the graph holds for one file by repo-relative path, and say whether that list is complete, before concluding a file holds nothing.",
+      "inputSchema": {
+        "properties": {
+          "cursor": {
+            "description": "Opaque token from a prior result's `next_cursor`. Pass it back unedited.",
+            "type": "string"
+          },
+          "page_size": {
+            "default": 200,
+            "description": "Entities per page (default 200, 1..1000). `total_in_file` is the whole-file count.",
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "path": {
+            "description": "Repo-relative file path, no leading slash and no \"..\". Optional when `cursor` names it.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "List file entities",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "semantic_locate",
+      "description": "Find code by a plain-language question, ranked from the graph: id, name, kind, file, line, signature, score. Know the exact name? Use semantic_search.",
+      "inputSchema": {
+        "anyOf": [
+          {
+            "required": [
+              "query"
+            ]
+          },
+          {
+            "required": [
+              "cursor"
+            ]
+          }
+        ],
+        "properties": {
+          "cursor": {
+            "description": "Opaque token from a prior result's `next_cursor`. Pass it back unedited.",
+            "type": "string"
+          },
+          "granularity": {
+            "default": "entity",
+            "description": "Rank entities ('entity', default) or roll up to files ('file')",
+            "enum": [
+              "file",
+              "entity"
+            ],
+            "type": "string"
+          },
+          "include_tests": {
+            "default": false,
+            "description": "Rank test-role entities alongside source. Off unless your query is about tests.",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 12,
+            "description": "Max ranked rows per page: entities, or files at file granularity. Default 20.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_chars": {
+            "default": 12000,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "query": {
+            "description": "Natural-language description of the code to find. Optional when paging with `cursor`.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Semantic locate",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "semantic_search",
+      "description": "Filter declarations by exact name, kind or language; it matches names, not meaning. Asking what code does rather than what it is called? Use semantic_locate.",
+      "inputSchema": {
+        "properties": {
+          "kind": {
+            "description": "Declaration kind, or `command` for a CLI command's own run function and constructor.",
+            "type": "string"
+          },
+          "language": {
+            "description": "Language filter (rust, typescript, etc.)",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max results to return",
+            "type": "integer"
+          },
+          "max_chars": {
+            "default": 12000,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "query": {
+            "description": "Name pattern to search for",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Semantic search",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "trace_data_flow",
+      "description": "Walk the call chain out from ONE entity and get the whole ordered path back; it walks call and import edges. Naming TWO things? Use trace_path.",
+      "inputSchema": {
+        "properties": {
+          "compact": {
+            "default": false,
+            "description": "Alias for include_body: false. Ignored when include_body is given explicitly.",
+            "type": "boolean"
+          },
+          "depth": {
+            "default": 3,
+            "description": "Maximum traversal depth from the focal (default 3, capped at 8)",
+            "maximum": 8,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "direction": {
+            "default": "both",
+            "description": "Which way to walk: `calls` for callees, `callers` for callers, `both` merges.",
+            "enum": [
+              "calls",
+              "callers",
+              "both"
+            ],
+            "type": "string"
+          },
+          "focal": {
+            "description": "Focal entity UUID or exact entity name to start tracing from",
+            "type": "string"
+          },
+          "include_body": {
+            "default": false,
+            "description": "Inline each step's source. False gives the chain's shape at a fraction of the size.",
+            "type": "boolean"
+          },
+          "limit_per_step": {
+            "default": 12,
+            "description": "Edges kept per hop. Raise it for a node `clipped_steps` reports as cut.",
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_chars": {
+            "default": 24576,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "max_response_chars": {
+            "default": 24576,
+            "description": "Character ceiling; the same parameter as `max_chars`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "target": {
+            "description": "A symbol to reach, by exact name or UUID. Its branch survives the per-step cap first.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "focal"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Trace data flow",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "trace_path",
+      "description": "Find how one entity reaches another as ordered hops; read `found` and `gap` before concluding A never reaches B. One endpoint only? Use trace_data_flow.",
+      "inputSchema": {
+        "properties": {
+          "direction": {
+            "default": "either",
+            "description": "`forward`: from reaches to. `reverse`: the other way. `either` (default) tries both.",
+            "enum": [
+              "either",
+              "forward",
+              "reverse"
+            ],
+            "type": "string"
+          },
+          "from": {
+            "description": "Source end: entity UUID, exact name, or name@file to pin one of two same-named entities.",
+            "type": "string"
+          },
+          "from_file": {
+            "description": "Pin `from` to the entity of that name in this file. Same as the name@file spelling.",
+            "type": "string"
+          },
+          "limit": {
+            "default": 3,
+            "description": "Routes returned, shortest first (default 3, ceiling 25). See `routes_total`.",
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_chars": {
+            "default": 12000,
+            "description": "Character ceiling; what was cut is named in `elisions`.",
+            "maximum": 60000,
+            "minimum": 2000,
+            "type": "integer"
+          },
+          "max_depth": {
+            "default": 6,
+            "description": "Hops between the two ends (default 6, ceiling 12). Containment hops are not counted.",
+            "maximum": 12,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "to": {
+            "description": "Target end, in the same forms.",
+            "type": "string"
+          },
+          "to_file": {
+            "description": "Deprecated, answered through 0.7.16; pass the entity id in `to`. Pins `to` by file.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "title": "Trace path",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

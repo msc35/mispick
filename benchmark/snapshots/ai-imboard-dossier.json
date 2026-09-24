@@ -1,0 +1,192 @@
+{
+  "protocolVersion": "2025-11-25",
+  "serverInfo": {
+    "name": "@ai-dossier/mcp-server",
+    "version": "1.0.4"
+  },
+  "tools": [
+    {
+      "name": "cancel_journey",
+      "description": "Cancel an active journey session. Returns a summary of what completed before cancellation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "journey_id": {
+            "type": "string",
+            "description": "Journey session ID (from start_journey)"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Optional reason for cancellation"
+          }
+        },
+        "required": [
+          "journey_id"
+        ]
+      }
+    },
+    {
+      "name": "get_journey_status",
+      "description": "Get the current state of a journey session: completed steps, current step, remaining steps, and collected outputs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "journey_id": {
+            "type": "string",
+            "description": "Journey session ID (from start_journey)"
+          }
+        },
+        "required": [
+          "journey_id"
+        ]
+      }
+    },
+    {
+      "name": "list_dossiers",
+      "description": "Discover available dossiers in a directory. Scans for *.ds.md files and returns metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Directory to search (default: current working directory)"
+          },
+          "recursive": {
+            "type": "boolean",
+            "description": "Search subdirectories recursively (default: true)"
+          }
+        }
+      }
+    },
+    {
+      "name": "read_dossier",
+      "description": "Read and parse a dossier file. Returns metadata and content. Should be called AFTER verify_dossier passes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md)"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    },
+    {
+      "name": "resolve_graph",
+      "description": "Resolve a dossier dependency graph into an execution plan. Reads relationships (preceded_by, followed_by, conflicts_with) and produces a DAG with ordered phases, parallel groups, and conflict detection.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dossier": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md) or registry name"
+          }
+        },
+        "required": [
+          "dossier"
+        ]
+      }
+    },
+    {
+      "name": "search_dossiers",
+      "description": "Search the dossier registry for available dossiers by keyword. Returns matching dossiers with metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search keywords"
+          },
+          "category": {
+            "type": "string",
+            "description": "Filter by category (devops, database, development, security, etc.)"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "name": "start_journey",
+      "description": "Start a journey session from a resolved and verified graph. Creates a session, returns the first step's dossier content with any injected context. Call step_complete after executing each step.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "graph_id": {
+            "type": "string",
+            "description": "ID of a previously resolved graph (from resolve_graph)"
+          }
+        },
+        "required": [
+          "graph_id"
+        ]
+      }
+    },
+    {
+      "name": "step_complete",
+      "description": "Mark the current journey step as complete or failed. Advances to the next step and returns its dossier content with injected context from previous outputs. Returns a summary when the last step completes or a step fails.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "journey_id": {
+            "type": "string",
+            "description": "Journey session ID (from start_journey)"
+          },
+          "outputs": {
+            "type": "object",
+            "description": "Key-value outputs collected during this step (e.g. { cluster_arn: \"arn:...\" })"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed"
+            ],
+            "description": "Whether this step succeeded or failed"
+          }
+        },
+        "required": [
+          "journey_id",
+          "status"
+        ]
+      }
+    },
+    {
+      "name": "verify_dossier",
+      "description": "Security verification - Verify integrity (checksum) and authenticity (signature) of a dossier. Returns pass/fail with stage details.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md)"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    },
+    {
+      "name": "verify_graph",
+      "description": "Batch security verification for a dossier dependency graph. Verifies all dossiers in a resolved graph and returns an aggregate security report with per-dossier breakdown and overall recommendation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "graph_id": {
+            "type": "string",
+            "description": "ID of a previously resolved graph (from resolve_graph)"
+          },
+          "dossier": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md) or registry name. Resolves and verifies in one shot."
+          }
+        }
+      }
+    }
+  ]
+}

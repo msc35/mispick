@@ -1,0 +1,250 @@
+{
+  "protocolVersion": "2026-07-28",
+  "serverInfo": {
+    "name": "acquisition-gov",
+    "version": "1.0.8"
+  },
+  "tools": [
+    {
+      "name": "get_rfo_agency_deviation",
+      "description": "Resolve an indexed source ID and return page-numbered official PDF text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "page_start": {
+            "default": 1,
+            "title": "Page Start",
+            "type": "integer"
+          },
+          "page_end": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page End"
+          }
+        },
+        "required": [
+          "source_id"
+        ],
+        "title": "get_rfo_agency_deviationArguments"
+      },
+      "annotations": {
+        "title": "Get posted agency RFO deviation",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_rfo_guidance",
+      "description": "Return an allowlisted Acquisition.gov RFO FAQ or guidance resource.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "enum": [
+              "faq",
+              "policy_and_guidance",
+              "deviation_guidance"
+            ],
+            "title": "Resource",
+            "type": "string"
+          },
+          "heading": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Heading"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cursor"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "title": "get_rfo_guidanceArguments"
+      },
+      "annotations": {
+        "title": "Get approved RFO guidance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_rfo_part",
+      "description": "Return parsed, paginated model-deviation text for one FAR part.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "title": "Part",
+            "type": "integer"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Section"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cursor"
+          },
+          "max_characters": {
+            "default": 20000,
+            "title": "Max Characters",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "part"
+        ],
+        "title": "get_rfo_partArguments"
+      },
+      "annotations": {
+        "title": "Get FAR Overhaul model part",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_rfo_agency_deviations",
+      "description": "List official agency-deviation links discovered through the RFO index.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "agency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Agency"
+          },
+          "part": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Part"
+          },
+          "limit": {
+            "default": 100,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "list_rfo_agency_deviationsArguments"
+      },
+      "annotations": {
+        "title": "List posted agency RFO deviations",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_rfo_parts",
+      "description": "List official RFO model parts and counts of posted agency deviations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Part"
+          },
+          "agency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Agency"
+          },
+          "updated_since": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Updated Since"
+          }
+        },
+        "title": "list_rfo_partsArguments"
+      },
+      "annotations": {
+        "title": "List FAR Overhaul parts",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    }
+  ]
+}

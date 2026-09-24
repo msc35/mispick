@@ -1,0 +1,240 @@
+{
+  "protocolVersion": "2025-11-25",
+  "serverInfo": {
+    "name": "thiri",
+    "version": "0.3.0"
+  },
+  "tools": [
+    {
+      "name": "analyze_chord",
+      "description": "Parse a chord symbol into its root, quality, intervals, extensions, and harmonic function. When a key is provided, returns the Roman numeral, scale degree, and whether the chord is diatonic.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "chord": {
+            "type": "string",
+            "description": "Chord symbol (e.g. 'Dm7', 'Cmaj7/E', 'G7#11')"
+          },
+          "key": {
+            "description": "Key center for functional analysis (e.g. 'C', 'Bb')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "chord"
+        ]
+      },
+      "annotations": {
+        "title": "Analyze Chord",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "conduct_band",
+      "description": "Arrange a 4-piece band from a natural-language prompt. Returns conductor tempo/groove, 4 lanes of note events, lead sheet, and base64 MIDI. Browser/client synthesizes audio via Csound; use thiri-conductor-mcp locally to render WAV.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Musical direction (e.g. '12-second neo-soul band in Eb, Rhodes + analog bass')"
+          },
+          "durationSec": {
+            "description": "Optional target duration override",
+            "type": "number"
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "annotations": {
+        "title": "Conduct Band",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "generate_voicing",
+      "description": "Generate instrument-ready voicings for a chord in a specified style. Pass previousNotes (or a previousVoicing object) from an earlier result to get a voiceLeadingScore for the transition. Styles: rootless, bill_evans, shell, triad, pad, guide-tones, guide-tone-1, guide-tone-2, both-guide-tones, drop-2, drop-3.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "chord": {
+            "type": "string",
+            "description": "Chord symbol (e.g. 'Dm7')"
+          },
+          "style": {
+            "description": "Voicing style (default: 'pad'). bill_evans is an alias of rootless.",
+            "type": "string",
+            "enum": [
+              "rootless",
+              "bill_evans",
+              "shell",
+              "triad",
+              "pad",
+              "guide-tones",
+              "guide-tone-1",
+              "guide-tone-2",
+              "both-guide-tones",
+              "drop-2",
+              "drop-3"
+            ]
+          },
+          "octave": {
+            "description": "Base octave (default: 3)",
+            "type": "number"
+          },
+          "density": {
+            "description": "Target voicing density / note count hint",
+            "type": "number"
+          },
+          "keyContext": {
+            "description": "Key context for diatonic color hooks (e.g. 'C major')",
+            "type": "string"
+          },
+          "colorPreferences": {
+            "description": "Explicit color-tone overrides",
+            "type": "object",
+            "properties": {
+              "fifth": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "b5",
+                  "#5",
+                  "#11",
+                  "b13",
+                  "omit"
+                ]
+              },
+              "ninth": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "b9",
+                  "#9",
+                  "omit"
+                ]
+              },
+              "eleventh": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "#11",
+                  "omit"
+                ]
+              },
+              "thirteenth": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "b13",
+                  "omit"
+                ]
+              }
+            }
+          },
+          "previousVoicing": {
+            "description": "Prior generate_voicing JSON result for strict guide-tone line tracking"
+          },
+          "previousNotes": {
+            "description": "Previous voicing notes for voice leading (e.g. ['E3', 'G3', 'Bb3', 'D4'])",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "chord"
+        ]
+      },
+      "annotations": {
+        "title": "Generate Voicing",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "reharmonize",
+      "description": "Reharmonize a chord progression using jazz techniques. Returns one alternative per applicable technique, each with the new progression, the changes, and a plain-English explanation. With technique 'auto' (default) it returns every technique that applies. Techniques: tritone_sub, ii_v_insertion, modal_interchange, diminished_passing, secondary_dominant, chain_of_dominants, coltrane_changes, backdoor. (modal_interchange and backdoor require a key.)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "progression": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Chord symbols, one per bar (e.g. ['Cmaj7', 'Dm7', 'G7', 'Cmaj7'])"
+          },
+          "key": {
+            "description": "Key center (e.g. 'C') \u2014 enables modal_interchange and backdoor",
+            "type": "string"
+          },
+          "technique": {
+            "description": "Reharmonization technique (default: 'auto' = all applicable)",
+            "type": "string",
+            "enum": [
+              "auto",
+              "tritone_sub",
+              "ii_v_insertion",
+              "modal_interchange",
+              "diminished_passing",
+              "secondary_dominant",
+              "chain_of_dominants",
+              "coltrane_changes",
+              "backdoor"
+            ]
+          }
+        },
+        "required": [
+          "progression"
+        ]
+      },
+      "annotations": {
+        "title": "Reharmonize Progression",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "resolve_chord",
+      "description": "Resolve a chord symbol to spelled note names, frequencies in Hz, MIDI numbers, and recommended improvisation scales.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "chord": {
+            "type": "string",
+            "description": "Chord symbol (e.g. 'Cm7', 'F#dim7')"
+          }
+        },
+        "required": [
+          "chord"
+        ]
+      },
+      "annotations": {
+        "title": "Resolve Chord",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "servers": [
+    {
+      "name": "io.github.modelcontextprotocol/server-filesystem",
+      "title": "Filesystem (reference)",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "cmd": "npx -y @modelcontextprotocol/server-filesystem .",
+      "status": "captured",
+      "snapshot": "io-github-modelcontextprotocol-server-filesystem.json",
+      "tool_count": 14,
+      "server_name": "secure-filesystem-server",
+      "server_version": "0.2.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "io.github.modelcontextprotocol/server-memory",
+      "title": "Memory (reference)",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "cmd": "npx -y @modelcontextprotocol/server-memory",
+      "status": "captured",
+      "snapshot": "io-github-modelcontextprotocol-server-memory.json",
+      "tool_count": 9,
+      "server_name": "memory-server",
+      "server_version": "0.6.3",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "io.github.modelcontextprotocol/server-sequential-thinking",
+      "title": "Sequential Thinking (reference)",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "cmd": "npx -y @modelcontextprotocol/server-sequential-thinking",
+      "status": "captured",
+      "snapshot": "io-github-modelcontextprotocol-server-sequential-thinking.json",
+      "tool_count": 1,
+      "server_name": "sequential-thinking-server",
+      "server_version": "2026.8.31",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "io.github.modelcontextprotocol/server-everything",
+      "title": "Everything (reference)",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "cmd": "npx -y @modelcontextprotocol/server-everything",
+      "status": "captured",
+      "snapshot": "io-github-modelcontextprotocol-server-everything.json",
+      "tool_count": 13,
+      "server_name": "mcp-servers/everything",
+      "server_version": "2.0.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.ankimcp/anki-mcp-server",
+      "title": "Anki MCP Server",
+      "repository": "https://github.com/ankimcp/anki-mcp-server",
+      "cmd": "npx -y @ankimcp/anki-mcp-server@0.26.0",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.ankimcp/anki-mcp-server' over stdio: MCPError: Request 'initialize' timed out | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "name": "ai.adeu/adeu",
+      "title": "ai.adeu/adeu",
+      "repository": "https://github.com/dealfluence/adeu",
+      "cmd": "npx -y @adeu/mcp-server@1.7.1",
+      "status": "captured",
+      "snapshot": "ai-adeu-adeu.json",
+      "tool_count": 9,
+      "server_name": "adeu-redlining-service",
+      "server_version": "1.0.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.toolprint/hypertool-mcp",
+      "title": "ai.toolprint/hypertool-mcp",
+      "repository": "https://github.com/toolprint/hypertool-mcp",
+      "cmd": "npx -y @toolprint/hypertool-mcp@0.0.42",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.toolprint/hypertool-mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "name": "ai.dinglebear/unraid",
+      "title": "Unraid RMCP",
+      "repository": "https://github.com/dinglebear-ai/unraid",
+      "cmd": "npx -y @dinglebear/unraid@0.3.0",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'ai.dinglebear/unraid' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | Error: UNRAID_API_URL is not set"
+    },
+    {
+      "name": "ai.codenib/codenib",
+      "title": "CodeNib",
+      "repository": "https://github.com/sysevol-ai/CodeNib",
+      "cmd": "uvx --from codenib==0.2.3 codenib",
+      "status": "needs_arguments",
+      "reason": "Could not start or query 'ai.codenib/codenib' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | Downloading codenib (3.2MiB) | Downloaded numpy | Downloaded codenib | Installed 25 packages in 19ms | usage: codenib [-h] [--version] | {index,wiki,export,artifact,publish,mcp,codegraph,toolchain,doctor} | ... | codenib: error: the following arguments are required: command"
+    },
+    {
+      "name": "ai.knowall/reverie",
+      "title": "Reverie",
+      "repository": "https://github.com/knowall-ai/mcp-reverie",
+      "cmd": "npx -y @knowall-ai/reverie@0.5.2",
+      "status": "captured",
+      "snapshot": "ai-knowall-reverie.json",
+      "tool_count": 12,
+      "server_name": "reverie",
+      "server_version": "0.5.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.kinlab/kin",
+      "title": "Kin",
+      "repository": "https://github.com/firelock-ai/kin",
+      "cmd": "npx -y @kinlab/kin-mcp@0.7.21",
+      "status": "captured",
+      "snapshot": "ai-kinlab-kin.json",
+      "tool_count": 22,
+      "server_name": "kin-mcp",
+      "server_version": "0.7.21",
+      "protocol_version": "2024-11-05"
+    },
+    {
+      "name": "ai.mcpcap/mcpcap",
+      "title": "ai.mcpcap/mcpcap",
+      "repository": "https://github.com/mcpcap/mcpcap",
+      "cmd": "uvx --from mcpcap==0.9.6 mcpcap",
+      "status": "captured",
+      "snapshot": "ai-mcpcap-mcpcap.json",
+      "tool_count": 9,
+      "server_name": "mcpcap",
+      "server_version": "2.14.7",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.vaaya/mcp",
+      "title": "Vaaya",
+      "repository": "https://github.com/vaaya-ai/vaaya-mcp",
+      "cmd": "npx -y @vaaya/mcp@0.6.8",
+      "status": "captured",
+      "snapshot": "ai-vaaya-mcp.json",
+      "tool_count": 15,
+      "server_name": "vaaya",
+      "server_version": "1.0.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.wavespeed/mcp",
+      "title": "ai.wavespeed/mcp",
+      "repository": "https://github.com/WaveSpeedAI/mcp-server",
+      "cmd": "npx -y @wavespeed/mcp@1.0.7",
+      "status": "captured",
+      "snapshot": "ai-wavespeed-mcp.json",
+      "tool_count": 7,
+      "server_name": "wavespeed",
+      "server_version": "1.0.7",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.zensation/zenbrain",
+      "title": "ZenBrain Memory",
+      "repository": "https://github.com/zensation-ai/zenbrain",
+      "cmd": "npx -y @zensation/mcp@0.1.3",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.zensation/zenbrain' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "name": "com.1102tools/acquisition-gov-mcp",
+      "title": "Acquisition.gov",
+      "repository": "https://github.com/1102tools-dev/federal-contracting-mcps",
+      "cmd": "uvx --from acquisition-gov-mcp==1.0.8 acquisition-gov-mcp",
+      "status": "captured",
+      "snapshot": "com-1102tools-acquisition-gov-mcp.json",
+      "tool_count": 5,
+      "server_name": "acquisition-gov",
+      "server_version": "1.0.8",
+      "protocol_version": "2026-07-28"
+    },
+    {
+      "name": "app.cellarion/cellarion",
+      "title": "Cellarion",
+      "repository": "https://github.com/jagduvi1/Cellarion",
+      "cmd": "npx -y cellarion-mcp@0.1.1",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'app.cellarion/cellarion' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | cellarion-mcp: no token. | Mint a personal API token in Cellarion (Settings \u2192 API tokens, \"read\" scope) | and pass it as CELLARION_TOKEN (or --token). Self-hosted? Also set CELLARION_URL."
+    },
+    {
+      "name": "ai.orangepro/mcp",
+      "title": "OrangePro",
+      "repository": "https://github.com/OrangeproAI/orangepro-mcp",
+      "cmd": "npx -y @orangepro/mcp-server@0.2.40",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.orangepro/mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | [opro start 09] [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591] 75% (25% left) proof plan: sym:src/mispick/fix.py#mcnemar_exact \u2192 pytest tests/test_fix.py::TestMcNemar::test_no_change_is_no_evidence | [opro start 10] [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591] 75% (25% left) proof plan: sym:src/mispick/fix.py#check_length \u2192 pytest tests/test_fix.py::TestLengthGuard::test_a_modest_rewrite_passes | [opro start 11] [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591] 75% (25% left) proof plan: sym:src/mispick/fix."
+    },
+    {
+      "name": "ai.buywhere/buywhere-mcp",
+      "title": "BuyWhere MCP",
+      "repository": "https://github.com/BuyWhere/buywhere-mcp",
+      "cmd": "npx -y @buywhere/mcp-server@0.3.1",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'ai.buywhere/buywhere-mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | Error: BUYWHERE_API_KEY environment variable is required."
+    },
+    {
+      "name": "co.workix/mcp",
+      "title": "Workix",
+      "repository": "https://github.com/facetoplace/Workix",
+      "cmd": "npx -y @workix/mcp@1.0.0",
+      "status": "captured",
+      "snapshot": "co-workix-mcp.json",
+      "tool_count": 64,
+      "server_name": "workix",
+      "server_version": "1.0.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.dinglebear/yarr",
+      "title": "Yarr MCP",
+      "repository": "https://github.com/dinglebear-ai/yarr",
+      "cmd": "npx -y @dinglebear/yarr@2.2.2",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.dinglebear/yarr' over stdio: MCPError: Request 'initialize' timed out | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | 16:30:27   INFO  yarr starting  auth=AuthPolicy::LoopbackDev  bind=127.0.0.1:40070  server_name=yarr | 16:30:27   INFO  MCP HTTP server listening  bind=127.0.0.1:40070 | 16:32:37   INFO  Shutdown signal received"
+    },
+    {
+      "name": "ai.dinglebear/yarr-mcp",
+      "title": "Yarr MCP",
+      "repository": "https://github.com/jmagar/yarr",
+      "cmd": "npx -y yarr-mcp@1.1.1",
+      "status": "package_unavailable",
+      "reason": "Could not start or query 'ai.dinglebear/yarr-mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | npm error code ETARGET | npm error notarget No matching version found for yarr-mcp@1.1.1. | npm error notarget In most cases you or one of your dependencies are requesting | npm error notarget a package version that doesn't exist. | npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-09-24T16_32_37_212Z-debug-0.log"
+    },
+    {
+      "name": "ai.withone/mcp",
+      "title": "One",
+      "repository": "https://github.com/withoneai/mcp",
+      "cmd": "npx -y @withone/mcp@1.2.4",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'ai.withone/mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | ONE_SECRET environment variable is required"
+    },
+    {
+      "name": "ai.nauro/nauro",
+      "title": "Nauro",
+      "repository": "https://github.com/Nauro-AI/nauro",
+      "cmd": "uvx --from nauro==1.19.0 nauro",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.nauro/nauro' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | projects                 Inspect and recover Nauro project registry... | questions                Maintenance commands for open-questions.md. | hook                     Client-side advisory hooks for AI coding agents. | setup                    Configure tool integrations. | config                   Inspect and remove Nauro configuration. | validate                 Validation diagnostics. | auth              "
+    },
+    {
+      "name": "ai.thiri/chord-intelligence",
+      "title": "THIRI Chord Intelligence",
+      "repository": "https://github.com/BluesPrince/thiri-mcp",
+      "cmd": "npx -y @bluesprincemedia/thiri-mcp@0.5.2",
+      "status": "captured",
+      "snapshot": "ai-thiri-chord-intelligence.json",
+      "tool_count": 5,
+      "server_name": "thiri",
+      "server_version": "0.3.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "au.com.ato-mcp/ato-mcp",
+      "title": "Australian Tax MCP",
+      "repository": "https://github.com/william-laverty/ato-mcp",
+      "cmd": "npx -y ato-mcp@2.2.1",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'au.com.ato-mcp/ato-mcp' over stdio: MCPError: Request 'initialize' timed out | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | [3255] Trying gio to open the browser... | [3255] Trying x-www-browser to open the browser... | [3255] Browser opened automatically. | [3255] Authentication required. Initializing auth... | [3255] Initializing auth coordination on-demand | [3255] OAuth callback server running at http://127.0.0.1:40435 | [3255] This instance is running the sign-in for this server (callback port 40435) | [3"
+    },
+    {
+      "name": "ai.etincel/etincel-nonfiction",
+      "title": "ai.etincel/etincel-nonfiction",
+      "repository": "https://github.com/AIStoryHub/etincel",
+      "cmd": "npx -y etincel@0.10.1",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.etincel/etincel-nonfiction' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "name": "ai.imboard/dossier",
+      "title": "ai.imboard/dossier",
+      "repository": "https://github.com/imboard-ai/ai-dossier",
+      "cmd": "npx -y @ai-dossier/mcp-server@1.0.4",
+      "status": "captured",
+      "snapshot": "ai-imboard-dossier.json",
+      "tool_count": 10,
+      "server_name": "@ai-dossier/mcp-server",
+      "server_version": "1.0.4",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "com.adrianczuczka/mason",
+      "title": "com.adrianczuczka/mason",
+      "repository": "https://github.com/adrianczuczka/mason",
+      "cmd": "npx -y mason-context@0.18.0",
+      "status": "captured",
+      "snapshot": "com-adrianczuczka-mason.json",
+      "tool_count": 22,
+      "server_name": "mason",
+      "server_version": "0.18.0",
+      "protocol_version": "2025-11-25"
+    },
+    {
+      "name": "ai.agenticaffiliate/affiliate-networks-mcp",
+      "title": "Affiliate Networks MCP",
+      "repository": "https://github.com/bobberrisford/affiliatemcp",
+      "cmd": "npx -y affiliate-networks-mcp@0.19.0",
+      "status": "captured",
+      "snapshot": "ai-agenticaffiliate-affiliate-networks-mcp.json",
+      "tool_count": 682,
+      "server_name": "affiliate-mcp",
+      "server_version": "0.19.0",
+      "protocol_version": "2025-11-25"
+    }
+  ]
+}

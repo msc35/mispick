@@ -1,0 +1,191 @@
+{
+  "protocolVersion": "2025-11-25",
+  "serverInfo": {
+    "name": "wavespeed",
+    "version": "1.0.7"
+  },
+  "tools": [
+    {
+      "name": "get_balance",
+      "description": "Show the WaveSpeed account credit balance.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_model_schema",
+      "description": "Get a model's real input schema (required fields, properties, defaults). Call this before run_model so inputs match what the model actually accepts.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from list_models, e.g. bytedance/seedream-v5.0-pro"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_prediction",
+      "description": "Fetch the status and outputs of a past or in-flight prediction by id \u2014 use to recover a run that hit the wait limit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Prediction id returned by run_model"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_price",
+      "description": "Estimate the cost of a run before executing it (no charge). Provide the same input you would pass to run_model \u2014 pricing often depends on inputs like duration or resolution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from list_models"
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": {},
+            "default": {},
+            "description": "Inputs the quote should account for"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_models",
+      "description": "Search the live WaveSpeed model catalog (image, video, audio, 3D). Returns model IDs usable with run_model. Do not invent model IDs \u2014 always pick one returned by this tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Free-text filter on id/name/description"
+          },
+          "type": {
+            "type": "string",
+            "description": "Filter by modality type, e.g. text-to-image, image-to-video"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 30,
+            "description": "Max results"
+          },
+          "refresh": {
+            "type": "boolean",
+            "default": false,
+            "description": "Bypass the 1h catalog cache"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "run_model",
+      "description": "Run any WaveSpeed model. input keys come from get_model_schema. Local files: pass \"@./path\" string values \u2014 they are uploaded and replaced with hosted URLs (bare paths are NOT uploaded). Returns output URLs. If the wait limit is hit, the task keeps running; recover it with get_prediction.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from list_models"
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Model inputs per its schema (e.g. {\"prompt\": \"...\", \"aspect_ratio\": \"16:9\"})"
+          },
+          "wait_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1800,
+            "default": 600,
+            "description": "Max seconds to wait; 0 = submit only and return the prediction id"
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "upload_file",
+      "description": "Upload a local file to WaveSpeed and get its hosted URL (identical bytes reuse the same upload for 24h). Usually unnecessary \u2014 run_model handles \"@./path\" inputs itself.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Local file path"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    }
+  ]
+}
