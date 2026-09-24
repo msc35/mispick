@@ -248,9 +248,36 @@ class TestProvenanceObject:
         result = RunResult(tool_set=tool_set, queries=[], choices=[], config=RunConfig(seed=None))
         assert "seed=" not in provenance_of(result).one_line
 
-    def test_one_line_includes_seed_when_set(self, tool_set: ToolSet) -> None:
-        result = RunResult(tool_set=tool_set, queries=[], choices=[], config=RunConfig(seed=42))
+    def test_one_line_includes_seed_when_the_backend_honours_it(self, tool_set: ToolSet) -> None:
+        result = RunResult(
+            tool_set=tool_set,
+            queries=[],
+            choices=[],
+            config=RunConfig(seed=42, supports_seed=True),
+        )
         assert "seed=42" in provenance_of(result).one_line
+
+    def test_one_line_marks_a_seed_the_backend_ignores(self, tool_set: ToolSet) -> None:
+        """Anthropic takes no seed. Printing a bare "seed=42" would be a false claim."""
+        result = RunResult(
+            tool_set=tool_set,
+            queries=[],
+            choices=[],
+            config=RunConfig(seed=42, supports_seed=False),
+        )
+        assert "seed=42-ignored" in provenance_of(result).one_line
+
+    def test_one_line_marks_temperature_unsupported(self, tool_set: ToolSet) -> None:
+        """The Messages API accepts no temperature, so the report must not imply one."""
+        result = RunResult(
+            tool_set=tool_set,
+            queries=[],
+            choices=[],
+            config=RunConfig(temperature=0.7, supports_temperature=False),
+        )
+        line = provenance_of(result).one_line
+        assert "temperature=n/a" in line
+        assert "temperature=0.7" not in line
 
 
 class TestTerminal:

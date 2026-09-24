@@ -96,9 +96,13 @@ runs:
   using: composite
   steps:
     - name: Set up uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@v10
       with:
         python-version: ${{ inputs.python-version }}
+        # This action runs mispick through `uvx` and never calls `uv sync`, so there is
+        # nothing to cache. Left enabled, setup-uv's post-run cache save fails the job even
+        # though every functional step passed.
+        enable-cache: false
 
     - name: Measure
       id: measure
@@ -138,7 +142,7 @@ runs:
 
     - name: Comment on the PR
       if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
-      uses: marocchino/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@v3
       with:
         header: mispick
         path: mispick-comment.md
@@ -154,7 +158,7 @@ runs:
 
     - name: Upload the reports
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: mispick-report
         path: |

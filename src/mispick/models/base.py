@@ -100,6 +100,11 @@ class Backend(abc.ABC):
     #: cannot deliver.
     supports_seed: bool = False
 
+    #: Whether this backend accepts a sampling temperature at all. Anthropic's Messages API
+    #: does not - it takes neither `temperature` nor `top_p` - so a report must not print a
+    #: temperature that was never sent.
+    supports_temperature: bool = True
+
     @abc.abstractmethod
     async def choose(
         self,

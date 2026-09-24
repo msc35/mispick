@@ -15,7 +15,10 @@ Read `SPEC.md` fully before doing anything. It is the source of truth.
 - Reports always state model, N, K, and date.
 
 ## Commands
-- `uv sync` — install
+- `uv sync --all-extras` — install. **Use `--all-extras`**: plain `uv sync` leaves the
+  `anthropic` extra out, and `[[tool.mypy.overrides]]` ignores its imports when missing, so
+  `mypy` silently skips `models/anthropic.py`. That hid a backend that raised `TypeError` on
+  every call.
 - `uv run pytest` — tests
 - `uv run ruff check . && uv run mypy src` — lint and types
 - `uv run mispick run --snapshot tests/fixtures/confusing_tools.json` — quick manual check

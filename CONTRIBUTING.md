@@ -1,10 +1,25 @@
 # Contributing
 
 ```bash
-uv sync
+uv sync --all-extras          # --all-extras matters, see below
 uv run pytest
 uv run ruff check . && uv run mypy src
 ```
+
+**Always `--all-extras`.** Plain `uv sync` leaves the optional `anthropic` dependency out, and
+mypy is configured to ignore its imports when absent — so `models/anthropic.py` goes unchecked
+and nothing tells you. That is exactly how a backend that passed `temperature` to an API which
+accepts no `temperature`, and would have raised `TypeError` on every call, survived a green
+local run. CI uses `--all-extras` and caught it on the first push.
+
+Workflows are linted too; `ruff` does not read them:
+
+```bash
+actionlint                    # brew install actionlint
+```
+
+A workflow with two `env` keys that differ only in case is rejected by GitHub wholesale, and the
+failure arrives as a zero-second run with no job and no log.
 
 ## Things the tests enforce, so a reviewer does not have to
 

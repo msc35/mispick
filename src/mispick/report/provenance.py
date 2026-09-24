@@ -24,6 +24,8 @@ class Provenance:
     tool_count: int
     deterministic: bool
     token_estimate: int = 0
+    supports_temperature: bool = True
+    supports_seed: bool = True
 
     @property
     def one_line(self) -> str:
@@ -31,10 +33,18 @@ class Provenance:
             f"model {self.model}",
             f"N={self.n}",
             f"K={self.k}",
-            f"temperature={self.temperature:g}",
         ]
+        # Only report the knobs the backend actually honours. Printing
+        # "temperature=0" for a provider that accepts no temperature would be a
+        # statement about this run that is not true.
+        if self.supports_temperature:
+            bits.append(f"temperature={self.temperature:g}")
+        else:
+            bits.append("temperature=n/a")
         if self.seed is not None:
-            bits.append(f"seed={self.seed}")
+            # Say "ignored" rather than nothing: the user asked for a seed, and silence
+            # would leave them believing it took effect.
+            bits.append(f"seed={self.seed}" if self.supports_seed else f"seed={self.seed}-ignored")
         bits.append(self.date)
         return " · ".join(bits)
 
@@ -63,4 +73,6 @@ def provenance_of(result: RunResult, token_estimate: int = 0) -> Provenance:
         tool_count=len(result.tools),
         deterministic=config.deterministic,
         token_estimate=token_estimate,
+        supports_temperature=config.supports_temperature,
+        supports_seed=config.supports_seed,
     )

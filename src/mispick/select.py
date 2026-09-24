@@ -34,6 +34,7 @@ class RunConfig:
     seed: int | None = None
     concurrency: int = DEFAULT_CONCURRENCY
     supports_seed: bool = False
+    supports_temperature: bool = True
 
     @property
     def deterministic(self) -> bool:
@@ -136,6 +137,7 @@ async def run_selection(
     config = config or RunConfig()
     config.model = backend.name
     config.supports_seed = backend.supports_seed
+    config.supports_temperature = backend.supports_temperature
     tools = tool_set.sorted_tools()
     by_name = tool_set.by_qualified_name()
     semaphore = asyncio.Semaphore(max(1, config.concurrency))

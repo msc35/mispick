@@ -26,8 +26,8 @@ jobs:
   benchmark:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           python-version: '3.12'
           enable-cache: true
@@ -62,7 +62,7 @@ jobs:
       - name: Build the site
         run: uv run python benchmark/build_site.py
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: benchmark
           path: |
@@ -71,6 +71,6 @@ jobs:
 
       # Publishing is a separate, manually reviewed step: the site names other people's
       # projects, so a bad run must not go live on a schedule.
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: benchmark/site
