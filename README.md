@@ -57,8 +57,22 @@ needs no account:
 ollama pull qwen3.5:4b
 ```
 
-Cloud models are optional: `--model openai/gpt-4.1-mini` or
-`--model anthropic/claude-haiku-4-5-20251001`, with the matching key in the environment.
+Cloud models are optional, with the matching key in the environment:
+
+```bash
+mispick run --snapshot tools.json --model openai/gpt-4.1-mini            # OPENAI_API_KEY
+mispick run --snapshot tools.json --model gemini/gemini-3.5-flash-lite   # GEMINI_API_KEY
+mispick run --snapshot tools.json --model anthropic/claude-haiku-4-5-20251001
+
+# anything else that speaks the OpenAI dialect - vLLM, OpenRouter, LM Studio
+MISPICK_BASE_URL=http://localhost:8000/v1 mispick run --snapshot tools.json \
+  --model compatible/my-model
+```
+
+**On cost.** Every selection call re-sends the whole tool list, so a cloud run is priced by
+tool-list size × queries × runs, not by the number of servers. Measuring one real 64-tool server
+at N=8 K=3 is about 30M input tokens on its own. `--dry-run` is not implemented yet; until it is,
+read the token estimate mispick prints and multiply.
 
 ## Use
 

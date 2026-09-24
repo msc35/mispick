@@ -130,6 +130,69 @@ class TestRegistry:
         assert get_backend("ollama/qwen3.5:4b", think=True).extra_body == {}
 
 
+class TestGemini:
+    """Gemini via its OpenAI-compatible endpoint. No key needed for any of this."""
+
+    def test_resolves_and_points_at_the_compat_endpoint(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("GEMINI_API_KEY", "test")
+        backend = get_backend("gemini/gemini-3.5-flash-lite")
+        assert backend.name == "gemini/gemini-3.5-flash-lite"
+        assert "generativelanguage.googleapis.com" in (backend.base_url or "")
+
+    def test_accepts_either_env_var(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.setenv("GOOGLE_API_KEY", "test")
+        assert get_backend("gemini/x").name == "gemini/x"
+
+    def test_declares_seed_unsupported_but_temperature_supported(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The compat layer accepts `seed` but Google does not document honouring it."""
+        monkeypatch.setenv("GEMINI_API_KEY", "test")
+        backend = get_backend("gemini/x")
+        assert backend.supports_seed is False
+        assert backend.supports_temperature is True
+
+    def test_sends_no_extra_request_fields(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Gemini rejects unknown fields, and reasoning_effort is not its thinking control."""
+        monkeypatch.setenv("GEMINI_API_KEY", "test")
+        assert get_backend("gemini/x").extra_body == {}
+
+    def test_missing_key_names_both_variables_and_the_free_alternative(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from mispick.models.base import BackendError
+
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+        with pytest.raises(BackendError) as excinfo:
+            get_backend("gemini/x")
+        message = str(excinfo.value)
+        assert "GEMINI_API_KEY" in message and "GOOGLE_API_KEY" in message
+        assert "ollama" in message
+
+
+class TestCustomCompatibleEndpoint:
+    def test_uses_the_configured_base_url(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("MISPICK_BASE_URL", "http://localhost:8000/v1")
+        backend = get_backend("compatible/my-model")
+        assert backend.base_url == "http://localhost:8000/v1"
+        assert backend.name == "compatible/my-model"
+
+    def test_openai_compatible_is_an_alias(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("MISPICK_BASE_URL", "http://localhost:8000/v1")
+        assert get_backend("openai-compatible/m").name == "compatible/m"
+
+    def test_no_base_url_says_what_to_set(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        from mispick.models.base import BackendError
+
+        monkeypatch.delenv("MISPICK_BASE_URL", raising=False)
+        with pytest.raises(BackendError, match="MISPICK_BASE_URL"):
+            get_backend("compatible/m")
+
+
 class TestInterfaceCompleteness:
     @pytest.mark.parametrize("cls", [MockBackend, ScriptedBackend, OpenAICompatibleBackend])
     def test_implements_the_interface(self, cls: type) -> None:

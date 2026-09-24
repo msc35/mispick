@@ -5,6 +5,8 @@ Accepted forms:
   ollama/qwen3.5:4b       -> Ollama, explicit
   openai/gpt-4.1-mini     -> OpenAI, needs OPENAI_API_KEY
   anthropic/claude-...    -> Anthropic, needs ANTHROPIC_API_KEY and the extra
+  gemini/gemini-3.5-flash-lite -> Gemini, needs GEMINI_API_KEY or GOOGLE_API_KEY
+  compatible/<model>      -> any OpenAI-compatible endpoint at MISPICK_BASE_URL
   mock                    -> the offline deterministic backend
 """
 
@@ -17,7 +19,7 @@ DEFAULT_MODEL = "ollama/qwen3.5:4b"
 
 
 def available_backends() -> list[str]:
-    return ["ollama", "openai", "anthropic", "mock"]
+    return ["ollama", "openai", "anthropic", "gemini", "compatible", "mock"]
 
 
 def get_backend(spec: str | None = None, *, jitter: bool = True, think: bool = False) -> Backend:
@@ -50,6 +52,14 @@ def get_backend(spec: str | None = None, *, jitter: bool = True, think: bool = F
         from mispick.models.anthropic import AnthropicBackend
 
         return AnthropicBackend(model)
+    if provider == "gemini":
+        from mispick.models.compatible import GeminiBackend
+
+        return GeminiBackend(model)
+    if provider in {"compatible", "openai-compatible"}:
+        from mispick.models.compatible import CustomBackend
+
+        return CustomBackend(model)
     if provider == "mock":
         from mispick.models.mock import MockBackend
 
@@ -57,5 +67,6 @@ def get_backend(spec: str | None = None, *, jitter: bool = True, think: bool = F
     raise BackendError(
         f"Unknown model provider {provider!r}. Use one of: {', '.join(available_backends())}.\n"
         "Examples: qwen3.5:4b (local, the default) | openai/gpt-4.1-mini | "
-        "anthropic/claude-haiku-4-5-20251001"
+        "gemini/gemini-3.5-flash-lite | anthropic/claude-haiku-4-5-20251001 | "
+        "compatible/my-model with MISPICK_BASE_URL set"
     )
