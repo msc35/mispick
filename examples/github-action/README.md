@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: mispick/mispick@v0.1.0
+      - uses: msc35/mispick@v0.1.0
         with:
           snapshot: tools.json
 ```
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0      # needed for compare-base
-      - uses: mispick/mispick@v0.1.0
+      - uses: msc35/mispick@v0.1.0
         with:
           snapshot: tools.json
           model: anthropic/claude-haiku-4-5-20251001

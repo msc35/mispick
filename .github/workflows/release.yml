@@ -1,0 +1,89 @@
+name: release
+
+# Publishes to PyPI via Trusted Publishing - no API token is stored in this repo.
+# Set up once at https://pypi.org/manage/account/publishing/ with:
+#   owner: msc35   repository: mispick   workflow: release.yml   environment: pypi
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Where to publish'
+        type: choice
+        options: [testpypi, pypi]
+        default: testpypi
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.12'
+
+      # Never ship a release that does not pass its own tests.
+      - run: uv sync --all-extras
+      - run: uv run ruff check .
+      - run: uv run mypy src
+      - run: uv run pytest -q
+
+      - name: Check the tag matches the version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version=$(uv run python -c 'import mispick; print(mispick.__version__)')
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$version" != "$tag" ]; then
+            echo "::error::tag $tag does not match mispick.__version__ $version"
+            exit 1
+          fi
+          echo "tag $tag matches version $version"
+
+      - run: uv build
+
+      # Prove the built wheel actually runs before it is published, rather than after.
+      - name: Smoke-test the wheel
+        run: |
+          uvx --from ./dist/*.whl mispick version
+          uvx --from ./dist/*.whl mispick run \
+            --snapshot tests/fixtures/confusing_tools.json --model mock -n 2 -k 1 \
+            --cache-dir "$(mktemp -d)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  testpypi:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi'
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  pypi:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.target == 'pypi')
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

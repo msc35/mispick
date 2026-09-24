@@ -31,7 +31,7 @@ uvx --from dist/mispick-0.1.0-py3-none-any.whl mispick run --snapshot tools.json
 
 ## The Action
 
-- [ ] The README and examples reference `mispick/mispick@v0.1.0`. That tag has to exist on the
+- [ ] The README and examples reference `msc35/mispick@v0.1.0`. That tag has to exist on the
       chosen owner before any of it works.
 - [ ] Publish to the GitHub Marketplace (optional; the `uses:` path works without it).
 
