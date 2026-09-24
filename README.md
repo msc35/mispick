@@ -99,6 +99,15 @@ tasks and found success rose by a median 5.85 points — but **regressed in 16.6
 chance of making things worse. mispick also caps rewrite length, so a rewrite cannot win by
 crowding out its neighbours, and it never edits your source — it prints a suggestion.
 
+**Expect rejections, especially on a small local model.** In our own runs against
+`ollama/qwen3.5:4b`, two of three proposed rewrites measurably made selection *worse* — one of them
+took a tool from 78% to 58% accuracy, breaking 14 trials and fixing none, and it replicated when
+re-run with three times the data. Its stated reasoning read perfectly sensibly. The third improved
+by 10 points but over only two changed trials, which is not enough to call, so mispick reported it
+as inconclusive rather than banking it. A 4B model is good enough to *find* confusion and often not
+good enough to *write its way out of it*; fix mode is more productive with a larger model. Either
+way the verdicts are the product — a run where nothing is accepted has told you something true.
+
 ### Across servers
 
 Point `--config` at a whole `claude_desktop_config.json` and mispick loads every server at once,
@@ -149,6 +158,7 @@ Read these before quoting a number.
   recovery after a bad call. Arguments are checked against `inputSchema` and no further.
 - **A low score can be correct.** Two tools may genuinely overlap. mispick tells you the model
   cannot separate them; whether they *should* be separable is your call.
+- **`mispick fix` often accepts nothing**, and that is working as intended. See the note above.
 - **Token counts are estimates**, and lower bounds — a real tokenizer and the provider's framing
   both add to them.
 - **Reasoning models** spend heavily on hidden thinking. mispick turns thinking off by default for

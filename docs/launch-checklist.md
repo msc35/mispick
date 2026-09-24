@@ -62,4 +62,12 @@ individuals, and the comparison in the README should stay factual and generous.
   which is in the toolchain here.
 - **Pick the default model by measurement.** `qwen3.5:4b` was chosen from the research and works,
   but the SPEC asks for the default to be confirmed against `qwen3.5:9b`, `granite4.1:3b` and
-  `qwen3:8b` on the fixture set. That is a few hours of local runs.
+  `qwen3:8b` on the fixture set. That is a few hours of local runs. Worth including *rewrite
+  acceptance rate* in that comparison, not just selection accuracy — see the next item.
+- **Prove the ACCEPTED path on a real model.** Fix mode's accept branch is covered by unit tests,
+  but no live model has yet earned an ACCEPTED verdict here. Three real attempts against
+  `qwen3.5:4b` produced two clear regressions (one replicated at K=9: 0 fixed, 14 broken) and one
+  inconclusive-positive (+10 points over 2 changed trials, p=0.50). That is consistent with the
+  Hasan et al. regression rate and with a 4B model being too weak to rewrite well, but it is not
+  proof that the accept branch fires in the wild. Re-run `mispick fix --pairs 3 --runs 9` against a
+  cloud model, or `qwen3.5:9b`, before claiming the feature end to end.
