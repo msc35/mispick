@@ -1,0 +1,41 @@
+name: pages
+
+# Deliberately manual. The leaderboard names other people's projects, so a run is reviewed
+# before it is published - a scheduled deploy could put a bad measurement in front of them.
+on:
+  workflow_dispatch:
+    inputs:
+      run-id:
+        description: 'The benchmark workflow run whose site artifact should be published'
+        required: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download the reviewed site
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark
+          run-id: ${{ inputs.run-id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: downloaded
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: downloaded/site
+      - id: deploy
+        uses: actions/deploy-pages@v4

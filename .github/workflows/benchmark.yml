@@ -1,0 +1,76 @@
+name: benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'How many servers to pick from the registry'
+        default: '30'
+      refresh-snapshots:
+        description: 'Re-capture tool lists from the registry (otherwise use the committed ones)'
+        type: boolean
+        default: false
+  schedule:
+    # Weekly, not nightly: tool surfaces do not change that fast, and every run starts other
+    # people's servers.
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: benchmark
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync
+
+      - name: Pick servers
+        if: ${{ inputs.refresh-snapshots }}
+        run: uv run python benchmark/pick.py --limit "${{ inputs.limit || '30' }}"
+
+      - name: Capture tool lists
+        if: ${{ inputs.refresh-snapshots }}
+        run: uv run python benchmark/capture.py
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve &
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:11434/api/tags >/dev/null && break
+            sleep 1
+          done
+          ollama pull qwen3.5:4b
+
+      - name: Measure
+        run: |
+          uv run python benchmark/measure.py \
+            --snapshots benchmark/snapshots \
+            --out benchmark/results \
+            --model ollama/qwen3.5:4b \
+            --queries 8 --runs 3 --temperature 0 --seed 1 --concurrency 4
+
+      - name: Build the site
+        run: uv run python benchmark/build_site.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark
+          path: |
+            benchmark/results
+            benchmark/site
+
+      # Publishing is a separate, manually reviewed step: the site names other people's
+      # projects, so a bad run must not go live on a schedule.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: benchmark/site
