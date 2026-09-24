@@ -18,6 +18,10 @@ an audience, and needs a human to press it.
 
 ## PyPI
 
+- [ ] **Remove the "Not on PyPI yet" banner from the README's Install section** once the release
+      lands. It is there because `uvx mispick` does not work until then, and a first-screen
+      command that fails is worse than an extra sentence.
+
 The wheel and sdist build cleanly and the wheel has been verified end to end:
 
 ```bash
