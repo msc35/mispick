@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 from pathlib import Path
 
 from typer.testing import CliRunner
 
-from mispick.cli import EXIT_ERROR, EXIT_OK, app
+from mispick.cli import EXIT_BELOW_THRESHOLD, EXIT_ERROR, EXIT_OK, app
 
 runner = CliRunner()
 
@@ -87,3 +88,91 @@ def test_only_limits_to_one_server() -> None:
     assert result.exit_code == EXIT_OK, result.output
     assert "publish_page" in result.output
     assert "refund_order" not in result.output
+
+
+class TestRun:
+    """The MVP command, driven with the offline mock backend."""
+
+    def test_reports_the_planted_confusion(self, snapshot_path: Path, tmp_path: Path) -> None:
+        result = runner.invoke(
+            app,
+            [
+                "run",
+                "--snapshot",
+                str(snapshot_path),
+                "--model",
+                "mock",
+                "--cache-dir",
+                str(tmp_path),
+                "-n",
+                "8",
+                "-k",
+                "3",
+                "--seed",
+                "7",
+            ],
+        )
+        assert result.exit_code == EXIT_OK, result.output
+        assert "Confusion matrix" in result.output
+        assert "score" in result.output
+        # the two tools that share a description must show up as the worst pair
+        assert "search_docs" in result.output and "search_issues" in result.output
+
+    def test_every_report_states_model_n_k_and_date(
+        self, snapshot_path: Path, tmp_path: Path
+    ) -> None:
+        """SPEC section 7: non-negotiable provenance."""
+        result = runner.invoke(
+            app,
+            ["run", "--snapshot", str(snapshot_path), "--model", "mock",
+             "--cache-dir", str(tmp_path), "-n", "4", "-k", "2"],
+        )
+        assert result.exit_code == EXIT_OK, result.output
+        assert "mock" in result.output
+        assert "N=4" in result.output
+        assert "K=2" in result.output
+        assert dt.date.today().isoformat() in result.output
+        assert "Results depend on the model" in result.output
+
+    def test_fail_under_returns_exit_one(self, snapshot_path: Path, tmp_path: Path) -> None:
+        result = runner.invoke(
+            app,
+            ["run", "--snapshot", str(snapshot_path), "--model", "mock",
+             "--cache-dir", str(tmp_path), "-n", "4", "-k", "1", "--fail-under", "100"],
+        )
+        assert result.exit_code == EXIT_BELOW_THRESHOLD
+        assert "below --fail-under" in result.output
+
+    def test_fail_under_passes_when_the_score_clears_it(
+        self, snapshot_path: Path, tmp_path: Path
+    ) -> None:
+        result = runner.invoke(
+            app,
+            ["run", "--snapshot", str(snapshot_path), "--model", "mock",
+             "--cache-dir", str(tmp_path), "-n", "4", "-k", "1", "--fail-under", "1"],
+        )
+        assert result.exit_code == EXIT_OK, result.output
+
+    def test_an_unknown_provider_lists_the_real_ones(
+        self, snapshot_path: Path, tmp_path: Path
+    ) -> None:
+        result = runner.invoke(
+            app,
+            ["run", "--snapshot", str(snapshot_path), "--model", "hotdog/wat",
+             "--cache-dir", str(tmp_path)],
+        )
+        assert result.exit_code == EXIT_ERROR
+        assert "Unknown model provider" in result.output
+        assert "ollama" in result.output
+
+    def test_a_dead_backend_explains_itself_rather_than_printing_zeros(
+        self, snapshot_path: Path, tmp_path: Path
+    ) -> None:
+        """Pointed at an Ollama that is not running, it must say so, not report 0%."""
+        result = runner.invoke(
+            app,
+            ["run", "--snapshot", str(snapshot_path), "--model", "ollama/nope",
+             "--cache-dir", str(tmp_path), "-n", "1", "-k", "1"],
+        )
+        assert result.exit_code == EXIT_ERROR
+        assert "ollama" in result.output.lower()

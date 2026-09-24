@@ -10,7 +10,7 @@ It never calls a tool. Only `initialize` and `tools/list`, so it is safe to poin
 
 ## Status
 
-**Pre-alpha, under active construction.** M0 (research) and M1 (loading tools) are done.
+**Pre-alpha, under active construction.** M0–M2 are done: the measurement pipeline works.
 
 - [`SPEC.md`](SPEC.md) — the source of truth for what this is
 - [`docs/research.md`](docs/research.md) — Phase 0 research: competitors, naming, MCP spec
@@ -29,10 +29,22 @@ uv run mispick tools --config tests/fixtures/two_servers.json
 
 # capture a tools/list so later runs work offline
 uv run mispick snapshot --cmd "python -m my_server" -o tools.json
+
+# measure which tools the model mixes up
+uv run mispick run --cmd "python -m my_server"
+uv run mispick run --snapshot tools.json --model mock   # offline, no model needed
 ```
 
-Measurement (`mispick run`) lands at M2. Install instructions, the demo GIF, and the benchmark
-link land at M2 and M7 per SPEC section 11.
+`run` generates test queries per tool, caches them in `.mispick/queries.yaml` (edit them — they
+are your test set), asks the model to pick a tool for each K times, and prints a confusion
+matrix, the worst pairs, per-tool precision and recall with Wilson 95% intervals, and a 0–100
+score. Every report states the model, N, K and the date, because the results depend on all four.
+
+The default backend is a local Ollama model, so it costs nothing and needs no account.
+`--model mock` is a deterministic offline stand-in used by the test suite.
+
+Install instructions, the demo GIF, and the benchmark link land with M8 and M7 per SPEC
+section 11.
 
 ### Why this vs the static linters
 
