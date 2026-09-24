@@ -1,0 +1,77 @@
+{
+  "protocolVersion": "2026-07-28",
+  "serverInfo": { "name": "acme-workspace", "version": "1.4.2" },
+  "tools": [
+    {
+      "name": "search_docs",
+      "description": "Search for information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "query": { "type": "string" } },
+        "required": ["query"]
+      },
+      "annotations": { "readOnlyHint": true }
+    },
+    {
+      "name": "search_issues",
+      "description": "Search for information.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "query": { "type": "string" } },
+        "required": ["query"]
+      },
+      "annotations": { "readOnlyHint": true }
+    },
+    {
+      "name": "create_ticket",
+      "title": "Create Support Ticket",
+      "description": "Open a new support ticket for a customer, with a subject and a priority level.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "subject": { "type": "string", "description": "One-line summary of the problem." },
+          "priority": { "type": "string", "enum": ["low", "normal", "urgent"] }
+        },
+        "required": ["subject"]
+      }
+    },
+    {
+      "name": "close_ticket",
+      "description": "Close an existing support ticket by its numeric id, with an optional resolution note.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ticket_id": { "type": "integer", "description": "The id of the ticket to close." },
+          "resolution": { "type": "string" }
+        },
+        "required": ["ticket_id"]
+      },
+      "annotations": { "destructiveHint": false, "idempotentHint": true }
+    },
+    {
+      "name": "send_invoice",
+      "description": "Email an invoice PDF to a customer for a given order.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": { "type": "string" },
+          "email": { "type": "string", "format": "email" }
+        },
+        "required": ["order_id", "email"]
+      }
+    },
+    {
+      "name": "refund_order",
+      "description": "Refund a customer's order in full. This cannot be undone.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "required": ["order_id"]
+      },
+      "annotations": { "destructiveHint": true, "readOnlyHint": false }
+    }
+  ]
+}

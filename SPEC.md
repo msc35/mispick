@@ -1,7 +1,8 @@
-# tool-confusion — Project Spec
+# mispick — Project Spec
 
-> Working name. Final name decided in Phase 0 (must be free on PyPI, npm and GitHub).
-> CLI command (working): `toolconf`
+> Name decided in Phase 0 (2026-09-23): **`mispick`** — free on PyPI, npm and GitHub at time of
+> checking. The earlier working name `toolconf` was already taken on PyPI.
+> CLI command: `mispick`
 
 ## 1. One-line pitch
 
@@ -13,7 +14,23 @@ Point it at any MCP server. It generates realistic user requests, asks a model t
 
 Static MCP linters already exist and are good: `mcp-lint` (PyPI, 23 rules), `oh-my-mcp` (npm, includes token budget), `mcpolish` (description quality rules), `mcp-conform`, `mcp-cve-lint`. **Do not rebuild a static linter.**
 
-What they don't do: run an actual model and measure selection behavior. A description can pass every lint rule and still be confused with a neighboring tool. Rule-based linters predict problems. This tool measures them.
+A description can pass every lint rule and still be confused with a neighboring tool. Rule-based
+linters predict problems; this tool measures them.
+
+Two projects do now measure selection behavior with a real model (found in Phase 0, both created
+August 2026 — see `docs/research.md` section 1):
+
+- **`whichtool`** (TypeScript): confusion matrix with Wilson intervals, local models via Ollama, same
+  never-execute-a-tool rule, badge/HTML/JUnit output, GitHub Action. It **deliberately refuses** to
+  propose rewrites ("a generated rewrite would read as authoritative while knowing nothing about
+  it"), handles one server per run, and publishes no benchmark. Unpublished from npm; source only.
+- **`toolfit`** (Python, on PyPI): confusion matrix **and** re-tested rewrites reported with
+  p-values. But it is cloud-only — task generation and fix proposals always require
+  `ANTHROPIC_API_KEY` — and states "one server per run". No benchmark.
+
+Neither does cross-server collision detection. Neither holds all four differentiators below. Our
+claim is the combination: measured confusion **and** proven fixes **and** across your whole config
+**and** free on a local model.
 
 Differentiators (keep all four, they are the product):
 1. **Confusion matrix** between tools, not just a single accuracy score.
@@ -38,16 +55,22 @@ Before writing product code, Claude Code must check and record:
 4. **Python MCP SDK**: current package name and version, how to spawn a stdio server and call `initialize` + `tools/list` as a client, and how to connect over Streamable HTTP. Write a 20-line working example into `docs/research.md`.
 5. **Official MCP registry API**: endpoint for listing servers, what metadata is available (package name, runtime, install command), rate limits.
 6. **Ollama**: tool-calling support, which small models (≤8B) handle tool calling reliably, and the OpenAI-compatible endpoint.
-7. **Research paper**: find the February 2026 paper by Wang et al. on tool descriptions across ~10,800 MCP servers (cited by mcpolish). Summarize its method and taxonomy of description problems. Use its taxonomy to label confusion causes if it fits.
+7. **Research paper** (resolved in Phase 0): the paper is *"Model Context Protocol (MCP) Tool
+   Descriptions Are Smelly!"*, **Hasan et al.**, arXiv [2602.14878](https://arxiv.org/abs/2602.14878),
+   2026-02-16 — **856 tools across 103 servers**, not Wang et al. across ~10,800 (that figure was an
+   error; no such paper was found). Its six-smell taxonomy (Unclear Purpose, Missing Usage
+   Guidelines, Unstated Limitations, Opaque Parameters, Underspecified, Exemplar Issues) is adopted
+   as the label vocabulary for confusion causes in `fix.py`. Its key result — LLM-augmented
+   descriptions **regressed in 16.67% of cases** — is the justification for differentiator 2.
 
 Deliverable: `docs/research.md` with sources as links. No product code in Phase 0.
 
 ## 5. Architecture
 
-Python 3.11+, managed with `uv`. Installable via `uvx <name>` and `pip`.
+Python 3.11+, managed with `uv`. Installable via `uvx mispick` and `pip`.
 
 ```
-src/<pkg>/
+src/mispick/
   cli.py            # typer CLI
   sources/
     server.py       # connect to stdio / HTTP server, run initialize + tools/list (NO call_tool)
@@ -73,18 +96,30 @@ tests/
   fixtures/         # fake MCP servers with deliberately confusing tools
 ```
 
-Dependencies: `mcp` (official SDK), `typer`, `rich`, `pydantic`, `jsonschema`, `pyyaml`, `httpx`, `openai` (used against Ollama's compatible endpoint), `anthropic` (optional extra). Keep the dependency list short. No heavy frameworks (no LangChain, no litellm).
+Dependencies: `mcp` (official SDK, **2.2.0**, which already pulls `pydantic`, `jsonschema` and
+`httpx2`), `typer`, `rich`, `pydantic`, `jsonschema`, `pyyaml`, `openai` (used against Ollama's
+compatible endpoint), `anthropic` (optional extra). `httpx` is **not** a direct dependency — the SDK
+brings `httpx2` and we talk to Ollama through `openai`. Keep the dependency list short. No heavy
+frameworks (no LangChain, no litellm).
 
 ## 6. Core pipeline
 
 ### 6.1 Load tools
 Inputs (one of):
-- `toolconf run --cmd "python -m my_server"` (stdio)
-- `toolconf run --url https://.../mcp` (Streamable HTTP)
-- `toolconf run --config ~/.../claude_desktop_config.json` (all servers, cross-server mode)
-- `toolconf run --snapshot tools.json` (offline)
+- `mispick run --cmd "python -m my_server"` (stdio)
+- `mispick run --url https://.../mcp` (Streamable HTTP)
+- `mispick run --config ~/.../claude_desktop_config.json` (all servers, cross-server mode)
+- `mispick run --snapshot tools.json` (offline)
 
 Handle `tools/list` pagination. Timeouts: 20s per server start. Record server name + version.
+
+Two pagination rules from the spec, both easy to get wrong (see `docs/research.md` section 3):
+- An **empty-string `nextCursor` is a valid cursor** and must not be treated as end-of-results. Only
+  the absence of a non-null `nextCursor` ends pagination.
+- Deterministic tool order is only a SHOULD, so **sort tools before computing the 6.2 cache key**.
+
+The SDK's high-level `mcp.Client` exposes `call_tool`, so `sources/server.py` must keep the `Client`
+private and return only our own tool models (section 3).
 
 ### 6.2 Generate test queries
 For each tool, ask the model for N (default 8) realistic user requests that *should* trigger it:
@@ -94,7 +129,7 @@ For each tool, ask the model for N (default 8) realistic user requests that *sho
 
 Also generate a few "no tool fits" queries so we measure over-triggering.
 
-Cache to `.toolconf/queries.yaml`. The user can edit this file and it becomes a stable test set. Cache key = hash of tool name + description + schema, so queries regenerate only when a tool changes.
+Cache to `.mispick/queries.yaml`. The user can edit this file and it becomes a stable test set. Cache key = hash of tool name + description + schema, so queries regenerate only when a tool changes.
 
 Important: the generator model should be a different call from the selector call, and generation should only see the target tool plus its neighbors' names, to avoid leaking the answer through wording. Document this choice.
 
@@ -108,9 +143,11 @@ For each query: send the full tool list (as the model would see it in a real cli
 - Top confused pairs, ranked
 - Argument validity rate (args validate against `inputSchema`)
 - Stability (agreement across K runs)
-- Token cost of the tool list (tokenizer estimate, label it an estimate)
+- **Wilson 95% confidence intervals** on accuracy and per-tool rates. With K=3 the per-cell counts
+  are small and bare percentages would overstate precision; both competitors quantify uncertainty.
+- Token cost of the tool list (tokenizer estimate, label it an estimate — it is a lower bound)
 
-### 6.5 Fix mode (`toolconf fix`)
+### 6.5 Fix mode (`mispick fix`)
 For the top 3 confused pairs:
 1. Ask the model to rewrite both descriptions to disambiguate, keeping meaning.
 2. Re-run selection on the same cached queries with the rewritten descriptions (in memory only).
@@ -125,7 +162,7 @@ Score 0–100 from accuracy, stability, and arg validity (document the formula).
 - Terminal: summary score, top confused pairs, heatmap using rich.
 - `--format json|md|html`.
 - HTML: single self-contained file, heatmap, per-tool table, fix suggestions. Must open offline.
-- Badge SVG: `toolconf badge` → `toolconf-badge.svg` showing score and model used.
+- Badge SVG: `mispick badge` → `mispick-badge.svg` showing score and model used.
 - Every report states the model name, N, K, and the date. Results depend on the model. Say so in the report.
 
 ## 8. GitHub Action
@@ -148,15 +185,17 @@ Rules: only `initialize` + `tools/list`. Be respectful and neutral in wording ("
 - **M1** Load tools from stdio + snapshot. Fixture server with 6 tools, 2 deliberately confusable. Test that `call_tool` is never reachable.
 - **M2** Query generation with cache + selection with Ollama. Metrics + terminal report. **This is the MVP. The demo GIF is recorded here.**
 - **M3** JSON / markdown / HTML reports, badge, `--fail-under`.
-- **M4** Fix mode with before/after re-testing.
-- **M5** Multi-server config mode with cross-server collision report.
+- **M4** Multi-server config mode with cross-server collision report. *(Pulled ahead of fix mode on
+  2026-09-24: no competitor does cross-server, whereas `toolfit` already ships re-tested rewrites,
+  so this is the more distinctive milestone.)*
+- **M5** Fix mode with before/after re-testing.
 - **M6** GitHub Action.
 - **M7** Benchmark + GitHub Pages leaderboard.
 - **M8** Launch polish: README, GIF, `uvx` install, PyPI release, MCP registry / awesome-lists submissions.
 
 ## 11. README requirements
 
-First screen must contain: the one-line pitch, a GIF of the confusion matrix, and a one-line install (`uvx <name> run --cmd "..."`). Then: why this vs static linters (one short honest paragraph naming them), how it works (5 lines), benchmark link, limitations (results depend on the model; small local models are noisier).
+First screen must contain: the one-line pitch, a GIF of the confusion matrix, and a one-line install (`uvx mispick run --cmd "..."`). Then: why this vs static linters (one short honest paragraph naming them), how it works (5 lines), benchmark link, limitations (results depend on the model; small local models are noisier).
 
 ## 12. Quality bar
 

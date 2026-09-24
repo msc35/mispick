@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "workspace": {
+      "command": "python",
+      "args": ["-m", "tests.fixtures.fixture_server"]
+    },
+    "wiki": {
+      "command": "python",
+      "args": ["-m", "tests.fixtures.second_server"]
+    }
+  }
+}

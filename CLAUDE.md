@@ -18,7 +18,7 @@ Read `SPEC.md` fully before doing anything. It is the source of truth.
 - `uv sync` — install
 - `uv run pytest` — tests
 - `uv run ruff check . && uv run mypy src` — lint and types
-- `uv run toolconf run --snapshot tests/fixtures/confusing_tools.json` — quick manual check
+- `uv run mispick run --snapshot tests/fixtures/confusing_tools.json` — quick manual check
 
 ## Style
 - Python 3.11+, type hints everywhere, pydantic models for data.
