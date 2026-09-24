@@ -17,6 +17,13 @@ from typing import Any
 
 from mispick.types import Tool
 
+#: Generation needs a generous budget. Small reasoning models - which is most of what runs
+#: locally - spend hundreds or thousands of hidden tokens before emitting a single visible
+#: character, and qwen3.5:4b measurably needs ~3.5k completion tokens to answer the
+#: generation prompt at all. A tight budget does not truncate the answer, it produces an
+#: empty one. See docs/research.md section 6.
+DEFAULT_MAX_TOKENS = 8192
+
 
 class BackendError(RuntimeError):
     """The model backend could not be reached, or gave us something unusable."""
@@ -111,7 +118,7 @@ class Backend(abc.ABC):
         *,
         temperature: float = 0.7,
         seed: int | None = None,
-        max_tokens: int = 2048,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
     ) -> str:
         """Ask the model for free-form text."""
 

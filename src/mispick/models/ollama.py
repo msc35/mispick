@@ -9,7 +9,13 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from mispick.models.base import Backend, BackendError, Selection, build_tool_payload
+from mispick.models.base import (
+    DEFAULT_MAX_TOKENS,
+    Backend,
+    BackendError,
+    Selection,
+    build_tool_payload,
+)
 from mispick.types import Tool
 
 #: Ollama's OpenAI-compatible base URL.
@@ -38,7 +44,8 @@ class OpenAICompatibleBackend(Backend):
         base_url: str | None = None,
         api_key: str = "unused",
         name: str | None = None,
-        timeout: float = 180.0,
+        timeout: float = 600.0,
+        extra_body: dict[str, Any] | None = None,
     ) -> None:
         try:
             from openai import AsyncOpenAI
@@ -47,7 +54,27 @@ class OpenAICompatibleBackend(Backend):
         self.model = model
         self.name = name or model
         self.base_url = base_url
+        #: Extra request fields. Dropped automatically if the endpoint rejects them.
+        self.extra_body = dict(extra_body or {})
         self._client = AsyncOpenAI(base_url=base_url, api_key=api_key, timeout=timeout)
+
+    async def _create(self, kwargs: dict[str, Any]) -> Any:
+        """Send a request, retrying once without our extra fields if they are refused.
+
+        `reasoning_effort` is the one that matters: Ollama honours it and it is worth a 40x
+        speedup on a small reasoning model, but not every OpenAI-compatible endpoint accepts
+        it, and a hard failure there would be a bad trade.
+        """
+        if self.extra_body:
+            try:
+                return await self._client.chat.completions.create(
+                    **kwargs, extra_body=self.extra_body
+                )
+            except Exception as exc:
+                if not _looks_like_rejected_field(exc):
+                    raise
+                self.extra_body = {}
+        return await self._client.chat.completions.create(**kwargs)
 
     async def choose(
         self,
@@ -70,7 +97,7 @@ class OpenAICompatibleBackend(Backend):
         if seed is not None:
             kwargs["seed"] = seed
         try:
-            response = await self._client.chat.completions.create(**kwargs)
+            response = await self._create(kwargs)
         except Exception as exc:
             return Selection(error=self._explain(exc))
 
@@ -100,7 +127,7 @@ class OpenAICompatibleBackend(Backend):
         *,
         temperature: float = 0.7,
         seed: int | None = None,
-        max_tokens: int = 2048,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
     ) -> str:
         kwargs: dict[str, Any] = {
             "model": self.model,
@@ -111,12 +138,39 @@ class OpenAICompatibleBackend(Backend):
         if seed is not None:
             kwargs["seed"] = seed
         try:
-            response = await self._client.chat.completions.create(**kwargs)
+            response = await self._create(kwargs)
         except Exception as exc:
             raise BackendError(self._explain(exc)) from exc
         if not response.choices:
             raise BackendError("the model returned no choices")
-        return (response.choices[0].message.content or "").strip()
+        choice = response.choices[0]
+        text = (choice.message.content or "").strip()
+        if not text:
+            raise BackendError(self._explain_empty(choice, max_tokens))
+        return text
+
+    @staticmethod
+    def _explain_empty(choice: Any, max_tokens: int) -> str:
+        """Say why a reply was blank, which is nearly always the reasoning budget."""
+        reasoning = getattr(choice.message, "reasoning", None) or getattr(
+            choice.message, "reasoning_content", None
+        )
+        if choice.finish_reason == "length":
+            extra = (
+                " It spent the whole budget on hidden reasoning tokens before writing "
+                "anything visible."
+                if reasoning
+                else ""
+            )
+            return (
+                f"the model hit the {max_tokens}-token limit without producing any visible "
+                f"output.{extra} Raise it with --max-tokens, or pick a model that does less "
+                "thinking."
+            )
+        return (
+            "the model returned an empty reply. If it is a reasoning model, it may need a "
+            "larger --max-tokens budget."
+        )
 
     def _explain(self, exc: Exception) -> str:
         """Turn a client error into something that says what to do next."""
@@ -135,15 +189,34 @@ class OpenAICompatibleBackend(Backend):
         await self._client.close()
 
 
+def _looks_like_rejected_field(exc: Exception) -> bool:
+    """Whether an error reads like "I do not know that request field"."""
+    text = str(exc).lower()
+    if "400" not in text and "unsupported" not in text and "unknown" not in text:
+        return False
+    return any(
+        word in text for word in ("reasoning", "unknown field", "unsupported", "unrecognized")
+    )
+
+
 class OllamaBackend(OpenAICompatibleBackend):
-    """Ollama, via its OpenAI-compatible endpoint."""
+    """Ollama, via its OpenAI-compatible endpoint.
+
+    Thinking is off by default. Most tool-capable models that fit on a laptop are reasoning
+    models, and on this workload their hidden reasoning is pure cost: measured on
+    qwen3.5:4b, one generation call took 89s and 1078 completion tokens with thinking on
+    versus 2.2s and 20 tokens with it off, for the same answer. Worse, thinking sometimes
+    spirals and consumes the entire output budget, producing an empty reply. Pass
+    `think=True` to turn it back on.
+    """
 
     def __init__(
         self,
         model: str = DEFAULT_MODEL,
         *,
         base_url: str = DEFAULT_BASE_URL,
-        timeout: float = 180.0,
+        timeout: float = 600.0,
+        think: bool = False,
     ) -> None:
         super().__init__(
             model,
@@ -151,4 +224,5 @@ class OllamaBackend(OpenAICompatibleBackend):
             api_key="ollama",
             name=f"ollama/{model}",
             timeout=timeout,
+            extra_body=None if think else {"reasoning_effort": "none"},
         )

@@ -27,7 +27,7 @@ from typing import Any
 
 import yaml
 
-from mispick.models.base import Backend, BackendError
+from mispick.models.base import DEFAULT_MAX_TOKENS, Backend, BackendError
 from mispick.types import Query, Tool, ToolSet
 
 #: Where the cache lives, relative to the working directory.
@@ -218,11 +218,14 @@ async def generate_for_tool(
     plan: GenerationPlan,
     seed: int | None = None,
     temperature: float = 0.8,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
 ) -> list[Query]:
     """Generate the query set for one tool."""
     neighbour = nearest_neighbour(tool, tools)
     prompt = build_prompt(tool, neighbour, plan)
-    reply = await backend.generate(prompt, temperature=temperature, seed=seed)
+    reply = await backend.generate(
+        prompt, temperature=temperature, seed=seed, max_tokens=max_tokens
+    )
     items = _parse_queries(reply)
 
     queries: list[Query] = []
@@ -263,12 +266,16 @@ async def generate_no_tool(
     count: int = DEFAULT_NO_TOOL,
     seed: int | None = None,
     temperature: float = 0.8,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
 ) -> list[Query]:
     """Generate queries that no tool should answer."""
     if count <= 0:
         return []
     reply = await backend.generate(
-        build_no_tool_prompt(tools, count), temperature=temperature, seed=seed
+        build_no_tool_prompt(tools, count),
+        temperature=temperature,
+        seed=seed,
+        max_tokens=max_tokens,
     )
     try:
         items = _parse_queries(reply)
@@ -362,6 +369,7 @@ async def build_query_set(
     cache: QueryCache | None = None,
     regenerate: bool = False,
     seed: int | None = None,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
     on_progress: Any = None,
 ) -> list[Query]:
     """Get a full query set, generating only what the cache does not already have."""
@@ -374,7 +382,9 @@ async def build_query_set(
         if cached:
             queries.extend(cached)
         else:
-            fresh = await generate_for_tool(backend, tool, tools, plan=plan, seed=seed)
+            fresh = await generate_for_tool(
+                backend, tool, tools, plan=plan, seed=seed, max_tokens=max_tokens
+            )
             if cache:
                 cache.put(tool, fresh)
             queries.extend(fresh)
@@ -385,7 +395,9 @@ async def build_query_set(
     if cached_none:
         queries.extend(cached_none)
     elif no_tool_count > 0:
-        fresh_none = await generate_no_tool(backend, tools, count=no_tool_count, seed=seed)
+        fresh_none = await generate_no_tool(
+            backend, tools, count=no_tool_count, seed=seed, max_tokens=max_tokens
+        )
         if cache:
             cache.put_no_tool(fresh_none)
         queries.extend(fresh_none)

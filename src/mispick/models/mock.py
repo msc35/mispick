@@ -83,7 +83,7 @@ class MockBackend(Backend):
         *,
         temperature: float = 0.7,
         seed: int | None = None,
-        max_tokens: int = 2048,
+        max_tokens: int = 8192,
     ) -> str:
         """Return plausible JSON for whichever prompt shape asked for it.
 
@@ -227,7 +227,7 @@ class ScriptedBackend(Backend):
         *,
         temperature: float = 0.7,
         seed: int | None = None,
-        max_tokens: int = 2048,
+        max_tokens: int = 8192,
     ) -> str:
         if self.generations:
             return self.generations.pop(0)

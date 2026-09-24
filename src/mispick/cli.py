@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+from enum import StrEnum
+from pathlib import Path
 from typing import Annotated
 
 import typer
@@ -13,8 +15,12 @@ from mispick import __version__
 from mispick.generate import DEFAULT_N, DEFAULT_NO_TOOL, QueryCache, build_query_set
 from mispick.loader import Target, TargetError, load, write_snapshot
 from mispick.metrics import Metrics, compute
-from mispick.models.base import BackendError
+from mispick.models.base import DEFAULT_MAX_TOKENS, BackendError
 from mispick.models.registry import DEFAULT_MODEL, get_backend
+from mispick.report import badge as badge_report
+from mispick.report import html as html_report
+from mispick.report import json as json_report
+from mispick.report import markdown as markdown_report
 from mispick.report import terminal as terminal_report
 from mispick.select import DEFAULT_CONCURRENCY, DEFAULT_K, RunConfig, RunResult, run_selection
 from mispick.sources.config import ConfigError, collisions
@@ -152,6 +158,21 @@ def snapshot_cmd(
 app.command(name="snapshot")(snapshot_cmd)
 
 
+class Format(StrEnum):
+    terminal = "terminal"
+    json = "json"
+    md = "md"
+    html = "html"
+
+
+FormatOpt = Annotated[Format, typer.Option("--format", help="Report format.")]
+OutOpt = Annotated[
+    str | None, typer.Option("--out", "-o", help="Write the report here instead of stdout.")
+]
+BadgeOpt = Annotated[
+    str | None, typer.Option("--badge", help="Also write an SVG badge to this path.")
+]
+
 ModelOpt = Annotated[
     str, typer.Option("--model", help="provider/model. Default is a local Ollama model.")
 ]
@@ -168,6 +189,20 @@ RegenOpt = Annotated[
 ]
 CacheDirOpt = Annotated[str, typer.Option("--cache-dir", help="Where queries.yaml lives.")]
 ConcurrencyOpt = Annotated[int, typer.Option("--concurrency", help="Selection calls in flight.")]
+ThinkOpt = Annotated[
+    bool,
+    typer.Option(
+        "--think/--no-think",
+        help="Let a reasoning model think first. Off by default: much slower, same answers.",
+    ),
+]
+MaxTokensOpt = Annotated[
+    int,
+    typer.Option(
+        "--max-tokens",
+        help="Output budget for query generation. Small reasoning models need a lot of it.",
+    ),
+]
 
 
 async def _measure(
@@ -182,10 +217,12 @@ async def _measure(
     regenerate: bool,
     cache_dir: str,
     concurrency: int,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
+    think: bool = False,
     no_tool: int = DEFAULT_NO_TOOL,
 ) -> tuple[RunResult, Metrics]:
     """Generate queries if needed, run selection, compute metrics."""
-    backend = get_backend(model)
+    backend = get_backend(model, think=think)
     cache = QueryCache.open(cache_dir)
     try:
         with console.status("[dim]generating test queries…[/dim]") as status:
@@ -201,6 +238,7 @@ async def _measure(
                 cache=cache,
                 regenerate=regenerate,
                 seed=seed,
+                max_tokens=max_tokens,
                 on_progress=on_tool,
             )
         path = cache.save(generator=backend.name)
@@ -231,6 +269,45 @@ async def _measure(
     return result, compute(result)
 
 
+def _emit(
+    result: RunResult,
+    metrics: Metrics,
+    fmt: Format,
+    out: str | None,
+    badge: str | None,
+) -> None:
+    """Render in the requested format, to a file or to stdout."""
+    if fmt is Format.terminal and out is None:
+        terminal_report.render(result, metrics, console)
+    else:
+        if fmt is Format.json:
+            text = json_report.render(result, metrics)
+        elif fmt is Format.md:
+            text = markdown_report.render(result, metrics)
+        elif fmt is Format.html:
+            text = html_report.render(result, metrics)
+        else:
+            # terminal format with --out: render without colour codes.
+            file_console = Console(width=100, no_color=True, record=True)
+            terminal_report.render(result, metrics, file_console)
+            text = file_console.export_text()
+        if out:
+            path = Path(out)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text)
+            err_console.print(f"[dim]wrote {path}[/dim]")
+        else:
+            # stdout must stay clean so it can be piped.
+            print(text, end="")
+
+    if badge:
+        svg = badge_report.render(metrics, model=result.config.model)
+        badge_path = Path(badge)
+        badge_path.parent.mkdir(parents=True, exist_ok=True)
+        badge_path.write_text(svg)
+        err_console.print(f"[dim]wrote {badge_path}[/dim]")
+
+
 @app.command()
 def run(
     cmd: CmdOpt = None,
@@ -247,7 +324,12 @@ def run(
     regenerate: RegenOpt = False,
     cache_dir: CacheDirOpt = ".mispick",
     concurrency: ConcurrencyOpt = DEFAULT_CONCURRENCY,
+    max_tokens: MaxTokensOpt = DEFAULT_MAX_TOKENS,
+    think: ThinkOpt = False,
     fail_under: FailUnderOpt = None,
+    fmt: FormatOpt = Format.terminal,
+    out: OutOpt = None,
+    badge: BadgeOpt = None,
 ) -> None:
     """Measure which tools the model mixes up."""
     target = _target(cmd, url, config, snapshot, timeout, only)
@@ -266,6 +348,8 @@ def run(
                 regenerate=regenerate,
                 cache_dir=cache_dir,
                 concurrency=concurrency,
+                max_tokens=max_tokens,
+                think=think,
             )
         )
     except BackendError as exc:
@@ -280,7 +364,7 @@ def run(
             err_console.print(f"  {error}")
         raise typer.Exit(EXIT_ERROR)
 
-    terminal_report.render(result, metrics, console)
+    _emit(result, metrics, fmt, out, badge)
 
     if fail_under is not None and metrics.score < fail_under:
         err_console.print(

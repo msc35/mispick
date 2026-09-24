@@ -62,10 +62,12 @@ def render(result: RunResult, metrics: Metrics, console: Console | None = None) 
         Panel(
             headline,
             title=f"mispick · {prov.servers} · {prov.tool_count} tools",
-            subtitle=prov.one_line,
             border_style=_score_colour(score),
         )
     )
+    # On its own line, not as a panel subtitle: a narrow terminal truncates a subtitle, and
+    # the date is not optional (SPEC section 7).
+    console.print(f"[dim]{prov.one_line}[/dim]", overflow="fold")
 
     _render_matrix(console, metrics)
     _render_pairs(console, metrics)

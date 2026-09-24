@@ -10,7 +10,13 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from mispick.models.base import Backend, BackendError, Selection, build_tool_payload
+from mispick.models.base import (
+    DEFAULT_MAX_TOKENS,
+    Backend,
+    BackendError,
+    Selection,
+    build_tool_payload,
+)
 from mispick.models.ollama import SYSTEM_PROMPT
 from mispick.types import Tool
 
@@ -89,7 +95,7 @@ class AnthropicBackend(Backend):
         *,
         temperature: float = 0.7,
         seed: int | None = None,
-        max_tokens: int = 2048,
+        max_tokens: int = DEFAULT_MAX_TOKENS,
     ) -> str:
         try:
             response = await self._client.messages.create(

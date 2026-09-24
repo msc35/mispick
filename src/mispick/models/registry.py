@@ -20,7 +20,7 @@ def available_backends() -> list[str]:
     return ["ollama", "openai", "anthropic", "mock"]
 
 
-def get_backend(spec: str | None = None, *, jitter: bool = True) -> Backend:
+def get_backend(spec: str | None = None, *, jitter: bool = True, think: bool = False) -> Backend:
     """Build a backend from a `provider/model` string."""
     spec = (spec or DEFAULT_MODEL).strip()
     if not spec:
@@ -35,13 +35,13 @@ def get_backend(spec: str | None = None, *, jitter: bool = True) -> Backend:
             return MockBackend(jitter=jitter)
         from mispick.models.ollama import OllamaBackend
 
-        return OllamaBackend(provider)
+        return OllamaBackend(provider, think=think)
 
     provider = provider.lower()
     if provider == "ollama":
         from mispick.models.ollama import OllamaBackend
 
-        return OllamaBackend(model)
+        return OllamaBackend(model, think=think)
     if provider == "openai":
         from mispick.models.openai import OpenAIBackend
 
