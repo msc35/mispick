@@ -61,9 +61,8 @@ async def measure_one(
 def token_estimate(tool_set: Any) -> int:
     """The tool-list token cost, which needs no model call at all."""
     from mispick.metrics import estimate_tool_tokens
-    from mispick.select import RunResult
 
-    return estimate_tool_tokens(RunResult(tool_set=tool_set, queries=[], choices=[]))
+    return estimate_tool_tokens(tool_set.sorted_tools())
 
 
 async def main_async(args: argparse.Namespace) -> int:

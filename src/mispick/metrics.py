@@ -13,10 +13,11 @@ from __future__ import annotations
 
 import math
 from collections import Counter, defaultdict
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 from mispick.select import RunResult
-from mispick.types import Choice, Query
+from mispick.types import Choice, Query, Tool
 
 #: The label used for "the model chose nothing" in the matrix, as a row and a column.
 NONE = "(none)"
@@ -153,15 +154,18 @@ class Metrics:
         return round(sum(w * r.value for w, r in parts) / weight * 100)
 
 
-def estimate_tool_tokens(result: RunResult) -> int:
+def estimate_tool_tokens(tools: Sequence[Tool]) -> int:
     """Rough token cost of putting this tool list in front of a model.
 
     Deliberately crude: characters over four. It is labelled an estimate everywhere it is
     shown, and it is a lower bound - a real tokenizer and the provider's own framing will
-    both add to it.
+    both add to it. Being a lower bound is what makes it usable for truncation detection: a
+    provider reporting fewer prompt tokens than this dropped content.
+
+    Takes tools rather than a RunResult so it can be called before any run exists.
     """
     chars = 0
-    for tool in result.tools:
+    for tool in tools:
         chars += len(tool.qualified_name) + len(tool.description or "")
         chars += len(str(tool.input_schema))
     return chars // 4
@@ -259,7 +263,7 @@ def compute(result: RunResult) -> Metrics:
         over_trigger=Rate(over, len(no_tool_trials)),
         phantom_rate=Rate(phantoms, len(scored)),
         unstable_queries=unstable,
-        token_estimate=estimate_tool_tokens(result),
+        token_estimate=estimate_tool_tokens(result.tools),
         trials=len(result.choices),
         errored_trials=errored,
     )

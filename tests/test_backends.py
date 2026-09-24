@@ -206,3 +206,89 @@ class TestInterfaceCompleteness:
 
         for method in ("choose", "generate", "aclose"):
             assert callable(getattr(AnthropicBackend, method, None))
+
+
+class TestTruncationDetection:
+    """A truncated tool list produces a real-looking score that blames the wrong thing.
+
+    Ollama silently clips a prompt that exceeds the context window: send 24,000 tokens of tool
+    definitions into a 4,096-token context and it reports 2,050 prompt tokens, replies "I do
+    not have access to tools", and every trial records "chose nothing". The confusion matrix
+    then blames the server's descriptions for a limit of our own configuration.
+    """
+
+    @staticmethod
+    def _response(prompt_tokens: int):
+        class Usage:
+            def __init__(self, n: int) -> None:
+                self.prompt_tokens = n
+
+        class Response:
+            def __init__(self, n: int) -> None:
+                self.usage = Usage(n)
+
+        return Response(prompt_tokens)
+
+    def _tools(self, count: int, description_length: int = 400):
+        from mispick.types import Tool
+
+        return [
+            Tool(
+                name=f"tool_{i}",
+                description="x" * description_length,
+                input_schema={"type": "object", "properties": {"q": {"type": "string"}}},
+            )
+            for i in range(count)
+        ]
+
+    def test_fires_when_far_fewer_tokens_were_processed(self) -> None:
+        from mispick.metrics import estimate_tool_tokens
+        from mispick.models.ollama import _truncation_error
+
+        tools = self._tools(64)
+        estimate = estimate_tool_tokens(tools)
+        error = _truncation_error(self._response(2050), tools)
+        assert error is not None
+        assert "2050" in error
+        assert str(estimate) in error
+        assert "truncated" in error
+        # It must say what to do about it.
+        assert "OLLAMA_CONTEXT_LENGTH" in error
+        assert "OLLAMA_NUM_PARALLEL" in error
+
+    def test_silent_when_the_whole_prompt_was_processed(self) -> None:
+        from mispick.metrics import estimate_tool_tokens
+        from mispick.models.ollama import _truncation_error
+
+        tools = self._tools(9)
+        estimate = estimate_tool_tokens(tools)
+        assert _truncation_error(self._response(estimate + 200), tools) is None
+
+    def test_tolerates_a_tokenizer_counting_slightly_fewer(self) -> None:
+        """chars/4 is an estimate; a real tokenizer may land a little under it."""
+        from mispick.metrics import estimate_tool_tokens
+        from mispick.models.ollama import _truncation_error
+
+        tools = self._tools(9)
+        estimate = estimate_tool_tokens(tools)
+        assert _truncation_error(self._response(int(estimate * 0.9)), tools) is None
+
+    def test_silent_when_usage_is_not_reported(self) -> None:
+        from mispick.models.ollama import _truncation_error
+
+        class Bare:
+            usage = None
+
+        assert _truncation_error(Bare(), self._tools(9)) is None
+
+    def test_silent_for_an_empty_tool_list(self) -> None:
+        from mispick.models.ollama import _truncation_error
+
+        assert _truncation_error(self._response(10), []) is None
+
+    def test_the_estimator_takes_tools_directly(self) -> None:
+        """So it can be called before a run exists, e.g. mid-request."""
+        from mispick.metrics import estimate_tool_tokens
+
+        assert estimate_tool_tokens(self._tools(4)) > 0
+        assert estimate_tool_tokens([]) == 0

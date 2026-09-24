@@ -103,6 +103,11 @@ class OpenAICompatibleBackend(Backend):
 
         if not response.choices:
             return Selection(error="the model returned no choices")
+
+        truncation = _truncation_error(response, tools)
+        if truncation:
+            return Selection(error=truncation)
+
         message = response.choices[0].message
         text = (message.content or "").strip()
         calls = getattr(message, "tool_calls", None) or []
@@ -187,6 +192,46 @@ class OpenAICompatibleBackend(Backend):
 
     async def aclose(self) -> None:
         await self._client.close()
+
+
+#: Flag truncation when the endpoint reports processing less than this fraction of what we
+#: estimated sending. Our estimate is characters/4, which normally *under*-counts real tokens,
+#: so a reported figure well below it means content was dropped rather than tokenised
+#: differently.
+TRUNCATION_RATIO = 0.75
+
+
+def _truncation_error(response: Any, tools: list[Tool]) -> str | None:
+    """Detect a tool list the model never actually saw.
+
+    Ollama silently truncates a prompt that exceeds the context window: send 24,000 tokens of
+    tool definitions into a 4,096-token context and it reports `prompt_tokens: 2050`, answers
+    "I don't have access to tools", and every trial records "chose nothing". The confusion
+    matrix then blames the server's descriptions for a limit of our own configuration - which
+    is worse than failing, because the number looks real.
+
+    Rather than ask each provider for its context length, compare what we sent against the
+    `prompt_tokens` the API itself reports. That works for any provider and needs no table of
+    model limits to go stale.
+    """
+    usage = getattr(response, "usage", None)
+    reported = getattr(usage, "prompt_tokens", None)
+    if not reported:
+        return None
+
+    from mispick.metrics import estimate_tool_tokens
+
+    estimate = estimate_tool_tokens(tools)
+    if estimate <= 0 or reported >= estimate * TRUNCATION_RATIO:
+        return None
+    return (
+        f"the model processed only {reported} prompt tokens, but this tool list is roughly "
+        f"{estimate}. The tool list was truncated, so the model never saw most of the tools "
+        "and any result would be meaningless. Raise the model's context window - for Ollama, "
+        "`OLLAMA_CONTEXT_LENGTH` or a Modelfile with a larger `num_ctx`, and note that "
+        "`OLLAMA_NUM_PARALLEL` divides the context between concurrent requests - or measure a "
+        "server with fewer tools."
+    )
 
 
 def _looks_like_rejected_field(exc: Exception) -> bool:
