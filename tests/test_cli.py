@@ -176,3 +176,27 @@ class TestRun:
         )
         assert result.exit_code == EXIT_ERROR
         assert "ollama" in result.output.lower()
+
+
+class TestCommandSurface:
+    def test_no_duplicate_or_leaked_command_names(self) -> None:
+        """`snapshot_cmd` once leaked in beside `snapshot` as a second, identical command."""
+        result = runner.invoke(app, ["--help"])
+        assert result.exit_code == EXIT_OK
+        assert "snapshot-cmd" not in result.output
+        assert "snapshot_cmd" not in result.output
+
+    def test_every_expected_command_is_present(self) -> None:
+        result = runner.invoke(app, ["--help"])
+        for name in ("tools", "snapshot", "run", "fix", "report", "compare", "version"):
+            assert name in result.output, f"missing command: {name}"
+
+    def test_command_names_are_unique(self) -> None:
+        # typer leaves `name` as None when it derives one from the function, so use the
+        # effective name the CLI actually exposes.
+        names = [
+            command.name
+            or (command.callback.__name__.replace("_", "-") if command.callback else "?")
+            for command in app.registered_commands
+        ]
+        assert len(names) == len(set(names)), f"duplicate command names: {names}"

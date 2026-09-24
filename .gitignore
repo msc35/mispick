@@ -11,3 +11,8 @@ build/
 .toolconf/
 *-badge.svg
 .DS_Store
+benchmark/site/
+benchmark/results/
+mispick-report.*
+mispick-comment.md
+mispick-badge.svg

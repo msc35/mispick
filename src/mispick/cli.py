@@ -137,7 +137,9 @@ def tools(
         )
 
 
-@app.command()
+# Registered as `snapshot` rather than by its function name: `snapshot` is also an option
+# name on the other commands, so the function cannot be called that without shadowing it.
+@app.command(name="snapshot")
 def snapshot_cmd(
     output: Annotated[str, typer.Option("--output", "-o", help="Where to write the JSON.")],
     cmd: CmdOpt = None,
@@ -154,10 +156,6 @@ def snapshot_cmd(
         f"Re-run offline with: [dim]mispick tools --snapshot {path}[/dim]"
     )
 
-
-# `snapshot` is both an option name and a command name; register the command under the
-# name we want without shadowing the option.
-app.command(name="snapshot")(snapshot_cmd)
 
 
 class Format(StrEnum):
