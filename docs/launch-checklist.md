@@ -74,7 +74,9 @@ Each of these puts the project in front of other people. Worth reading the wordi
 especially anything comparing mispick to `whichtool` or `toolfit` — both are 0-star projects by
 individuals, and the comparison in the README should stay factual and generous.
 
-- [ ] PR to `punkpeye/awesome-mcp-servers` and similar lists.
+- [ ] PR to `punkpeye/awesome-mcp-devtools`, `## Testing Tools` section. Entry text and steps are
+      in `docs/awesome-list-entries.md`, which also records which lists mispick does **not** belong
+      in and why - the big server lists explicitly scope themselves to servers.
 - [ ] Anywhere else you plan to post.
 
 **Not the official MCP registry.** Decided 2026-09-24. The registry describes itself as "a list of
