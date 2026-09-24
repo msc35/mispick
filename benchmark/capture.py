@@ -49,7 +49,8 @@ async def capture_one(server: dict[str, Any], out_dir: Path) -> dict[str, Any]:
         record["status"] = "needs_credentials" if KEY_HINTS.search(message) else "failed"
         record["reason"] = message.splitlines()[0][:300]
         return record
-    except Exception as exc:  # noqa: BLE001 - one bad server must not stop the sweep
+    # Deliberately broad: one bad server must not stop the sweep.
+    except Exception as exc:
         record["status"] = "failed"
         record["reason"] = f"{type(exc).__name__}: {exc}"[:300]
         return record

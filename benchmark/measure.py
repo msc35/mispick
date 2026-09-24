@@ -97,7 +97,8 @@ async def main_async(args: argparse.Namespace) -> int:
         except BackendError as exc:
             print(f"model error: {exc}")
             return 2
-        except Exception as exc:  # noqa: BLE001 - one bad snapshot must not stop the sweep
+        # Deliberately broad: one bad snapshot must not stop the sweep.
+        except Exception as exc:
             print(f"failed: {type(exc).__name__}: {exc}")
             continue
 

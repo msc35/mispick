@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from mispick.sources.server import DEFAULT_TIMEOUT, ServerError, load_http, load_stdio
+from mispick.sources.server import DEFAULT_TIMEOUT, load_http, load_stdio
 from mispick.types import ServerInfo, ToolSet
 
 
@@ -103,7 +103,9 @@ async def _load_one(spec: ServerSpec, timeout: float) -> tuple[ToolSet | None, s
         else:  # pragma: no cover - parse_config guarantees one of the two
             return None, f"{spec.label}: no command or url"
         return ts, None
-    except (ServerError, Exception) as exc:
+    # Deliberately broad: one unreachable server must not kill a ten-server run.
+    # (`Exception` already covers ServerError; naming both was misleading.)
+    except Exception as exc:
         return None, f"{spec.label}: {exc}"
 
 
