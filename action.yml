@@ -1,0 +1,177 @@
+name: mispick
+description: >-
+  Measure which of your MCP tools a model mixes up, and comment the confusion matrix on the PR.
+author: mispick
+branding:
+  icon: shuffle
+  color: purple
+
+inputs:
+  cmd:
+    description: 'Local stdio server command, e.g. "python -m my_server".'
+    required: false
+  url:
+    description: 'Streamable HTTP server URL.'
+    required: false
+  config:
+    description: 'A claude_desktop_config.json / .mcp.json; loads every server (cross-server mode).'
+    required: false
+  snapshot:
+    description: 'A committed tools/list JSON file. This is what CI should usually use.'
+    required: false
+  model:
+    description: >-
+      provider/model. Ollama is too slow for CI, so set this to a cloud model and provide the
+      matching key, or leave it and the run will be skipped with an explanation.
+    required: false
+    default: ''
+  queries:
+    description: 'Queries generated per tool (N).'
+    required: false
+    default: '8'
+  runs:
+    description: 'Times each query is re-run (K).'
+    required: false
+    default: '3'
+  temperature:
+    description: 'Sampling temperature. Use 0 with a seed for a reproducible run.'
+    required: false
+    default: '0'
+  seed:
+    description: 'Seed, if the backend honours one.'
+    required: false
+    default: '1'
+  fail-under:
+    description: 'Fail the job if the score drops below this.'
+    required: false
+    default: ''
+  compare-base:
+    description: >-
+      Also measure the base branch and post the delta ("accuracy 81% -> 74%, search_docs now
+      confused with search_issues"). Needs a snapshot path that exists on both branches.
+    required: false
+    default: 'false'
+  comment:
+    description: 'Post the markdown report as a PR comment.'
+    required: false
+    default: 'true'
+  badge:
+    description: 'Path to write an SVG badge to. Empty to skip.'
+    required: false
+    default: ''
+  queries-file:
+    description: >-
+      Path to a committed queries.yaml cache directory. Commit it so CI measures a stable test
+      set instead of regenerating queries on every run.
+    required: false
+    default: '.mispick'
+  working-directory:
+    description: 'Directory to run in.'
+    required: false
+    default: '.'
+  python-version:
+    description: 'Python version to set up.'
+    required: false
+    default: '3.12'
+  version:
+    description: 'mispick version specifier for uv, e.g. "mispick==0.1.0".'
+    required: false
+    default: 'mispick'
+
+outputs:
+  score:
+    description: 'The 0-100 score.'
+    value: ${{ steps.measure.outputs.score }}
+  accuracy:
+    description: 'Selection accuracy as a fraction.'
+    value: ${{ steps.measure.outputs.accuracy }}
+  report:
+    description: 'Path to the JSON report.'
+    value: ${{ steps.measure.outputs.report }}
+  skipped:
+    description: '"true" when the run was skipped for want of a model.'
+    value: ${{ steps.measure.outputs.skipped }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Measure
+      id: measure
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        MISPICK_CMD: ${{ inputs.cmd }}
+        MISPICK_URL: ${{ inputs.url }}
+        MISPICK_CONFIG: ${{ inputs.config }}
+        MISPICK_SNAPSHOT: ${{ inputs.snapshot }}
+        MISPICK_MODEL: ${{ inputs.model }}
+        MISPICK_N: ${{ inputs.queries }}
+        MISPICK_K: ${{ inputs.runs }}
+        MISPICK_TEMPERATURE: ${{ inputs.temperature }}
+        MISPICK_SEED: ${{ inputs.seed }}
+        MISPICK_FAIL_UNDER: ${{ inputs.fail-under }}
+        MISPICK_BADGE: ${{ inputs.badge }}
+        MISPICK_CACHE_DIR: ${{ inputs.queries-file }}
+        MISPICK_VERSION: ${{ inputs.version }}
+      run: ${{ github.action_path }}/scripts/measure.sh
+
+    - name: Measure the base branch
+      id: base
+      if: ${{ inputs.compare-base == 'true' && steps.measure.outputs.skipped != 'true' && github.event_name == 'pull_request' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        MISPICK_SNAPSHOT: ${{ inputs.snapshot }}
+        MISPICK_MODEL: ${{ inputs.model }}
+        MISPICK_N: ${{ inputs.queries }}
+        MISPICK_K: ${{ inputs.runs }}
+        MISPICK_TEMPERATURE: ${{ inputs.temperature }}
+        MISPICK_SEED: ${{ inputs.seed }}
+        MISPICK_CACHE_DIR: ${{ inputs.queries-file }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      run: ${{ github.action_path }}/scripts/measure-base.sh
+
+    - name: Comment on the PR
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: mispick
+        path: mispick-comment.md
+
+    - name: Job summary
+      if: always()
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        if [ -f mispick-comment.md ]; then
+          cat mispick-comment.md >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    - name: Upload the reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: mispick-report
+        path: |
+          mispick-report.json
+          mispick-report.html
+          mispick-comment.md
+        if-no-files-found: ignore
+
+    - name: Enforce the threshold
+      if: ${{ inputs.fail-under != '' && steps.measure.outputs.skipped != 'true' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        score="${{ steps.measure.outputs.score }}"
+        threshold="${{ inputs.fail-under }}"
+        if [ "$score" -lt "$threshold" ]; then
+          echo "::error title=mispick::score $score is below the threshold of $threshold"
+          exit 1
+        fi
+        echo "score $score meets the threshold of $threshold"

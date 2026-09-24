@@ -220,3 +220,85 @@ class TestCache:
         text = path.read_text()
         assert "ollama/qwen3.5:4b" in text
         assert "your test set" in text
+
+
+class TestSalvage:
+    """Small local models truncate and ramble. Recover what is usable."""
+
+    def test_recovers_objects_from_truncated_json(self) -> None:
+        from mispick.generate import salvage_queries
+
+        truncated = (
+            '{"queries": [{"text": "What are the steps to apply for a patent?", '
+            '"kind": "straightforward"}, {"text": "How do I find out if my project is '
+            'protected?", "kind": "straightforward"}, {"text'
+        )
+        items = salvage_queries(truncated)
+        assert len(items) == 2
+        assert items[0]["text"].startswith("What are the steps")
+        assert items[1]["kind"] == "straightforward"
+
+    def test_recovers_from_trailing_prose(self) -> None:
+        from mispick.generate import salvage_queries
+
+        chatty = (
+            'Sure! Here are the queries:\n{"queries": [{"text": "Close ticket 12"}]}\n'
+            "Let me know if you want more."
+        )
+        assert salvage_queries(chatty) == [{"text": "Close ticket 12"}]
+
+    def test_handles_escaped_quotes(self) -> None:
+        from mispick.generate import salvage_queries
+
+        text = '{"queries": [{"text": "Find the \\"onboarding\\" policy"}]}'
+        assert salvage_queries(text)[0]["text"] == 'Find the "onboarding" policy'
+
+    def test_returns_nothing_for_genuine_rubbish(self) -> None:
+        from mispick.generate import salvage_queries
+
+        assert salvage_queries("I'm sorry, I can't help with that.") == []
+
+    async def test_parse_falls_back_to_salvage(self) -> None:
+        from mispick.generate import _parse_queries
+
+        truncated = '{"queries": [{"text": "Close ticket 12", "kind": "straightforward"}, {"te'
+        assert _parse_queries(truncated) == [
+            {"text": "Close ticket 12", "kind": "straightforward"}
+        ]
+
+    async def test_one_bad_reply_is_retried_before_failing(self, tool_set: ToolSet) -> None:
+        """A single rambling call must not waste every call before it."""
+        from mispick.models.mock import MockBackend
+
+        class FlakyOnce(MockBackend):
+            def __init__(self) -> None:
+                super().__init__()
+                self.attempts = 0
+
+            async def generate(self, prompt: str, **kwargs: object) -> str:
+                self.attempts += 1
+                if self.attempts == 1:
+                    return "I'm sorry, I can't help with that."
+                return await super().generate(prompt)
+
+        backend = FlakyOnce()
+        tools = tool_set.sorted_tools()
+        queries = await generate_for_tool(
+            backend, tools[0], tools, plan=GenerationPlan.for_n(4)
+        )
+        assert backend.attempts == 2
+        assert queries
+
+    async def test_two_bad_replies_name_the_tool_that_failed(self, tool_set: ToolSet) -> None:
+        from mispick.models.base import BackendError
+        from mispick.models.mock import MockBackend
+
+        class AlwaysBad(MockBackend):
+            async def generate(self, prompt: str, **kwargs: object) -> str:
+                return "nope"
+
+        tools = tool_set.sorted_tools()
+        with pytest.raises(BackendError, match="after two attempts"):
+            await generate_for_tool(
+                AlwaysBad(), tools[0], tools, plan=GenerationPlan.for_n(4)
+            )

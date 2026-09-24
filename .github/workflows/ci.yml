@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - run: uv sync --all-extras
+      - name: Lint
+        run: uv run ruff check src tests
+      - name: Types
+        run: uv run mypy src
+      - name: Tests
+        run: uv run pytest -q
+      # The suite must pass with no network and no model backend. This is the check that
+      # keeps that true.
+      - name: Tests are offline
+        run: uv run pytest -q
+        env:
+          OPENAI_API_KEY: ''
+          ANTHROPIC_API_KEY: ''
+          no_proxy: '*'
+          NO_PROXY: '*'
+
+  action:
+    # Proves action.yml at least parses and skips cleanly with no model key.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          snapshot: tests/fixtures/confusing_tools.json
+          comment: 'false'
+      - name: The run should have skipped, not failed
+        run: |
+          test -f mispick-comment.md
+          grep -q "skipped" mispick-comment.md

@@ -10,8 +10,8 @@ It never calls a tool. Only `initialize` and `tools/list`, so it is safe to poin
 
 ## Status
 
-**Pre-alpha, under active construction.** M0–M5 are done, including cross-server mode and
-proven fixes.
+**Pre-alpha, under active construction.** M0–M6 are done: pipeline, reports, cross-server
+mode, proven fixes, and a GitHub Action.
 
 - [`SPEC.md`](SPEC.md) — the source of truth for what this is
 - [`docs/research.md`](docs/research.md) — Phase 0 research: competitors, naming, MCP spec
@@ -71,6 +71,15 @@ tasks and found success rose by a median 5.85 points — but **regressed in 16.6
 tool that hands you an unmeasured rewrite is handing you a one-in-six chance of making things
 worse. mispick also caps rewrite length, so a rewrite cannot win by crowding out its neighbours,
 and never modifies your source — it prints a suggestion.
+
+### In CI
+
+`action.yml` posts the markdown report as a sticky PR comment and can measure the base branch
+too, so the comment reads "84 → 91 (▲7)" with the confusions that appeared or disappeared. With
+no model key it **skips with an explanation instead of failing** — a check that goes red because
+a secret is missing is a check people learn to ignore. See
+[examples/github-action](examples/github-action/) for the workflows and for why you should commit
+both `tools.json` and `.mispick/queries.yaml`.
 
 ### Across servers
 

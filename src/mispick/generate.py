@@ -193,13 +193,58 @@ def _extract_json(text: str) -> dict[str, Any]:
                 return parsed
         except json.JSONDecodeError:
             pass
-    raise BackendError(f"Could not read JSON from the model's reply: {text[:200]!r}")
+    raise BackendError(
+        f"Could not read JSON from the model's reply ({len(text)} characters). "
+        f"Reply began: {text[:300]!r}"
+    )
+
+
+#: One {"text": ..., "kind": ...} object, however the model spaced it.
+_ITEM = re.compile(
+    r'\{[^{}]*?"text"\s*:\s*"(?P<text>(?:[^"\\]|\\.)*)"'
+    r'(?:[^{}]*?"kind"\s*:\s*"(?P<kind>[^"]*)")?[^{}]*?\}',
+    re.DOTALL,
+)
+
+
+def salvage_queries(text: str) -> list[dict[str, Any]]:
+    """Recover whatever complete query objects a malformed reply contains.
+
+    Small local models truncate, trail off into prose, or forget a closing bracket. When the
+    reply is 80% good, throwing all of it away and failing the run is the wrong trade - and
+    re-asking costs another 30 seconds of someone's laptop. So we take the objects that did
+    parse. Anything genuinely unusable still raises, upstream.
+    """
+    out: list[dict[str, Any]] = []
+    for match in _ITEM.finditer(text):
+        try:
+            value = json.loads(f'"{match.group("text")}"')
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(value, str) or not value.strip():
+            continue
+        item: dict[str, Any] = {"text": value.strip()}
+        if match.group("kind"):
+            item["kind"] = match.group("kind")
+        out.append(item)
+    return out
 
 
 def _parse_queries(reply: str) -> list[dict[str, Any]]:
-    payload = _extract_json(reply)
+    """Read the query list, salvaging a partly-broken reply rather than discarding it."""
+    try:
+        payload = _extract_json(reply)
+    except BackendError:
+        salvaged = salvage_queries(reply)
+        if salvaged:
+            return salvaged
+        raise
+
     raw = payload.get("queries")
     if not isinstance(raw, list):
+        salvaged = salvage_queries(reply)
+        if salvaged:
+            return salvaged
         raise BackendError("The model's reply had no 'queries' list.")
     out = []
     for item in raw:
@@ -207,6 +252,8 @@ def _parse_queries(reply: str) -> list[dict[str, Any]]:
             out.append({"text": item})
         elif isinstance(item, dict) and isinstance(item.get("text"), str):
             out.append(item)
+    if not out:
+        return salvage_queries(reply)
     return out
 
 
@@ -223,10 +270,31 @@ async def generate_for_tool(
     """Generate the query set for one tool."""
     neighbour = nearest_neighbour(tool, tools)
     prompt = build_prompt(tool, neighbour, plan)
-    reply = await backend.generate(
-        prompt, temperature=temperature, seed=seed, max_tokens=max_tokens
-    )
-    items = _parse_queries(reply)
+
+    # One retry, cooler: a small local model that rambled once often complies when the
+    # temperature drops. Failing a whole run because one of six calls trailed off mid-JSON
+    # would waste every call before it.
+    items: list[dict[str, Any]] = []
+    last_error: BackendError | None = None
+    for attempt in range(2):
+        try:
+            reply = await backend.generate(
+                prompt,
+                temperature=temperature if attempt == 0 else min(temperature, 0.2),
+                seed=seed,
+                max_tokens=max_tokens,
+            )
+            items = _parse_queries(reply)
+        except BackendError as exc:
+            last_error = exc
+            items = []
+        if items:
+            break
+    if not items:
+        raise BackendError(
+            f"Could not generate queries for {tool.qualified_name!r} after two attempts: "
+            f"{last_error}"
+        )
 
     queries: list[Query] = []
     counts = {"straightforward": 0, "paraphrased": 0, "hard_negative": 0}

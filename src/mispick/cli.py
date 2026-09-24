@@ -496,6 +496,66 @@ def fix(
         err_console.print(f"[dim]wrote {patch_path}[/dim]")
 
 
+@app.command(name="report")
+def report_cmd(
+    path: Annotated[str, typer.Argument(help="A JSON report from `mispick run --format json`.")],
+    fmt: FormatOpt = Format.terminal,
+    out: OutOpt = None,
+    badge: BadgeOpt = None,
+) -> None:
+    """Re-render a saved run in another format, without measuring again."""
+    from mispick.report.load import ReportError
+    from mispick.report.load import load as load_report
+
+    try:
+        result, metrics = load_report(path)
+    except ReportError as exc:
+        err_console.print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_ERROR) from exc
+    _emit(result, metrics, fmt, out, badge)
+
+
+@app.command(name="compare")
+def compare_cmd(
+    base: Annotated[str, typer.Argument(help="The base branch's JSON report.")],
+    head: Annotated[str, typer.Argument(help="This branch's JSON report.")],
+    out: OutOpt = None,
+    max_drop: Annotated[
+        int | None,
+        typer.Option("--max-drop", help="Exit 1 if the score fell by more than this."),
+    ] = None,
+) -> None:
+    """Compare two saved runs and report the delta. For CI."""
+    from mispick.report.load import ReportError
+    from mispick.report.load import load as load_report
+
+    try:
+        base_result, base_metrics = load_report(base)
+        head_result, head_metrics = load_report(head)
+    except ReportError as exc:
+        err_console.print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_ERROR) from exc
+
+    text = markdown_report.render_comparison(
+        (head_result, head_metrics), (base_result, base_metrics)
+    )
+    if out:
+        path = Path(out)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text)
+        err_console.print(f"[dim]wrote {path}[/dim]")
+    else:
+        print(text, end="")
+
+    drop = base_metrics.score - head_metrics.score
+    if max_drop is not None and drop > max_drop:
+        err_console.print(
+            f"[red]score fell by {drop} points "
+            f"({base_metrics.score} → {head_metrics.score}), above --max-drop {max_drop}[/red]"
+        )
+        raise typer.Exit(EXIT_BELOW_THRESHOLD)
+
+
 @app.command()
 def version() -> None:
     """Print the mispick version."""

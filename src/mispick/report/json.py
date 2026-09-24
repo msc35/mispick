@@ -37,7 +37,11 @@ def build(result: RunResult, metrics: Metrics) -> dict[str, Any]:
             {
                 "name": t.qualified_name,
                 "server": t.server,
+                "title": t.title,
                 "description": t.description,
+                # The schema is part of what the model was shown, and the token estimate is
+                # computed from it - without it a re-rendered report would not match.
+                "inputSchema": t.input_schema,
                 "annotations": t.annotations,
             }
             for t in result.tools
