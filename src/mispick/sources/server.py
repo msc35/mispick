@@ -73,6 +73,36 @@ async def _collect(client: Any, label: str, source: str) -> ToolSet:
     return ToolSet(tools=tools, servers=[info])
 
 
+def describe_exception(exc: BaseException, limit: int = 3) -> str:
+    """A readable cause for an exception that may be an ExceptionGroup.
+
+    The SDK runs its transport in an anyio task group, so a server that will not start
+    surfaces as `unhandled errors in a TaskGroup (1 sub-exception)` - which tells the user
+    nothing. Flatten to the leaves and name those instead.
+    """
+    leaves: list[BaseException] = []
+
+    def walk(error: BaseException) -> None:
+        if isinstance(error, BaseExceptionGroup):
+            for inner in error.exceptions:
+                walk(inner)
+        else:
+            leaves.append(error)
+
+    walk(exc)
+    if not leaves:  # pragma: no cover - defensive
+        return f"{type(exc).__name__}: {exc}"
+
+    seen: list[str] = []
+    for leaf in leaves:
+        text = str(leaf).strip().splitlines()[0] if str(leaf).strip() else ""
+        rendered = f"{type(leaf).__name__}: {text}" if text else type(leaf).__name__
+        if rendered not in seen:
+            seen.append(rendered)
+    extra = "" if len(seen) <= limit else f" (and {len(seen) - limit} more)"
+    return "; ".join(seen[:limit]) + extra
+
+
 def _stderr_tail(errlog: IO[str], lines: int = 8) -> str:
     """The last few lines the server wrote to stderr, for an error message."""
     try:
@@ -130,7 +160,7 @@ async def load_stdio(
             raise
         except Exception as exc:
             raise ServerError(
-                f"Could not start or query {name!r} over stdio: {exc}\n"
+                f"Could not start or query {name!r} over stdio: {describe_exception(exc)}\n"
                 "Check the command runs on its own, and that it speaks MCP over stdio."
                 + _stderr_tail(errlog)
             ) from exc
@@ -158,7 +188,7 @@ async def load_http(
         raise
     except Exception as exc:
         raise ServerError(
-            f"Could not query {name!r} over Streamable HTTP: {exc}\n"
+            f"Could not query {name!r} over Streamable HTTP: {describe_exception(exc)}\n"
             "Check the URL, and set MISPICK_BEARER_TOKEN if the server needs auth."
         ) from exc
 

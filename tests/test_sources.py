@@ -138,6 +138,64 @@ class TestLiveServer:
         assert "missing GITHUB_TOKEN" in message
 
 
+class TestErrorMessages:
+    """A server that will not start must say why, not "1 sub-exception"."""
+
+    def test_unwraps_an_exception_group(self) -> None:
+        from mispick.sources.server import describe_exception
+
+        group = BaseExceptionGroup(
+            "unhandled errors in a TaskGroup (1 sub-exception)",
+            [ConnectionError("Connection closed")],
+        )
+        described = describe_exception(group)
+        assert described == "ConnectionError: Connection closed"
+        assert "TaskGroup" not in described
+
+    def test_unwraps_nested_groups(self) -> None:
+        from mispick.sources.server import describe_exception
+
+        inner = BaseExceptionGroup("inner", [ValueError("bad schema")])
+        outer = BaseExceptionGroup("outer", [inner])
+        assert describe_exception(outer) == "ValueError: bad schema"
+
+    def test_deduplicates_identical_leaves(self) -> None:
+        from mispick.sources.server import describe_exception
+
+        group = BaseExceptionGroup(
+            "many", [ConnectionError("closed"), ConnectionError("closed")]
+        )
+        assert describe_exception(group) == "ConnectionError: closed"
+
+    def test_caps_the_number_of_causes_listed(self) -> None:
+        from mispick.sources.server import describe_exception
+
+        group = BaseExceptionGroup("many", [ValueError(f"e{i}") for i in range(6)])
+        described = describe_exception(group, limit=2)
+        assert described.count(";") == 1
+        assert "and 4 more" in described
+
+    def test_a_plain_exception_is_unchanged(self) -> None:
+        from mispick.sources.server import describe_exception
+
+        assert describe_exception(RuntimeError("nope")) == "RuntimeError: nope"
+
+    async def test_a_real_failure_names_a_cause_and_quotes_stderr(self) -> None:
+        """End to end: the message a user actually sees."""
+        from mispick.sources.server import ServerError, load_stdio
+
+        cmd = (
+            "python -c \"import sys; "
+            "sys.stderr.write('FATAL: set ACME_TOKEN\\n'); sys.exit(1)\""
+        )
+        with pytest.raises(ServerError) as excinfo:
+            await load_stdio(cmd, label="acme", timeout=10)
+        message = str(excinfo.value)
+        assert "sub-exception" not in message, "the TaskGroup wrapper must be unwrapped"
+        assert "FATAL: set ACME_TOKEN" in message
+        assert "speaks MCP over stdio" in message
+
+
 class TestPagination:
     """The empty-string cursor is the bug this guards. See docs/research.md section 3."""
 

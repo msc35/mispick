@@ -45,46 +45,123 @@ class TestScriptsAreSound:
 
 
 class TestPick:
-    def test_flags_descriptions_that_imply_a_credential(self) -> None:
+    """Server selection. The registry has no popularity order, so this does the ranking."""
+
+    @staticmethod
+    def _pick():
         sys.path.insert(0, str(BENCH))
         try:
             import importlib
 
-            pick = importlib.import_module("pick")
+            return importlib.import_module("pick")
         finally:
             sys.path.pop(0)
 
-        assert not pick.looks_key_free({"description": "Needs a GitHub API key."})
-        assert not pick.looks_key_free({"description": "Sign in with OAuth to continue."})
-        assert pick.looks_key_free({"description": "Read and write local files."})
+    def test_skips_entries_that_imply_a_credential(self) -> None:
+        pick = self._pick()
+        entries = [
+            {
+                "server": {
+                    "name": "x/keyed",
+                    "description": "Needs a GitHub API key.",
+                    "repository": {"url": "https://github.com/o/keyed"},
+                    "packages": [
+                        {"registryType": "npm", "identifier": "k", "transport": {"type": "stdio"}}
+                    ],
+                }
+            },
+            {
+                "server": {
+                    "name": "x/open",
+                    "description": "Read and write local files.",
+                    "repository": {"url": "https://github.com/o/open"},
+                    "packages": [
+                        {"registryType": "npm", "identifier": "o", "transport": {"type": "stdio"}}
+                    ],
+                }
+            },
+        ]
+        assert [c["name"] for c in pick.candidates(entries)] == ["x/open"]
+
+    def test_requires_a_github_repo_and_a_stdio_package(self) -> None:
+        pick = self._pick()
+        no_repo = {"server": {"name": "a", "packages": [
+            {"registryType": "npm", "identifier": "a", "transport": {"type": "stdio"}}]}}
+        no_pkg = {"server": {"name": "b", "repository": {"url": "https://github.com/o/b"}}}
+        remote_only = {"server": {"name": "c", "repository": {"url": "https://github.com/o/c"},
+                                  "remotes": [{"type": "streamable-http", "url": "https://x"}]}}
+        assert pick.candidates([no_repo, no_pkg, remote_only]) == []
+
+    def test_parses_owner_and_repo_from_the_url(self) -> None:
+        pick = self._pick()
+        entry = {"server": {"name": "n", "description": "fine",
+                            "repository": {"url": "https://github.com/Some-Owner/the.repo.git"},
+                            "packages": [{"registryType": "pypi", "identifier": "p",
+                                          "transport": {"type": "stdio"}}]}}
+        c = pick.candidates([entry])[0]
+        assert c["owner"] == "Some-Owner"
+        assert c["repo"] == "the.repo"
 
     def test_builds_a_runnable_command_per_ecosystem(self) -> None:
-        sys.path.insert(0, str(BENCH))
-        try:
-            import importlib
-
-            pick = importlib.import_module("pick")
-        finally:
-            sys.path.pop(0)
-
+        pick = self._pick()
         npm = {"registryType": "npm", "identifier": "some-mcp", "version": "1.2.3"}
         assert pick.install_command(npm) == "npx -y some-mcp@1.2.3"
         pypi = {"registryType": "pypi", "identifier": "some_mcp", "version": "0.1.0"}
         assert pick.install_command(pypi) == "uvx --from some_mcp==0.1.0 some_mcp"
 
+    def test_ranks_by_stars(self) -> None:
+        pick = self._pick()
+        items = [
+            {"name": "low", "owner": "a", "repo": "low", "stars": 3},
+            {"name": "high", "owner": "b", "repo": "high", "stars": 900},
+            {"name": "mid", "owner": "c", "repo": "mid", "stars": 50},
+        ]
+        assert [c["name"] for c in pick.rank(items, 3, 2)] == ["high", "mid", "low"]
+
+    def test_skips_archived_repositories(self) -> None:
+        pick = self._pick()
+        items = [
+            {"name": "dead", "owner": "a", "repo": "dead", "stars": 9999, "archived": True},
+            {"name": "alive", "owner": "b", "repo": "alive", "stars": 1},
+        ]
+        assert [c["name"] for c in pick.rank(items, 5, 2)] == ["alive"]
+
+    def test_caps_one_owner_so_a_publisher_cannot_dominate(self) -> None:
+        """The failure this exists for: 13 of the first 40 entries came from one publisher."""
+        pick = self._pick()
+        items = [
+            {"name": f"spam{i}", "owner": "flood", "repo": f"r{i}", "stars": 100 - i}
+            for i in range(10)
+        ] + [{"name": "other", "owner": "someone", "repo": "x", "stars": 1}]
+        picked = pick.rank(items, 10, 2)
+        assert sum(1 for c in picked if c["owner"] == "flood") == 2
+        assert "other" in [c["name"] for c in picked]
+
+    def test_measures_one_repository_once(self) -> None:
+        """Several registry names can point at the same repo."""
+        pick = self._pick()
+        items = [
+            {"name": "x/thing", "owner": "o", "repo": "thing", "stars": 10},
+            {"name": "x/thing-mcp", "owner": "o", "repo": "Thing", "stars": 10},
+        ]
+        assert len(pick.rank(items, 5, 5)) == 1
+
+    def test_reference_servers_are_included_and_launchable(self) -> None:
+        """The registry carries none of these, which is why they are hand-listed."""
+        pick = self._pick()
+        assert len(pick.REFERENCE_SERVERS) >= 4
+        for server in pick.REFERENCE_SERVERS:
+            assert server["cmd"].startswith("npx -y @modelcontextprotocol/")
+            assert server["source"] == "reference"
+            assert server["repository"]
+
     def test_respects_the_registry_page_cap(self) -> None:
         """limit=101 is a 422 from the registry, so paging must stay at 100."""
-        sys.path.insert(0, str(BENCH))
-        try:
-            import importlib
-
-            pick = importlib.import_module("pick")
-        finally:
-            sys.path.pop(0)
         import inspect
 
+        pick = self._pick()
         assert pick.PAGE_SIZE <= 100
-        assert "version=latest" in inspect.getsource(pick.fetch_page), (
+        assert "version=latest" in inspect.getsource(pick.fetch_registry), (
             "without version=latest the registry returns every version and double-counts"
         )
 

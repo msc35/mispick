@@ -47,7 +47,11 @@ async def capture_one(server: dict[str, Any], out_dir: Path) -> dict[str, Any]:
     except ServerError as exc:
         message = str(exc)
         record["status"] = "needs_credentials" if KEY_HINTS.search(message) else "failed"
-        record["reason"] = message.splitlines()[0][:300]
+        # Keep the whole message, not just its first line: the diagnostic value is in the
+        # unwrapped cause and the server's own stderr, both of which come after it.
+        record["reason"] = " | ".join(
+            line.strip() for line in message.splitlines() if line.strip()
+        )[:600]
         return record
     # Deliberately broad: one bad server must not stop the sweep.
     except Exception as exc:
