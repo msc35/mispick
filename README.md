@@ -10,8 +10,7 @@ It never calls a tool. Only `initialize` and `tools/list`, so it is safe to poin
 
 ## Status
 
-**Pre-alpha, under active construction.** M0–M3 are done: the pipeline works and reports in
-every format.
+**Pre-alpha, under active construction.** M0–M4 are done, including cross-server mode.
 
 - [`SPEC.md`](SPEC.md) — the source of truth for what this is
 - [`docs/research.md`](docs/research.md) — Phase 0 research: competitors, naming, MCP spec
@@ -38,6 +37,9 @@ uv run mispick run --snapshot tools.json --model mock   # offline, no model need
 # reports: terminal (default), json, md for a PR comment, self-contained html
 uv run mispick run --snapshot tools.json --format html --out report.html --badge badge.svg
 uv run mispick run --snapshot tools.json --fail-under 80   # exit 1 for CI
+
+# every server in your config at once, and what they do to each other
+uv run mispick run --config ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
 
 `run` generates test queries per tool, caches them in `.mispick/queries.yaml` (edit them — they
@@ -52,6 +54,17 @@ Measured on the fixture server with `ollama/qwen3.5:4b`: the two tools that shar
 description "Search for information." get confused 42% of the time, and `search_docs` ends up
 with 35% precision — it attracts work belonging to four other tools. That is the finding a
 static linter cannot give you.
+
+### Across servers
+
+Point `--config` at a whole `claude_desktop_config.json` and mispick loads every server at once,
+because that is how a client actually sees them. It reports which bare tool names collide across
+servers, and — the part that matters — how often a request for one server's tool is answered by
+another server's. On the two-server fixture, 17% of trials cross servers and
+`workspace:search_docs` drops to 0% recall: every request for it is answered by
+`wiki:search_docs` instead. No other tool measures this, and the MCP spec names it as a real
+problem, warning that `serverInfo.name` is not unique across servers — so mispick keys on your
+config label instead.
 
 **On local reasoning models.** Most tool-capable models that fit on a laptop think before
 answering, and on this workload the thinking is pure cost: on `qwen3.5:4b` one generation call

@@ -165,6 +165,51 @@ def render(result: RunResult, metrics: Metrics) -> str:
     )
     a("</div>")
 
+    # Cross-server
+    from mispick.crossserver import analyse as analyse_cross
+
+    cross = analyse_cross(result, metrics)
+    if cross.is_multi_server:
+        a("<h2>Across servers</h2>")
+        a('<div class="card">')
+        a('<table><thead><tr><th>Server</th><th class="n">Tools</th>'
+          '<th class="n">Accuracy on its own tools</th><th class="n">Work lost</th>'
+          '<th class="n">Work stolen</th></tr></thead><tbody>')
+        for entry in sorted(cross.servers, key=lambda s: s.accuracy.value):
+            a(
+                f"<tr><td><code>{e(entry.label)}</code></td>"
+                f'<td class="n">{entry.tool_count}</td>'
+                f'<td class="n">{entry.accuracy}</td>'
+                f'<td class="n">{entry.lost or "·"}</td>'
+                f'<td class="n">{entry.stolen or "·"}</td></tr>'
+            )
+        a("</tbody></table>")
+        if cross.collisions:
+            a("<p><strong>Name collisions.</strong> The same bare tool name on more than one "
+              "server:</p><ul>")
+            for c in cross.collisions:
+                note = (
+                    " &mdash; and their descriptions are identical"
+                    if c.identical_descriptions
+                    else ""
+                )
+                servers = ", ".join(f"<code>{e(s)}</code>" for s in c.servers)
+                a(f"<li><code>{e(c.name)}</code> on {servers}{note}</li>")
+            a("</ul>")
+            a('<p class="legend">The MCP spec tells clients to disambiguate these by prefixing '
+              "the server name, and warns that <code>serverInfo.name</code> is not unique "
+              "across servers &mdash; so mispick keys on your config label instead.</p>")
+        if cross.leaks:
+            a(f"<p><strong>{cross.cross_server_rate} of trials went to the wrong server.</strong>"
+              "</p><ul>")
+            for expected, chosen, count in cross.leaks[:8]:
+                a(f"<li><code>{e(expected)}</code> &rarr; <code>{e(chosen)}</code> "
+                  f"({count} trials)</li>")
+            a("</ul>")
+        else:
+            a('<p class="good">No trial crossed from one server to another.</p>')
+        a("</div>")
+
     # Confused pairs
     pairs = top_confused_pairs(metrics, limit=10)
     a("<h2>Most confused pairs</h2>")

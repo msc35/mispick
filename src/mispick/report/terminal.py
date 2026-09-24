@@ -7,6 +7,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from mispick.crossserver import CrossServerReport, analyse
 from mispick.metrics import NONE, PHANTOM, Metrics, top_confused_pairs
 from mispick.report.provenance import provenance_of
 from mispick.select import RunResult
@@ -71,6 +72,11 @@ def render(result: RunResult, metrics: Metrics, console: Console | None = None) 
 
     _render_matrix(console, metrics)
     _render_pairs(console, metrics)
+
+    cross = analyse(result, metrics)
+    if cross.is_multi_server:
+        _render_cross_server(console, cross)
+
     _render_per_tool(console, metrics)
     _render_notes(console, result, metrics)
 
@@ -118,6 +124,63 @@ def _render_pairs(console: Console, metrics: Metrics) -> None:
     console.print(
         "[dim]Run `mispick fix` to get a re-tested description rewrite for these.[/dim]"
     )
+
+
+def _render_cross_server(console: Console, cross: CrossServerReport) -> None:
+    """The multi-server view: name collisions, then measured leakage between servers."""
+    console.print()
+    console.print("[bold]Across servers[/bold]")
+
+    table = Table(box=None, pad_edge=False)
+    table.add_column("server", style="cyan")
+    table.add_column("tools", justify="right")
+    table.add_column("accuracy on its own tools", justify="right")
+    table.add_column("work lost", justify="right")
+    table.add_column("work stolen", justify="right")
+    for score in sorted(cross.servers, key=lambda s: s.accuracy.value):
+        table.add_row(
+            score.label,
+            str(score.tool_count),
+            str(score.accuracy),
+            str(score.lost) if score.lost else "[dim]·[/dim]",
+            str(score.stolen) if score.stolen else "[dim]·[/dim]",
+        )
+    console.print(table)
+
+    if cross.collisions:
+        console.print()
+        console.print("[bold yellow]Name collisions[/bold yellow]")
+        for collision in cross.collisions:
+            note = (
+                " [red](and their descriptions are identical)[/red]"
+                if collision.identical_descriptions
+                else ""
+            )
+            console.print(
+                f"  [bold]{collision.name}[/bold] on {', '.join(collision.servers)}{note}"
+            )
+        console.print(
+            "[dim]The MCP spec tells clients to disambiguate these by prefixing the server "
+            "name, and warns that serverInfo.name is not unique - so mispick keys on your "
+            "config label instead.[/dim]"
+        )
+
+    if cross.leaks:
+        console.print()
+        console.print(
+            f"[bold]Cross-server confusions[/bold]  [dim]{cross.cross_server_rate} of trials "
+            "went to the wrong server[/dim]"
+        )
+        leak_table = Table(box=None, pad_edge=False)
+        leak_table.add_column("intended")
+        leak_table.add_column("chosen instead")
+        leak_table.add_column("trials", justify="right")
+        for expected, chosen, count in cross.leaks[:8]:
+            leak_table.add_row(expected, f"[red]{chosen}[/red]", str(count))
+        console.print(leak_table)
+    elif cross.is_multi_server:
+        console.print()
+        console.print("[green]No trial crossed from one server to another.[/green]")
 
 
 def _render_per_tool(console: Console, metrics: Metrics) -> None:

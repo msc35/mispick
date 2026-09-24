@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from mispick.crossserver import analyse
 from mispick.metrics import Metrics, top_confused_pairs
 from mispick.report.provenance import provenance_of
 from mispick.select import RunResult
@@ -78,6 +79,7 @@ def build(result: RunResult, metrics: Metrics) -> dict[str, Any]:
             {"expected": p.expected, "chosen": p.chosen, "count": p.count}
             for p in top_confused_pairs(metrics, limit=3)
         ],
+        "crossServer": _cross_server(result, metrics),
         "unstableQueries": metrics.unstable_queries,
         "queries": [q.model_dump() for q in result.queries],
         "trials": [
@@ -88,6 +90,35 @@ def build(result: RunResult, metrics: Metrics) -> dict[str, Any]:
             for c in result.choices
         ],
         "backendErrors": result.errors,
+    }
+
+
+def _cross_server(result: RunResult, metrics: Metrics) -> dict[str, Any]:
+    cross = analyse(result, metrics)
+    return {
+        "isMultiServer": cross.is_multi_server,
+        "crossServerRate": _rate(cross.cross_server_rate),
+        "nameCollisions": [
+            {
+                "name": c.name,
+                "servers": c.servers,
+                "identicalDescriptions": c.identical_descriptions,
+            }
+            for c in cross.collisions
+        ],
+        "servers": [
+            {
+                "label": s.label,
+                "toolCount": s.tool_count,
+                "accuracy": _rate(s.accuracy),
+                "lost": s.lost,
+                "stolen": s.stolen,
+            }
+            for s in cross.servers
+        ],
+        "leaks": [
+            {"expected": e, "chosen": c, "count": n} for e, c, n in cross.leaks
+        ],
     }
 
 

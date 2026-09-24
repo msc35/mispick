@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from mispick.crossserver import analyse
 from mispick.metrics import NONE, PHANTOM, Metrics, top_confused_pairs
 from mispick.report.provenance import provenance_of
 from mispick.select import RunResult
@@ -41,6 +42,38 @@ def render(result: RunResult, metrics: Metrics, *, title: str = "mispick") -> st
     else:
         a("No tool was mistaken for another tool.")
         a("")
+
+    cross = analyse(result, metrics)
+    if cross.is_multi_server:
+        a("### Across servers")
+        a("")
+        a("| Server | Tools | Accuracy on its own tools | Work lost | Work stolen |")
+        a("|---|---|---|---|---|")
+        for score in sorted(cross.servers, key=lambda s: s.accuracy.value):
+            a(
+                f"| `{score.label}` | {score.tool_count} | {score.accuracy} | "
+                f"{score.lost or '·'} | {score.stolen or '·'} |"
+            )
+        a("")
+        if cross.collisions:
+            a("**Name collisions.** The same bare tool name on more than one server:")
+            a("")
+            for c in cross.collisions:
+                note = " — and their descriptions are identical" if c.identical_descriptions else ""
+                a(f"- `{c.name}` on {', '.join(f'`{s}`' for s in c.servers)}{note}")
+            a("")
+        if cross.leaks:
+            a(
+                f"**{cross.cross_server_rate} of trials went to the wrong server.** "
+                "Worst crossings:"
+            )
+            a("")
+            for expected, chosen, count in cross.leaks[:8]:
+                a(f"- `{expected}` → `{chosen}` ({count} trials)")
+            a("")
+        else:
+            a("No trial crossed from one server to another.")
+            a("")
 
     a("<details>")
     a("<summary>Confusion matrix</summary>")
