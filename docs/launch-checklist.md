@@ -13,8 +13,8 @@ an audience, and needs a human to press it.
       ```
 - [ ] **Decide the GitHub owner.** `pyproject.toml` and the README currently point at
       `github.com/msc35/mispick`. Change both if that is wrong.
-- [ ] **Reserve the npm name** even though this is a Python package, so `npx mispick` cannot become
-      someone else's tool.
+- [ ] **Reserve the npm name** (declined for now, 2026-09-24). Worth revisiting: `mispick` is free
+      on npm today, and reserving it stops `npx mispick` becoming somebody else's program.
 
 ## PyPI
 
@@ -50,9 +50,19 @@ Each of these puts the project in front of other people. Worth reading the wordi
 especially anything comparing mispick to `whichtool` or `toolfit` — both are 0-star projects by
 individuals, and the comparison in the README should stay factual and generous.
 
-- [ ] Submit to the official MCP registry.
 - [ ] PR to `punkpeye/awesome-mcp-servers` and similar lists.
 - [ ] Anywhere else you plan to post.
+
+**Not the official MCP registry.** Decided 2026-09-24. The registry describes itself as "a list of
+MCP servers, like an app store for MCP servers", and mispick is a client, not a server - it connects
+to servers and reads `tools/list`. Listing it there would put a non-server in a server directory.
+The SPEC's M8 assumed the registry was a venue for this; it is not.
+
+If that surface is wanted later, the way to earn the listing is to add a `mispick mcp` subcommand
+exposing the read-only operations (inspect a surface, re-render a saved report) over MCP, the way
+`whichtool` does. That is a feature, not a publishing step, and it needs care: an agent must not be
+able to point it at an arbitrary command, or it becomes a remote code execution hole. Keep the
+target config-only and treat dynamic targets as an unsafe opt-in.
 
 ## Still open
 
