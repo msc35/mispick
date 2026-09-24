@@ -288,6 +288,75 @@ class TestSite:
         assert scores["clear"] > scores["confusable"], scores
 
 
+class TestOversizedServers:
+    """One registry server ships 682 tools - 76% of the corpus by itself."""
+
+    def test_a_huge_surface_is_reported_but_not_measured(self, tmp_path: Path) -> None:
+        snapshots = tmp_path / "snapshots"
+        snapshots.mkdir()
+        base = json.loads((ROOT / "tests/fixtures/confusing_tools.json").read_text())
+        (snapshots / "normal.json").write_text(json.dumps(base))
+
+        huge = dict(base)
+        huge["serverInfo"] = {"name": "huge", "version": "1.0"}
+        huge["tools"] = [
+            {
+                "name": f"tool_{i}",
+                "description": f"Does thing {i}.",
+                "inputSchema": {"type": "object", "properties": {"q": {"type": "string"}}},
+            }
+            for i in range(200)
+        ]
+        (snapshots / "huge.json").write_text(json.dumps(huge))
+        (snapshots / "index.json").write_text(
+            json.dumps(
+                {
+                    "servers": [
+                        {"name": "x/normal", "title": "Normal", "status": "captured",
+                         "snapshot": "normal.json"},
+                        {"name": "x/huge", "title": "Huge Surface", "status": "captured",
+                         "snapshot": "huge.json"},
+                    ]
+                }
+            )
+        )
+
+        results = tmp_path / "results"
+        subprocess.run(
+            [sys.executable, str(BENCH / "measure.py"), "--snapshots", str(snapshots),
+             "--out", str(results), "--model", "mock", "--queries", "2", "--runs", "1",
+             "--seed", "1", "--max-tools", "120"],
+            check=True, cwd=ROOT, capture_output=True,
+        )
+        index = json.loads((results / "index.json").read_text())
+
+        assert [s["slug"] for s in index["servers"]] == ["normal"], "huge must not be measured"
+        skipped = {s["registry_name"]: s for s in index["skipped"]}
+        assert "x/huge" in skipped
+        entry = skipped["x/huge"]
+        assert entry["status"] == "too_many_tools"
+        assert entry["tool_count"] == 200
+        # The token cost is the finding, and it needs no model call.
+        assert entry["tokens"] > 0
+        assert "tokens on every request" in entry["reason"]
+
+        site = tmp_path / "site"
+        subprocess.run(
+            [sys.executable, str(BENCH / "build_site.py"), "--results", str(results),
+             "--out", str(site)],
+            check=True, cwd=ROOT, capture_output=True,
+        )
+        page = (site / "index.html").read_text()
+        assert "Huge Surface" in page
+        assert "200" in page
+        assert "too many tools" in page
+
+    def test_the_limit_can_be_disabled(self, tmp_path: Path) -> None:
+        """--max-tools 0 means measure everything, however long it takes."""
+        source = (BENCH / "measure.py").read_text()
+        assert "if args.max_tools:" in source, "0 must fall through to measuring"
+
+
 class TestWorkflows:
     def test_pages_deploy_is_manual(self) -> None:
         """The leaderboard names other people's projects; a bad run must not auto-publish."""

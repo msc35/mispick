@@ -58,6 +58,14 @@ async def measure_one(
     return payload
 
 
+def token_estimate(tool_set: Any) -> int:
+    """The tool-list token cost, which needs no model call at all."""
+    from mispick.metrics import estimate_tool_tokens
+    from mispick.select import RunResult
+
+    return estimate_tool_tokens(RunResult(tool_set=tool_set, queries=[], choices=[]))
+
+
 async def main_async(args: argparse.Namespace) -> int:
     snapshots = sorted(p for p in Path(args.snapshots).glob("*.json") if p.name != "index.json")
     if not snapshots:
@@ -92,6 +100,35 @@ async def main_async(args: argparse.Namespace) -> int:
     summaries: list[dict[str, Any]] = []
     for i, snapshot in enumerate(snapshots, 1):
         print(f"[{i}/{len(snapshots)}] {snapshot.stem} … ", end="", flush=True)
+
+        # A server with an enormous tool surface can cost more model time than every other
+        # server combined - one registry server ships 682 tools, which is 76% of this corpus.
+        # Skip the measurement but keep the server on the leaderboard with its tool count and
+        # token cost, both of which are computed without calling a model. That number is the
+        # interesting finding about such a server anyway.
+        if args.max_tools:
+            probe = load_snapshot(snapshot)
+            if len(probe.tools) > args.max_tools:
+                meta = catalogue.get(snapshot.stem, {})
+                skipped.append(
+                    {
+                        "registry_name": meta.get("name", snapshot.stem),
+                        "title": meta.get("title") or meta.get("name") or snapshot.stem,
+                        "repository": meta.get("repository"),
+                        "status": "too_many_tools",
+                        "reason": (
+                            f"{len(probe.tools)} tools, above the --max-tools limit of "
+                            f"{args.max_tools}. Its tool list alone costs roughly "
+                            f"{token_estimate(probe)} tokens on every request (estimate, and a "
+                            "lower bound)."
+                        ),
+                        "tool_count": len(probe.tools),
+                        "tokens": token_estimate(probe),
+                    }
+                )
+                print(f"skipped ({len(probe.tools)} tools, over --max-tools)")
+                continue
+
         try:
             payload = await measure_one(snapshot, args, cache_root)
         except BackendError as exc:
@@ -168,6 +205,15 @@ def main() -> int:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--concurrency", type=int, default=4)
+    parser.add_argument(
+        "--max-tools",
+        type=int,
+        default=120,
+        help=(
+            "Skip measuring a server with more tools than this, reporting its tool count and "
+            "token cost instead. 0 disables the limit."
+        ),
+    )
     return asyncio.run(main_async(parser.parse_args()))
 
 

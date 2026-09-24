@@ -124,18 +124,27 @@ def render_index(index: dict[str, Any]) -> str:
             "<p class='lede'>These were in the candidate list but could not be measured. "
             "Listed so the coverage above is not overstated.</p>"
         )
-        a("<table><thead><tr><th>Server</th><th>Why</th></tr></thead><tbody>")
+        a("<table><thead><tr><th>Server</th><th class='n'>Tools</th><th>Why</th>"
+          "</tr></thead><tbody>")
         for server in skipped:
             title = e(str(server.get("title") or server.get("registry_name") or "unknown"))
             repo = server.get("repository")
             name = f"<a href='{e(repo)}'>{title}</a>" if repo else title
             status = str(server.get("status") or "failed").replace("_", " ")
             reason = e(str(server.get("reason") or ""))
+            count = server.get("tool_count")
             a(
                 f"<tr class='skipped'><td>{name}</td>"
+                f"<td class='n'>{count if count is not None else '&mdash;'}</td>"
                 f"<td>{e(status)}{f' &mdash; {reason}' if reason else ''}</td></tr>"
             )
         a("</tbody></table>")
+        a(
+            "<p class='legend'>A server that would not start is a fact about running it on a "
+            "clean machine, not a judgement of the project - it may need setup this benchmark "
+            "did not do. Servers listed as <em>too many tools</em> were measured only for their "
+            "token cost, which needs no model call.</p>"
+        )
 
     a(f"<div class='note'><strong>Read this before quoting a number.</strong> {CAVEAT}</div>")
     a(
