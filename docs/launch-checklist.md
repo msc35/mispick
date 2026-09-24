@@ -1,11 +1,18 @@
 # Launch checklist (M8)
 
-Everything here is prepared but **not executed** — each item publishes something under a name, to
-an audience, and needs a human to press it.
+**Status, 2026-09-24.** The GitHub side is done: `msc35/mispick` exists, private, `main`, CI green
+on 3.11/3.12/3.13 across Linux and macOS plus the action and workflow-lint jobs. Nothing is
+published anywhere else.
+
+Remaining items publish something under a name, to an audience, and need a human to press them.
 
 ## Before anything is published
 
-- [ ] **Re-check the name.** `mispick` was free on PyPI, npm and GitHub on 2026-09-23. Names can be
+- [x] **Re-checked the name** on 2026-09-24: free on PyPI, npm and GitHub. Re-check again at the
+      moment of reserving, since names can be taken at any time.
+- [x] **Owner decided**: `msc35/mispick`. Every reference agrees — README, examples, pyproject and
+      the benchmark site footer. The Action is `msc35/mispick@v0.1.0`.
+- [ ] **Re-check the name again if time has passed.** `mispick` was free on PyPI, npm and GitHub on 2026-09-23. Names can be
       taken at any time; check again at the moment of reserving it.
       ```bash
       curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/mispick/json   # want 404
@@ -29,14 +36,23 @@ uv build
 uvx --from dist/mispick-0.1.0-py3-none-any.whl mispick run --snapshot tools.json --model mock
 ```
 
-- [ ] `uv publish` to TestPyPI first, install from it, run it once.
-- [ ] `uv publish` to PyPI.
-- [ ] Tag `v0.1.0` and cut a GitHub release.
+- [ ] **You:** register the pending publisher at <https://pypi.org/manage/account/publishing/> —
+      project `mispick`, owner `msc35`, repository `mispick`, workflow `release.yml`,
+      environment `pypi`. Then the same at test.pypi.org with environment `testpypi`.
+      The GitHub environments `pypi` and `testpypi` already exist.
+- [ ] Run `release.yml` against `testpypi`, install from TestPyPI, run it once.
+- [ ] Flip the repository public.
+- [ ] Tag `v0.1.0`; `release.yml` publishes to PyPI on the tag.
+- [ ] Cut a GitHub release.
+
+Pre-flighted on 2026-09-24, so the release run should not be the place these are discovered:
+the wheel builds, `uvx --from ./dist/*.whl mispick version` works, `pyproject.version` and
+`mispick.__version__` agree at 0.1.0, and the tag guard allows `v0.1.0` and blocks `v9.9.9`.
 
 ## The Action
 
-- [ ] The README and examples reference `msc35/mispick@v0.1.0`. That tag has to exist on the
-      chosen owner before any of it works.
+- [ ] The README and examples reference `msc35/mispick@v0.1.0`. That tag does not exist yet, so
+      the CI snippet does not resolve until the release is tagged.
 - [ ] Publish to the GitHub Marketplace (optional; the `uses:` path works without it).
 
 ## Benchmark and Pages
