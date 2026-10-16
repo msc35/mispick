@@ -193,7 +193,7 @@ asks three questions:
 2. **Does a cheap model's confusion predict a stronger model's?**
 3. **Do generated test requests give the same answers as hand-written ones?**
 
-Plan: [docs/analysis-plan.md](docs/analysis-plan.md). There are no results yet.
+Plan: [docs/analysis-plan.md](docs/analysis-plan.md). Write-up, with no results yet: [docs/study.md](docs/study.md).
 
 ## Limitations
 
