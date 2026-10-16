@@ -1,6 +1,6 @@
 # mispick
 
-**Find out which of your MCP tools an AI model mixes up — measured, not guessed.**
+**Find out which of your MCP tools an AI model mixes up.**
 
 ## TL;DR
 
