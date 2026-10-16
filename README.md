@@ -151,7 +151,7 @@ config label instead.
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: msc35/mispick@v0.1.0
+- uses: msc35/mispick-action@v1
   with:
     snapshot: tools.json
     model: anthropic/claude-haiku-4-5-20251001
@@ -164,7 +164,9 @@ config label instead.
 It posts the report as a sticky PR comment, and with `compare-base` the comment reads
 `84 → 91 (▲7)` and names the confusions that appeared or disappeared. With no model key it skips
 with an explanation instead of failing — a check that goes red over a missing secret is a check
-people learn to ignore. See [examples/github-action](examples/github-action/).
+people learn to ignore. See [examples/github-action](examples/github-action/). The Action also
+lives on its own in [msc35/mispick-action](https://github.com/msc35/mispick-action), for the
+GitHub Marketplace.
 
 ## Benchmark
 
