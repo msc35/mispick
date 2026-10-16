@@ -221,3 +221,87 @@ class TestExclusions:
         _, kept, report = analyze.apply_exclusions(pairs, trials, analyze.PRIMARY_KINDS)
         assert "s" in report["servers"]
         assert kept.empty
+
+
+@pytest.fixture
+def frozen_benchmark(tmp_path: Path) -> tuple[Path, Path]:
+    """Four fixture servers measured with the mock model, laid out like a frozen artifact."""
+    snapshots = tmp_path / "snapshots"
+    snapshots.mkdir()
+    source = json.loads((ROOT / "tests/fixtures/confusing_tools.json").read_text())
+    for i, name in enumerate(["alpha", "beta", "gamma", "delta"]):
+        variant = json.loads(json.dumps(source))
+        for tool in variant["tools"][:i]:
+            tool["description"] = f"{tool.get('description') or ''} Variant {name}."
+        (snapshots / f"{name}.json").write_text(json.dumps(variant))
+    data = tmp_path / "data"
+    args = SimpleNamespace(
+        snapshots=snapshots, out=data, model="mock", queries=8, runs=3, temperature=0.0,
+        seed=1, concurrency=2, max_tools=120, only=None, rerun=False, rpm=0, tpm=0,
+        budget_calls=0,
+    )
+    assert asyncio.run(_measure_module().main_async(args)) == 0
+    return snapshots, data
+
+
+class TestTransfer:
+    def _transfer(self) -> Any:
+        for module in ("numpy", "scipy", "statsmodels"):
+            pytest.importorskip(module)
+        return importlib.import_module("analysis.transfer")
+
+    def test_plan_makes_no_calls_and_estimates_tokens(
+        self, frozen_benchmark: tuple[Path, Path], tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        transfer = self._transfer()
+        snapshots, data = frozen_benchmark
+        out = tmp_path / "out"
+        assert transfer.main(["--data", str(data), "--snapshots", str(snapshots), "--out",
+                              str(out), "plan", "--model", "mock"]) == 0
+        plan = json.loads((out / "transfer_plan.json").read_text())
+        assert len(plan["subset"]["tertiles"]) == 3
+        assert len(plan["subset"]["servers"]) == 4  # fewer than 4 per tertile: take them all
+        assert plan["per_model"]["mock"]["input_tokens"] > 0
+        assert "Nothing was run" in capsys.readouterr().out
+        assert not (out / "transfer").exists()
+
+    def test_the_subset_is_deterministic(self, frozen_benchmark: tuple[Path, Path]) -> None:
+        transfer = self._transfer()
+        snapshots, data = frozen_benchmark
+        index = json.loads((data / "index.json").read_text())
+        assert transfer.select_subset(index, snapshots) == transfer.select_subset(index, snapshots)
+
+    def test_run_refuses_without_approval(
+        self, frozen_benchmark: tuple[Path, Path], tmp_path: Path
+    ) -> None:
+        transfer = self._transfer()
+        snapshots, data = frozen_benchmark
+        assert transfer.main(["--data", str(data), "--snapshots", str(snapshots), "--out",
+                              str(tmp_path), "run", "--model", "mock"]) == 2
+
+    def test_missing_frozen_queries_are_refused_not_regenerated(
+        self, frozen_benchmark: tuple[Path, Path]
+    ) -> None:
+        transfer = self._transfer()
+        snapshots, data = frozen_benchmark
+        shutil.rmtree(data / ".queries" / "alpha")
+        with pytest.raises(SystemExit, match="no frozen queries"):
+            transfer.frozen_queries(data, "alpha", snapshots)
+
+    def test_the_same_model_transfers_perfectly(
+        self, frozen_benchmark: tuple[Path, Path], tmp_path: Path
+    ) -> None:
+        transfer = self._transfer()
+        snapshots, data = frozen_benchmark
+        common = ["--data", str(data), "--snapshots", str(snapshots), "--out", str(tmp_path)]
+        assert transfer.main([*common, "plan", "--model", "mock"]) == 0
+        assert transfer.main([*common, "run", "--model", "mock", "--yes"]) == 0
+        assert transfer.main([*common, "analyze"]) == 0
+
+        report = json.loads((tmp_path / "transfer.json").read_text())
+        entry = report["models"]["mock"]
+        assert entry["complete"] is True
+        assert entry["spearman_all_pairs"]["rho"] == pytest.approx(1.0)
+        assert entry["top_k"]["top1_match_share"] == 1.0
+        assert all(t["other_better"] == 0 and t["other_worse"] == 0 for t in entry["mcnemar_f2"])

@@ -18,6 +18,21 @@ uv run python analysis/analyze.py --features results/features.csv \
     --results analysis/data/benchmark-v1 --out results
 ```
 
+**RQ-b, cross-model transfer** (`transfer.py`) takes three steps. Each step stops before the next
+one costs anything:
+
+```bash
+uv run python analysis/transfer.py plan --model <provider/model>    # subset + token estimate
+uv run python analysis/transfer.py run --model <provider/model> --yes   # only after approval
+uv run python analysis/transfer.py analyze                          # writes results/transfer.json
+```
+
+- **No new questions.** `run` reuses the benchmark's frozen queries and refuses a server where
+  any are missing, so the other model never generates questions of its own.
+- **Resumable.** Like the benchmark, an interrupted `run` continues where it stopped.
+- **Fixed in advance.** The model choice goes into a dated addendum in the analysis plan before
+  the run.
+
 **Outputs** go to `results/`:
 - `features.csv` and `features_meta.json`
 - `analysis.json`
