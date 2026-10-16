@@ -1,6 +1,23 @@
 # mispick
 
-**Find out which of your MCP tools the model mixes up — measured, not guessed.**
+**Find out which of your MCP tools an AI model mixes up — measured, not guessed.**
+
+## TL;DR
+
+- **The problem.** An AI assistant picks which tool to use by reading each tool's short
+  description. If two descriptions sound alike, it quietly picks the wrong one, and nothing
+  tells you.
+- **What mispick does.** It writes realistic test requests for every tool, asks a real model to
+  pick a tool for each one, and counts what it picked. You get a table of which tools get
+  mistaken for which (a *confusion matrix*), plus a 0–100 score.
+- **It's safe.** It only reads the tool list. It never runs a tool, so you can point it at a
+  server that deletes things.
+- **It can suggest fixes**, and it re-tests each suggested rewrite. It keeps only the ones that
+  measurably helped.
+- **Free by default.** It runs on a local model through Ollama. Cloud models are optional.
+- **Status:** v0.1.0 is [on PyPI](https://pypi.org/project/mispick/). A
+  [public benchmark](#benchmark) of real MCP servers is running now. A
+  [research study](#research-study) built on it is pre-registered.
 
 <p align="center">
   <img src="docs/media/demo.svg" alt="mispick's terminal report: a confusion matrix showing search_docs and search_issues being mistaken for each other, per-tool precision and recall with confidence intervals, and a 0-100 score." width="900">
@@ -10,12 +27,10 @@
 uvx mispick run --cmd "python -m my_server"
 ```
 
-Point it at any MCP server. It generates realistic user requests, asks a model to pick a tool for
-each one, and shows you a **confusion matrix**: which tools get chosen for which intent. Then it
-proposes description rewrites for the confused pairs and **re-runs to prove the fix helped**.
-
-It never calls a tool. Only `initialize` and `tools/list`, so it is safe to point at a server that
-deletes things.
+**How to read the report.** Each row of the table is a tool. Each column is what the model
+actually picked when that tool was the right answer. A perfect server has every count on the
+diagonal. Anything off the diagonal is a mix-up worth fixing. Every percentage comes with a range
+(a 95% confidence interval), because with few test requests a single number can mislead.
 
 ---
 
@@ -153,10 +168,32 @@ people learn to ignore. See [examples/github-action](examples/github-action/).
 
 ## Benchmark
 
-`benchmark/` runs the pipeline over servers from the official MCP registry that start without
-credentials, and builds a static leaderboard. Snapshots are committed so results are reproducible,
-only `initialize` and `tools/list` are ever sent, and the page lists the servers it could *not*
-measure so the coverage is not overstated. See [benchmark/README.md](benchmark/README.md).
+`benchmark/` measures real servers from the official MCP registry that start without an API key,
+and builds a static leaderboard from the results.
+
+- **Now running.** A daily GitHub Actions job measures 15 servers on Gemini 3.5 Flash-Lite's free
+  tier. It needs about 11 days because of the free tier's daily limit, and it resumes where it
+  stopped each day.
+- **Reproducible.** The captured tool lists are committed in `benchmark/snapshots/`.
+- **Safe.** Only `initialize` and `tools/list` are ever sent.
+- **Honest about coverage.** The page also lists the servers it could *not* measure, so coverage
+  is not overstated.
+
+See [benchmark/README.md](benchmark/README.md) and the run plan in
+[docs/benchmark-plan.md](docs/benchmark-plan.md).
+
+## Research study
+
+The benchmark data also feeds a small study. Its analysis plan was written and committed
+**before** looking at any results, so the questions can't be bent to fit the answers. The study
+asks three questions:
+
+1. **What makes two tools easy to confuse?** For example, similar descriptions, overlapping names,
+   or missing "use this when…" guidance.
+2. **Does a cheap model's confusion predict a stronger model's?**
+3. **Do generated test requests give the same answers as hand-written ones?**
+
+Plan: [docs/analysis-plan.md](docs/analysis-plan.md). There are no results yet.
 
 ## Limitations
 
@@ -181,7 +218,7 @@ Read these before quoting a number.
 ## Development
 
 ```bash
-uv sync
+uv sync --all-extras                  # --all-extras so mypy also checks the Anthropic backend
 uv run pytest                         # offline; no model or network needed
 uv run ruff check . && uv run mypy src
 uv run mispick run --snapshot tests/fixtures/confusing_tools.json --model mock
