@@ -16,3 +16,6 @@ benchmark/results/
 mispick-report.*
 mispick-comment.md
 mispick-badge.svg
+
+# Launch posts, kept local until launch day
+drafts/launch/
