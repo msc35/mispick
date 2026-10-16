@@ -8,6 +8,7 @@ three is a different finding from one that wins two.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -132,8 +133,13 @@ async def run_selection(
     *,
     config: RunConfig | None = None,
     on_progress: Any = None,
+    completed: Iterable[Choice] = (),
 ) -> RunResult:
-    """Ask the model to choose, for every query, K times."""
+    """Ask the model to choose, for every query, K times.
+
+    `completed` holds trials from an earlier, interrupted run of the same configuration;
+    they are kept and not asked again.
+    """
     config = config or RunConfig()
     config.model = backend.name
     config.supports_seed = backend.supports_seed
@@ -142,18 +148,34 @@ async def run_selection(
     by_name = tool_set.by_qualified_name()
     semaphore = asyncio.Semaphore(max(1, config.concurrency))
 
-    tasks = [
-        _one(backend, tools, query, run, config, by_name, semaphore)
+    # Trials already recorded by an interrupted run are reused, not repeated. Errored ones
+    # are retried: an error is not a measurement.
+    wanted = {(query.id, run) for query in queries for run in range(config.k)}
+    done = {
+        (c.query_id, c.run): c
+        for c in completed
+        if not c.error and (c.query_id, c.run) in wanted
+    }
+    choices: list[Choice] = list(done.values())
+    pending = [
+        asyncio.ensure_future(_one(backend, tools, query, run, config, by_name, semaphore))
         for query in queries
         for run in range(config.k)
+        if (query.id, run) not in done
     ]
 
-    choices: list[Choice] = []
-    for coro in asyncio.as_completed(tasks):
-        choice = await coro
-        choices.append(choice)
-        if on_progress:
-            on_progress(choice)
+    try:
+        for future in asyncio.as_completed(pending):
+            choice = await future
+            choices.append(choice)
+            if on_progress:
+                on_progress(choice)
+    except BaseException:
+        # A used-up quota stops every trial, not just the one that saw it.
+        for task in pending:
+            task.cancel()
+        await asyncio.gather(*pending, return_exceptions=True)
+        raise
 
     errors = sorted({c.error for c in choices if c.error})
     return RunResult(

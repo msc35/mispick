@@ -9,7 +9,10 @@ blind to it. These tests exercise the parts that need no API key.
 
 from __future__ import annotations
 
+import asyncio
 import inspect
+from types import SimpleNamespace
+from typing import Any
 
 import pytest
 
@@ -17,7 +20,7 @@ from mispick.models.base import Backend
 from mispick.models.mock import MockBackend, ScriptedBackend
 from mispick.models.ollama import OllamaBackend, OpenAICompatibleBackend
 from mispick.models.registry import DEFAULT_MODEL, available_backends, get_backend
-from mispick.types import ToolSet
+from mispick.types import Tool, ToolSet
 
 
 def _anthropic_available() -> bool:
@@ -159,6 +162,22 @@ class TestGemini:
         """Gemini rejects unknown fields, and reasoning_effort is not its thinking control."""
         monkeypatch.setenv("GEMINI_API_KEY", "test")
         assert get_backend("gemini/x").extra_body == {}
+
+    def test_never_sends_a_seed(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Gemini answers a `seed` field with 400 INVALID_ARGUMENT, on every call."""
+        monkeypatch.setenv("GEMINI_API_KEY", "test")
+        backend = get_backend("gemini/x")
+        sent: list[dict[str, Any]] = []
+
+        async def capture(kwargs: dict[str, Any]) -> Any:
+            sent.append(kwargs)
+            message = SimpleNamespace(content="ok", tool_calls=None)
+            return SimpleNamespace(choices=[SimpleNamespace(message=message)], usage=None)
+
+        monkeypatch.setattr(backend, "_create", capture)
+        asyncio.run(backend.choose([Tool(name="a")], "q", seed=7))
+        asyncio.run(backend.generate("p", seed=7))
+        assert sent and all("seed" not in kwargs for kwargs in sent)
 
     def test_missing_key_names_both_variables_and_the_free_alternative(
         self, monkeypatch: pytest.MonkeyPatch

@@ -10,13 +10,19 @@ on:
         description: 'Re-capture tool lists from the registry (otherwise use the committed ones)'
         type: boolean
         default: false
+      budget-calls:
+        description: 'Model calls to spend in this run (the free tier allows 500 a day)'
+        default: '480'
   schedule:
-    # Weekly, not nightly: tool surfaces do not change that fast, and every run starts other
-    # people's servers.
-    - cron: '17 4 * * 1'
+    # Daily, shortly after Gemini's free-tier quota resets at midnight Pacific. Each run
+    # continues from the previous one's saved progress, so the full sweep takes about 11 days.
+    # Once every server is measured, a run makes no model calls at all.
+    - cron: '30 8 * * *'
 
 permissions:
   contents: read
+  # To fetch the previous run's saved progress.
+  actions: read
 
 concurrency:
   group: benchmark
@@ -25,6 +31,9 @@ concurrency:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.2.0
@@ -41,23 +50,51 @@ jobs:
         if: ${{ inputs.refresh-snapshots }}
         run: uv run python benchmark/capture.py
 
-      - name: Install Ollama
+      - name: Check the API key is configured
         run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          ollama serve &
-          for _ in $(seq 1 30); do
-            curl -sf http://localhost:11434/api/tags >/dev/null && break
-            sleep 1
-          done
-          ollama pull qwen3.5:4b
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::Add a repository secret named GEMINI_API_KEY (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
 
+      - name: Restore progress from the previous run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          id=$(gh api "repos/$REPO/actions/artifacts?name=benchmark-progress&per_page=1" \
+            --jq '.artifacts[] | select(.expired == false) | .id')
+          if [ -n "$id" ]; then
+            gh api "repos/$REPO/actions/artifacts/$id/zip" > "$RUNNER_TEMP/progress.zip"
+            mkdir -p benchmark/results
+            unzip -o -q "$RUNNER_TEMP/progress.zip" -d benchmark/results
+            echo "Restored progress from artifact $id."
+          else
+            echo "No saved progress; starting fresh."
+          fi
+
+      # Paced under the free tier's 15 requests and 250K tokens per minute, and stopped
+      # cleanly before its 500 requests per day. Running out exits 0 with progress saved.
       - name: Measure
+        env:
+          BUDGET: ${{ inputs.budget-calls || '480' }}
         run: |
           uv run python benchmark/measure.py \
             --snapshots benchmark/snapshots \
             --out benchmark/results \
-            --model ollama/qwen3.5:4b \
-            --queries 8 --runs 3 --temperature 0 --seed 1 --concurrency 4
+            --model gemini/gemini-3.5-flash-lite \
+            --queries 8 --runs 3 --temperature 0 --seed 1 \
+            --concurrency 2 --rpm 14 --tpm 230000 --budget-calls "$BUDGET"
+
+      # Saved even when the run fails, so no paid-for trial is lost. The trial log and query
+      # cache are dot-directories, which upload-artifact skips unless told otherwise.
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: benchmark-progress
+          path: benchmark/results
+          include-hidden-files: true
+          retention-days: 90
 
       - name: Build the site
         run: uv run python benchmark/build_site.py

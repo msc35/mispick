@@ -24,13 +24,24 @@ uv run python benchmark/pick.py --limit 30 --out benchmark/servers.json
 # 2. capture their tool lists (initialize + tools/list only)
 uv run python benchmark/capture.py --servers benchmark/servers.json --out benchmark/snapshots
 
-# 3. measure every snapshot with one fixed model
+# 3. measure every snapshot with one fixed model (resumable: run it again to continue)
 uv run python benchmark/measure.py --snapshots benchmark/snapshots --out benchmark/results \
-    --model ollama/qwen3.5:4b --seed 1
+    --model gemini/gemini-3.5-flash-lite --seed 1 \
+    --rpm 14 --tpm 230000 --budget-calls 480
 
 # 4. build the static site
 uv run python benchmark/build_site.py --results benchmark/results --out benchmark/site
 ```
+
+Step 3 survives interruption. Finished servers are skipped, and each finished trial is appended
+to `results/.trials/<server>.jsonl` and replayed on the next run, so no call is paid for twice.
+When the provider's daily quota or `--budget-calls` runs out, the script saves its progress and
+exits 0; `results/index.json` says `"complete": false` and lists what is pending. A quota stop
+is never recorded as "the model chose nothing".
+
+The `benchmark` workflow runs step 3 daily on the Gemini free tier (15 requests a minute, 500 a
+day), carrying progress between runs as the `benchmark-progress` artifact. It needs a
+`GEMINI_API_KEY` repository secret.
 
 `benchmark/site/` is plain HTML with no framework and no external requests, ready for GitHub
 Pages.

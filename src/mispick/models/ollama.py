@@ -6,13 +6,16 @@ Free, offline, no account. Ollama supports `seed` and `temperature` on
 
 from __future__ import annotations
 
+import asyncio
 import json
+import re
 from typing import Any
 
 from mispick.models.base import (
     DEFAULT_MAX_TOKENS,
     Backend,
     BackendError,
+    QuotaExhaustedError,
     Selection,
     build_tool_payload,
 )
@@ -58,7 +61,40 @@ class OpenAICompatibleBackend(Backend):
         self.extra_body = dict(extra_body or {})
         self._client = AsyncOpenAI(base_url=base_url, api_key=api_key, timeout=timeout)
 
+    @property
+    def is_local(self) -> bool:
+        """Whether this talks to a server on this machine, such as Ollama."""
+        url = str(self.base_url or "")
+        return any(host in url for host in ("localhost", "127.0.0.1", "[::1]"))
+
     async def _create(self, kwargs: dict[str, Any]) -> Any:
+        """Send a request, waiting out per-minute rate limits and transient failures.
+
+        A per-minute 429 is retried after the delay the provider asks for, and so are a
+        dropped connection, a timeout and a 5xx "overloaded". A daily-quota 429 raises
+        `QuotaExhaustedError`, which callers must never record as a model decision.
+        """
+        for attempt in range(RATE_LIMIT_RETRIES + 1):
+            try:
+                return await self._create_once(kwargs)
+            except Exception as exc:
+                kind = rate_limit_kind(exc)
+                if kind is None and not self.is_local:
+                    # A local server that is down will not come back by itself; say so now.
+                    kind = transient_kind(exc)
+                if kind is None:
+                    raise
+                if kind == "daily":
+                    raise QuotaExhaustedError(
+                        f"{self.name}: the provider's daily quota is used up. Progress is "
+                        f"saved; run again after it resets. ({str(exc)[:200]})"
+                    ) from exc
+                if attempt == RATE_LIMIT_RETRIES:
+                    raise
+                await _sleep(retry_delay(exc, attempt))
+        raise AssertionError("unreachable")  # pragma: no cover
+
+    async def _create_once(self, kwargs: dict[str, Any]) -> Any:
         """Send a request, retrying once without our extra fields if they are refused.
 
         `reasoning_effort` is the one that matters: Ollama honours it and it is worth a 40x
@@ -94,10 +130,12 @@ class OpenAICompatibleBackend(Backend):
             "tool_choice": "auto",
             "temperature": temperature,
         }
-        if seed is not None:
+        if seed is not None and self.supports_seed:
             kwargs["seed"] = seed
         try:
             response = await self._create(kwargs)
+        except QuotaExhaustedError:
+            raise
         except Exception as exc:
             return Selection(error=self._explain(exc))
 
@@ -140,10 +178,12 @@ class OpenAICompatibleBackend(Backend):
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
-        if seed is not None:
+        if seed is not None and self.supports_seed:
             kwargs["seed"] = seed
         try:
             response = await self._create(kwargs)
+        except QuotaExhaustedError:
+            raise
         except Exception as exc:
             raise BackendError(self._explain(exc)) from exc
         if not response.choices:
@@ -180,13 +220,19 @@ class OpenAICompatibleBackend(Backend):
     def _explain(self, exc: Exception) -> str:
         """Turn a client error into something that says what to do next."""
         text = str(exc)
+        local = self.is_local
         if self.base_url and ("Connection" in type(exc).__name__ or "connect" in text.lower()):
+            if not local:
+                return (
+                    f"could not reach the model backend at {self.base_url} after "
+                    f"{RATE_LIMIT_RETRIES} retries. Check the network connection."
+                )
             return (
                 f"could not reach the model backend at {self.base_url}. "
                 "Is Ollama running? Start it with `ollama serve`, then "
                 f"`ollama pull {self.model}`."
             )
-        if "not found" in text.lower() and self.base_url:
+        if "not found" in text.lower() and local:
             return f"model {self.model!r} is not installed. Run: ollama pull {self.model}"
         return f"{type(exc).__name__}: {text}"
 
@@ -232,6 +278,64 @@ def _truncation_error(response: Any, tools: list[Tool]) -> str | None:
         "`OLLAMA_NUM_PARALLEL` divides the context between concurrent requests - or measure a "
         "server with fewer tools."
     )
+
+
+#: How many times to wait out a per-minute rate limit before giving up on one request.
+RATE_LIMIT_RETRIES = 6
+
+#: Replaced in tests, so a retry costs no wall-clock time.
+_sleep = asyncio.sleep
+
+_RETRY_DELAY = re.compile(r"retry(?:Delay|[ _-]in)[\"']?\s*[:=]?\s*[\"']?(\d+(?:\.\d+)?)\s*s", re.I)
+
+
+def rate_limit_kind(exc: Exception) -> str | None:
+    """Classify a 429: "daily" for a used-up quota, "minute" for a transient limit.
+
+    Gemini names the exhausted quota (`...PerDayPerProjectPerModel-FreeTier` versus
+    `...PerMinute...`); OpenAI says `insufficient_quota` when the balance, not the rate, is
+    the problem. Neither will clear by retrying within the day.
+    """
+    status = getattr(exc, "status_code", None)
+    text = str(exc)
+    if status != 429 and type(exc).__name__ != "RateLimitError" and "429" not in text[:40]:
+        return None
+    lowered = text.lower()
+    if "perday" in lowered or "per day" in lowered or "insufficient_quota" in lowered:
+        return "daily"
+    return "minute"
+
+
+def transient_kind(exc: Exception) -> str | None:
+    """A failure worth retrying: a dropped connection, a timeout, or a 5xx.
+
+    Measured on the first Gemini pilot: a laptop going to sleep cost 37 trials as connection
+    errors, and Google's "this model is currently experiencing high demand" 503 cost 4 more.
+    Both clear on their own.
+    """
+    name = type(exc).__name__
+    if name in {"APIConnectionError", "APITimeoutError"} or "Timeout" in name:
+        return "transient"
+    status = getattr(exc, "status_code", None)
+    if isinstance(status, int) and status >= 500:
+        return "transient"
+    return None
+
+
+def retry_delay(exc: Exception, attempt: int) -> float:
+    """How long the provider asked us to wait, or an exponential fallback."""
+    response = getattr(exc, "response", None)
+    headers = getattr(response, "headers", None) or {}
+    try:
+        after = headers.get("retry-after")
+        if after:
+            return min(float(after) + 1.0, 120.0)
+    except (TypeError, ValueError):
+        pass
+    match = _RETRY_DELAY.search(str(exc))
+    if match:
+        return min(float(match.group(1)) + 1.0, 120.0)
+    return float(min(5 * 2**attempt, 60))
 
 
 def _looks_like_rejected_field(exc: Exception) -> bool:

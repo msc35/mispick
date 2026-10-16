@@ -27,7 +27,7 @@ from typing import Any
 
 import yaml
 
-from mispick.models.base import DEFAULT_MAX_TOKENS, Backend, BackendError
+from mispick.models.base import DEFAULT_MAX_TOKENS, Backend, BackendError, QuotaExhaustedError
 from mispick.types import Query, Tool, ToolSet
 
 #: Where the cache lives, relative to the working directory.
@@ -109,6 +109,17 @@ def _schema_summary(tool: Tool) -> str:
     return ", ".join(bits) + "   (* = required)"
 
 
+#: Without this, generated requests lean on context that does not exist - "insert these
+#: nodes into the graph" with no nodes - and a sensible model looks before it writes, calling a
+#: read tool first. Measured on the first Gemini pilot: 13 of 30 create requests went to
+#: `read_graph`. That scores the generator's vagueness against the server.
+SELF_CONTAINED_RULE = (
+    "Each request must stand alone: spell out the concrete details the user would actually "
+    "give (names, values, paths, the text itself). Never refer to 'these', 'that', 'the "
+    "above' or anything said earlier."
+)
+
+
 def build_prompt(tool: Tool, neighbour: Tool | None, plan: GenerationPlan) -> str:
     """The generation prompt. Neighbours appear by name only - never their descriptions."""
     neighbour_name = neighbour.qualified_name if neighbour else None
@@ -145,6 +156,7 @@ def build_prompt(tool: Tool, neighbour: Tool | None, plan: GenerationPlan) -> st
         "",
         "Rules: one sentence each. No tool names in the text. No numbering.",
         "Do not quote the description above.",
+        SELF_CONTAINED_RULE,
         "",
         "Reply with JSON only:",
         '{"queries": [{"text": "...", "kind": "straightforward|paraphrased|hard_negative"}]}',
@@ -165,6 +177,7 @@ def build_no_tool_prompt(tools: list[Tool], count: int) -> str:
             "answer from its own knowledge or say it cannot help, and call no tool at all.",
             "",
             "Rules: one sentence each. No tool names. No numbering.",
+            SELF_CONTAINED_RULE,
             "",
             "Reply with JSON only:",
             '{"queries": [{"text": "..."}]}',
@@ -285,6 +298,8 @@ async def generate_for_tool(
                 max_tokens=max_tokens,
             )
             items = _parse_queries(reply)
+        except QuotaExhaustedError:
+            raise
         except BackendError as exc:
             last_error = exc
             items = []

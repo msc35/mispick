@@ -29,6 +29,15 @@ class BackendError(RuntimeError):
     """The model backend could not be reached, or gave us something unusable."""
 
 
+class QuotaExhaustedError(BackendError):
+    """The provider's daily quota, or our own call budget, is used up.
+
+    This is never a model decision. Recording it as "chose nothing" would score the server's
+    descriptions for our billing limit, so it always propagates: the caller keeps the progress
+    it has and resumes later.
+    """
+
+
 @dataclass
 class Selection:
     """One model decision, before we validate it against the schema."""

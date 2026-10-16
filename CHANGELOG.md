@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Rate limits: OpenAI-compatible backends (Ollama, OpenAI, Gemini, custom) wait out a
+  per-minute 429 using the provider's own retry delay. A used-up daily quota raises
+  `QuotaExhaustedError` and is never recorded as a model decision.
+- `PacedBackend` paces calls under a requests-per-minute and tokens-per-minute cap and stops
+  cleanly at a call budget.
+- `run_selection(completed=...)` reuses trials from an interrupted run instead of repeating them.
+- Benchmark: `measure.py` is resumable (`--only`, `--rerun`, `--rpm`, `--tpm`, `--budget-calls`)
+  and the `benchmark` workflow runs it daily on the Gemini free tier.
+- Fix: the Gemini backend sent `seed`, which Gemini rejects with a 400 on every call.
+
 ## 0.1.0 — unreleased
 
 First release. Not yet published to PyPI.
