@@ -1,0 +1,116 @@
+# Hand-written requests for ai-adeu-adeu
+#
+# Write what a real user would type to an assistant that has these tools.
+# - At least 2 per tool and 20 in total. Include some hard cases.
+# - Put each request under the tool that SHOULD be chosen.
+# - kind: straightforward (default), paraphrased (indirect wording), or hard_negative
+#   (sounds like a different tool, but this one is right). For a hard case, set
+#   `neighbour:` to the tool it sounds like.
+# - Give concrete details (names, paths, values). Never 'these' or 'that'.
+# - Do NOT look at generated queries or benchmark results for this server first.
+# - Requests no tool can answer go under no_tool at the bottom.
+#
+# Leave `fingerprint` alone: it ties these requests to this exact tool list.
+version: 1
+server: ai-adeu-adeu
+tools:
+  accept_all_changes:
+    # What this tool says it does:
+    #   Accepts all tracked changes and removes all comments in a single operation, producing a finalized clean document. Use this when a document review is entirely complete and you want to clear all redlines.
+    fingerprint: b17295139b52f11e
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  create_email_draft:
+    # What this tool says it does:
+    #   Creates an email draft in the user's native draft box. Provide `reply_to_email_id` to reply, or `subject` and `to_recipients` for a new email.
+    fingerprint: b974565cf503bb9b
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  diff_docx_files:
+    # What this tool says it does:
+    #   Compares two DOCX files and returns a unified diff of their text content. Useful for analyzing differences between versions before editing.
+    fingerprint: d498e68c18995fdc
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  finalize_document:
+    # What this tool says it does:
+    #   Prepares a document for external distribution or e-signature. This tool combines metadata sanitization, document locking (protection), and markup resolution into a single step. NOTE: PDF export and AES encryption are disabled in this environment.
+    fingerprint: 74ee881ba23af006
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  login_to_adeu_cloud:
+    # What this tool says it does:
+    #   Logs the user into the Adeu Cloud backend. Securely opens a browser window for authentication.
+    fingerprint: 76ebc8502478b5d8
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  logout_of_adeu_cloud:
+    # What this tool says it does:
+    #   Logs out of the Adeu Cloud backend by clearing the local API key.
+    fingerprint: ae2b319b2c14bad7
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  process_document_batch:
+    # What this tool says it does:
+    #   Applies a batch of edits and review actions to a DOCX.
+    #
+    #   All changes evaluate against the ORIGINAL document state — do not chain dependent edits within one batch (e.g. rename X to Y, then modify Y). Apply the rename first, then send a second batch.
+    #
+    #   Each item in `changes` must specify a `type`:
+    #   1. 'modify': Search-and-replace. `target_text` must uniquely match — include surrounding context if the phrase is ambiguous. `new_text` supports Markdown: '# Heading 1' through '###### Heading 6', '**bold**', '_italic_', and '\n\n' to split into multiple paragraphs. Empty `new_text` deletes. Do NOT write CriticMarkup tags ({++, {--, {>>) manually — use the `comment` parameter for comments.
+    #   2. 'accept' / 'reject': Finalize or revert a tracked change by `target_id` (e.g. 'Chg:12').
+    #   3. 'reply': Reply to a comment by `target_id` (e.g. 'Com:5') with `text`.
+    #   4. 'insert_row' / 'delete_row': Table edits. Disk mode only — not supported on Live Word canvas.
+    #
+    #   ID VOLATILITY: 'Chg:N' and 'Com:N' shift between document states. Always call `read_docx` immediately before any accept/reject/reply — do not reuse IDs from earlier in the conversation.
+    #
+    #   `author_name` is used for attribution on all tracked changes and comments, in both disk and Live Word modes.
+    fingerprint: 58ddba912fca0bd6
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  read_docx:
+    # What this tool says it does:
+    #   Reads a DOCX file. Returns text with inline CriticMarkup for Tracked Changes and Comments: {++inserted++}, {--deleted--}, {==highlighted==}{>>comment<<}. Set clean_view=True for the finalized 'Accepted' text without markup.
+    #
+    #   Modes:
+    #   - 'full' (default): paginated body content. Use page=N to navigate.
+    #   - 'outline': heading map only — start here for large docs to plan targeted reads. Defaults to L1-L2 headings; pass outline_max_level=3-6 to see deeper structure.
+    #   - 'appendix': defined terms, anchors, and cross-reference targets. Consult before editing legal/technical docs to avoid breaking references.
+    fingerprint: 741521fe4b799474
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  search_and_fetch_emails:
+    # What this tool says it does:
+    #   Searches the user's live email inbox. By default, searches only the Inbox folder. Returns a list of lightweight previews. Call again with `email_id` to fetch the full body and download attachments.
+    fingerprint: 2f14cefce0d5d4cc
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+no_tool:
+- text: ""

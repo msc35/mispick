@@ -184,4 +184,13 @@ All of these outcomes are publishable and will be reported in the same way.
 
 ## Deviations
 
-None yet.
+### 2026-10-16: hard cases in the hand-written set (RQ-c)
+
+Recorded before any hand-written request was written and before any benchmark result was
+analysed. Section 7 asks for "some hard cases" in the human set, but compares it with the
+generated **primary** set, which leaves hard negatives out. To compare like with like:
+
+- Hand-written requests marked `kind: hard_negative` are kept out of the primary accuracy
+  difference and reported separately.
+- Hand-written requests follow the same "spell out concrete details" rule the generator was
+  given. The template states that rule.

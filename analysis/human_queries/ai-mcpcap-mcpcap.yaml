@@ -1,0 +1,262 @@
+# Hand-written requests for ai-mcpcap-mcpcap
+#
+# Write what a real user would type to an assistant that has these tools.
+# - At least 2 per tool and 20 in total. Include some hard cases.
+# - Put each request under the tool that SHOULD be chosen.
+# - kind: straightforward (default), paraphrased (indirect wording), or hard_negative
+#   (sounds like a different tool, but this one is right). For a hard case, set
+#   `neighbour:` to the tool it sounds like.
+# - Give concrete details (names, paths, values). Never 'these' or 'that'.
+# - Do NOT look at generated queries or benchmark results for this server first.
+# - Requests no tool can answer go under no_tool at the bottom.
+#
+# Leave `fingerprint` alone: it ties these requests to this exact tool list.
+version: 1
+server: ai-mcpcap-mcpcap
+tools:
+  analyze_capinfos:
+    # What this tool says it does:
+    #   Return metadata from a PCAP file, similar to Wireshark's capinfos utility.
+    #
+    #   IMPORTANT: This tool expects a FILE PATH or URL, not file content.
+    #   - For local files: "/path/to/capture.pcap"
+    #   - For remote files: "https://example.com/capture.pcap"
+    #   - File uploads are NOT supported - save the file locally first
+    #
+    #   Args:
+    #       pcap_file: Path to local PCAP file or HTTP URL to remote PCAP file
+    #                 (NOT file content - must be a path or URL)
+    #
+    #   Returns:
+    #       A structured dictionary containing PCAP metadata including:
+    #       - File information (size, name, encapsulation type)
+    #       - Packet statistics (count, data size, average sizes)
+    #       - Temporal data (duration, timestamps, rates)
+    fingerprint: 1e55b5e3dc4516f7
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_dhcp_packets:
+    # What this tool says it does:
+    #   Analyze DHCP packets from a PCAP file and return comprehensive analysis results.
+    #
+    #   FILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through
+    #   Claude's web interface. Files must be accessible via URL or local file path.
+    #
+    #   SUPPORTED INPUT FORMATS:
+    #   - Remote files: "https://example.com/capture.pcap"
+    #   - Local files: "/absolute/path/to/capture.pcap"
+    #
+    #   UNSUPPORTED:
+    #   - Files uploaded through Claude's file upload feature
+    #   - Base64 file content
+    #   - Relative file paths
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #
+    #   Returns:
+    #       A structured dictionary containing DHCP packet analysis results
+    fingerprint: 139d4c9b27f4dcf8
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_dns_packets:
+    # What this tool says it does:
+    #   Analyze DNS packets from a PCAP file and return comprehensive analysis results.
+    #
+    #   FILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through
+    #   Claude's web interface. Files must be accessible via URL or local file path.
+    #
+    #   SUPPORTED INPUT FORMATS:
+    #   - Remote files: "https://example.com/capture.pcap"
+    #   - Local files: "/absolute/path/to/capture.pcap"
+    #
+    #   UNSUPPORTED:
+    #   - Files uploaded through Claude's file upload feature
+    #   - Base64 file content
+    #   - Relative file paths
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #
+    #   Returns:
+    #       A structured dictionary containing DNS packet analysis results
+    fingerprint: 9ac834945417d748
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_icmp_packets:
+    # What this tool says it does:
+    #   Analyze ICMP packets from a PCAP file and return comprehensive analysis results.
+    #
+    #   FILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through
+    #   Claude's web interface. Files must be accessible via URL or local file path.
+    #
+    #   SUPPORTED INPUT FORMATS:
+    #   - Remote files: "https://example.com/capture.pcap"
+    #   - Local files: "/absolute/path/to/capture.pcap"
+    #
+    #   UNSUPPORTED:
+    #   - Files uploaded through Claude's file upload feature
+    #   - Base64 file content
+    #   - Relative file paths
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #
+    #   Returns:
+    #       A structured dictionary containing ICMP packet analysis results
+    fingerprint: 4551a5a3986eebd5
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_sip_packets:
+    # What this tool says it does:
+    #   Analyze SIP packets from a PCAP file and return structured signaling details.
+    #
+    #   FILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through
+    #   Claude's web interface. Files must be accessible via URL or local file path.
+    #
+    #   SUPPORTED INPUT FORMATS:
+    #   - Remote files: "https://example.com/capture.pcap"
+    #   - Local files: "/absolute/path/to/capture.pcap"
+    #
+    #   UNSUPPORTED:
+    #   - Files uploaded through Claude's file upload feature
+    #   - Base64 file content
+    #   - Relative file paths
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #
+    #   Returns:
+    #       A structured dictionary containing SIP packet analysis results
+    fingerprint: 288f42f4eccd04a6
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_tcp_anomalies:
+    # What this tool says it does:
+    #   Detect TCP traffic patterns through statistical analysis.
+    #
+    #   This tool analyzes TCP traffic to identify observable patterns without
+    #   making assumptions about root causes. It provides factual metrics and
+    #   pattern detection that can be used for further investigation.
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #       server_ip: Optional filter for server IP address
+    #       server_port: Optional filter for server port
+    #
+    #   Returns:
+    #       A structured dictionary containing:
+    #       - statistics: Comprehensive TCP metrics (handshakes, flags, RST distribution, etc.)
+    #       - patterns: Observable patterns detected in the traffic
+    #       - summary: High-level summary of findings
+    #
+    #   Detected pattern categories:
+    #   - connection_establishment: Handshake success/failure rates, SYN response ratios
+    #   - connection_termination: RST distribution, normal vs abnormal closes
+    #   - reliability: Retransmission rates, packet loss indicators
+    #   - connection_lifecycle: Connection state transitions
+    #
+    #   The analysis is purely observational - it reports what is seen in the traffic
+    #   without attempting to diagnose specific issues like "firewall block" or
+    #   "network congestion". This allows the data to be interpreted in context.
+    fingerprint: 976a5d0831f922bd
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_tcp_connections:
+    # What this tool says it does:
+    #   Analyze TCP connection states and lifecycle.
+    #
+    #   This is the core tool for TCP connection analysis, solving 80% of TCP-related issues.
+    #
+    #   FILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through
+    #   Claude's web interface. Files must be accessible via URL or local file path.
+    #
+    #   SUPPORTED INPUT FORMATS:
+    #   - Remote files: "https://example.com/capture.pcap"
+    #   - Local files: "/absolute/path/to/capture.pcap"
+    #
+    #   UNSUPPORTED:
+    #   - Files uploaded through Claude's file upload feature
+    #   - Base64 file content
+    #   - Relative file paths
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #       server_ip: Optional filter for server IP address
+    #       server_port: Optional filter for server port
+    #       detailed: Whether to return detailed connection information
+    #
+    #   Returns:
+    #       A structured dictionary containing TCP connection analysis results including:
+    #       - summary: Overall connection statistics
+    #       - connections: List of individual connections with states
+    #       - issues: Detected problems
+    fingerprint: 1daa773f8373798c
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_tcp_retransmissions:
+    # What this tool says it does:
+    #   Analyze TCP retransmission patterns.
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #       server_ip: Optional filter for server IP address
+    #       threshold: Retransmission rate threshold (default: 2%)
+    #
+    #   Returns:
+    #       A structured dictionary containing:
+    #       - total_retransmissions: Total number of retransmissions
+    #       - retransmission_rate: Overall retransmission rate
+    #       - by_connection: Per-connection retransmission statistics
+    #       - summary: Worst connections and threshold violations
+    fingerprint: 00fa27891ad3e2a0
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  analyze_traffic_flow:
+    # What this tool says it does:
+    #   Analyze bidirectional traffic flow characteristics.
+    #
+    #   Identifies traffic direction, asymmetry, RST sources, and data transfer patterns.
+    #
+    #   Args:
+    #       pcap_file: HTTP URL or absolute local file path to PCAP file
+    #       server_ip: Server IP address (required)
+    #       server_port: Optional filter for server port
+    #
+    #   Returns:
+    #       A structured dictionary containing:
+    #       - client_to_server: Client-to-server traffic statistics
+    #       - server_to_client: Server-to-client traffic statistics
+    #       - analysis: Asymmetry analysis and interpretations
+    fingerprint: aca63352120fd3df
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+no_tool:
+- text: ""

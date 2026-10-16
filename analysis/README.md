@@ -33,6 +33,16 @@ uv run python analysis/transfer.py analyze                          # writes res
 - **Fixed in advance.** The model choice goes into a dated addendum in the analysis plan before
   the run.
 
+**RQ-c: generated vs hand-written requests** (`human_vs_generated.py`). The requests in
+`human_queries/` are written by hand. Each template shows the tools' descriptions, never the
+generated queries.
+
+```bash
+uv run python analysis/human_vs_generated.py check        # >= 2 per tool, >= 20 per server
+uv run python analysis/human_vs_generated.py run --yes    # benchmark model and settings
+uv run python analysis/human_vs_generated.py analyze      # writes results/human_vs_generated.json
+```
+
 **Outputs** go to `results/`:
 - `features.csv` and `features_meta.json`
 - `analysis.json`

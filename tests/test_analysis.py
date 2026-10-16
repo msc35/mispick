@@ -305,3 +305,89 @@ class TestTransfer:
         assert entry["spearman_all_pairs"]["rho"] == pytest.approx(1.0)
         assert entry["top_k"]["top1_match_share"] == 1.0
         assert all(t["other_better"] == 0 and t["other_worse"] == 0 for t in entry["mcnemar_f2"])
+
+
+class TestHumanVsGenerated:
+    def _module(self) -> Any:
+        return importlib.import_module("analysis.human_vs_generated")
+
+    def _fill(self, path: Path) -> None:
+        """Stand in for the person: write requests that name each tool's purpose."""
+        import yaml
+
+        data = yaml.safe_load(path.read_text())
+        for name, entry in data["tools"].items():
+            words = name.replace("_", " ")
+            entry["queries"] = [
+                {"text": f"please {words} for account {i}", "kind": "straightforward"}
+                for i in range(4)
+            ]
+        data["no_tool"] = [{"text": "what is the capital of France"}]
+        path.write_text(yaml.safe_dump(data, sort_keys=False))
+
+    def test_the_template_holds_descriptions_but_no_generated_queries(
+        self, frozen_benchmark: tuple[Path, Path], tmp_path: Path
+    ) -> None:
+        module = self._module()
+        snapshots, data = frozen_benchmark
+        human = tmp_path / "human"
+        common = ["--human", str(human), "--snapshots", str(snapshots), "--servers", "alpha"]
+        assert module.main([*common, "template"]) == 0
+        text = (human / "alpha.yaml").read_text()
+        generated = (data / ".queries" / "alpha" / "queries.yaml").read_text()
+        import yaml
+
+        for tool in yaml.safe_load(generated)["tools"].values():
+            for query in tool["queries"]:
+                assert query["text"] not in text
+        assert "search_docs" in text
+        assert module.main([*common, "check"]) == 1
+
+    def test_check_catches_the_rules(self, frozen_benchmark: tuple[Path, Path]) -> None:
+        module = self._module()
+        snapshots, _ = frozen_benchmark
+        from mispick.sources.snapshot import load_snapshot
+
+        tool_set = load_snapshot(snapshots / "alpha.json")
+        path = snapshots.parent / "bad.yaml"
+        path.write_text(module.render_template("alpha", tool_set))
+        import yaml
+
+        doc = yaml.safe_load(path.read_text())
+        first = next(iter(doc["tools"]))
+        doc["tools"][first]["queries"] = [
+            {"text": "same thing"}, {"text": "Same thing"}, {"text": "x", "kind": "hard_negative"}
+        ]
+        path.write_text(yaml.safe_dump(doc))
+        _, problems = module.read_human(path, tool_set)
+        joined = "\n".join(problems)
+        assert "duplicate request" in joined
+        assert "needs `neighbour:`" in joined
+        assert "(need 20)" in joined
+
+    def test_end_to_end_with_the_mock_model(
+        self, frozen_benchmark: tuple[Path, Path], tmp_path: Path
+    ) -> None:
+        for module_name in ("numpy",):
+            pytest.importorskip(module_name)
+        module = self._module()
+        snapshots, data = frozen_benchmark
+        human = tmp_path / "human"
+        out = tmp_path / "out"
+        common = ["--human", str(human), "--snapshots", str(snapshots), "--data", str(data),
+                  "--out", str(out), "--servers", "alpha,beta"]
+        assert module.main([*common, "template"]) == 0
+        for slug in ("alpha", "beta"):
+            self._fill(human / f"{slug}.yaml")
+        assert module.main([*common, "check"]) == 0
+        assert module.main([*common, "run", "--model", "mock"]) == 2
+        assert module.main([*common, "run", "--model", "mock", "--yes", "--rpm", "0",
+                            "--tpm", "0"]) == 0
+        assert module.main([*common, "analyze"]) == 0
+
+        report = json.loads((out / "human_vs_generated.json").read_text())
+        assert report["complete"] is True
+        assert report["servers"] == ["alpha", "beta"]
+        difference = report["difference"]
+        assert difference["lo"] <= difference["difference_pp"] <= difference["hi"]
+        assert difference["verdict"].split()[0] in {"equivalent", "different", "inconclusive"}

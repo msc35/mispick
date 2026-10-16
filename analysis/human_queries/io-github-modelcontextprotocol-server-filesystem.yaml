@@ -1,0 +1,144 @@
+# Hand-written requests for io-github-modelcontextprotocol-server-filesystem
+#
+# Write what a real user would type to an assistant that has these tools.
+# - At least 2 per tool and 20 in total. Include some hard cases.
+# - Put each request under the tool that SHOULD be chosen.
+# - kind: straightforward (default), paraphrased (indirect wording), or hard_negative
+#   (sounds like a different tool, but this one is right). For a hard case, set
+#   `neighbour:` to the tool it sounds like.
+# - Give concrete details (names, paths, values). Never 'these' or 'that'.
+# - Do NOT look at generated queries or benchmark results for this server first.
+# - Requests no tool can answer go under no_tool at the bottom.
+#
+# Leave `fingerprint` alone: it ties these requests to this exact tool list.
+version: 1
+server: io-github-modelcontextprotocol-server-filesystem
+tools:
+  create_directory:
+    # What this tool says it does:
+    #   Create a new directory or ensure a directory exists. Can create multiple nested directories in one operation. If the directory already exists, this operation will succeed silently. Perfect for setting up directory structures for projects or ensuring required paths exist. Only works within allowed directories.
+    fingerprint: 95e2361967d63835
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  directory_tree:
+    # What this tool says it does:
+    #   Get a recursive tree view of files and directories as a JSON structure. Each entry includes 'name', 'type' (file/directory), and 'children' for directories. Files have no children array, while directories always have a children array (which may be empty). The output is formatted with 2-space indentation for readability. Only works within allowed directories.
+    fingerprint: fba7f184b165748f
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  edit_file:
+    # What this tool says it does:
+    #   Make line-based edits to a text file. Each edit replaces exact line sequences with new content. Returns a git-style diff showing the changes made. Only works within allowed directories.
+    fingerprint: 4e97b117d9b1ab18
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  get_file_info:
+    # What this tool says it does:
+    #   Retrieve detailed metadata about a file or directory. Returns comprehensive information including size, creation time, last modified time, permissions, and type. This tool is perfect for understanding file characteristics without reading the actual content. Only works within allowed directories.
+    fingerprint: c1eff6287779e270
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  list_allowed_directories:
+    # What this tool says it does:
+    #   Returns the list of directories that this server is allowed to access. Subdirectories within these allowed directories are also accessible. Use this to understand which directories and their nested paths are available before trying to access files.
+    fingerprint: eb5bf7b5ecf1ea8d
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  list_directory:
+    # What this tool says it does:
+    #   Get a detailed listing of all files and directories in a specified path. Results clearly distinguish between files and directories with [FILE] and [DIR] prefixes. This tool is essential for understanding directory structure and finding specific files within a directory. Only works within allowed directories.
+    fingerprint: 141874637796acaa
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  list_directory_with_sizes:
+    # What this tool says it does:
+    #   Get a detailed listing of all files and directories in a specified path, including sizes. Results clearly distinguish between files and directories with [FILE] and [DIR] prefixes. This tool is useful for understanding directory structure and finding specific files within a directory. Only works within allowed directories.
+    fingerprint: 92cf130748680c65
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  move_file:
+    # What this tool says it does:
+    #   Move or rename files and directories. Can move files between directories and rename them in a single operation. If the destination exists, the operation will fail. Works across different directories and can be used for simple renaming within the same directory. Both source and destination must be within allowed directories.
+    fingerprint: fac1cd7f8f01b613
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  read_file:
+    # What this tool says it does:
+    #   Read the complete contents of a file as text. DEPRECATED: Use read_text_file instead.
+    fingerprint: a3df431073a83b9e
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  read_media_file:
+    # What this tool says it does:
+    #   Read a file and return it as a base64-encoded content block with its MIME type. Image and audio files are returned as image/audio content; any other file type is returned as an embedded resource. Only works within allowed directories.
+    fingerprint: 22f080d7078952b7
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  read_multiple_files:
+    # What this tool says it does:
+    #   Read the contents of multiple files simultaneously. This is more efficient than reading files one by one when you need to analyze or compare multiple files. Each file's content is returned with its path as a reference. Failed reads for individual files won't stop the entire operation. Only works within allowed directories.
+    fingerprint: d3574de6e207331e
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  read_text_file:
+    # What this tool says it does:
+    #   Read the complete contents of a file from the file system as text. Handles various text encodings and provides detailed error messages if the file cannot be read. Use this tool when you need to examine the contents of a single file. Use the 'head' parameter to read only the first N lines of a file, or the 'tail' parameter to read only the last N lines of a file. Operates on the file as text regardless of extension. Only works within allowed directories.
+    fingerprint: bb3b671ea9ed00e6
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  search_files:
+    # What this tool says it does:
+    #   Recursively search for files and directories matching a pattern. The patterns should be glob-style patterns that match paths relative to the working directory. Use pattern like '*.ext' to match files in current directory, and '**/*.ext' to match files in all subdirectories. Returns full paths to all matching items. Great for finding files when you don't know their exact location. Only searches within allowed directories.
+    fingerprint: 2528a7ea1e748b16
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  write_file:
+    # What this tool says it does:
+    #   Create a new file or completely overwrite an existing file with new content. Use with caution as it will overwrite existing files without warning. Handles text content with proper encoding. Only works within allowed directories.
+    fingerprint: 41a0dfa3143d99fb
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+no_tool:
+- text: ""

@@ -1,0 +1,63 @@
+# Hand-written requests for ai-thiri-chord-intelligence
+#
+# Write what a real user would type to an assistant that has these tools.
+# - At least 2 per tool and 20 in total. Include some hard cases.
+# - Put each request under the tool that SHOULD be chosen.
+# - kind: straightforward (default), paraphrased (indirect wording), or hard_negative
+#   (sounds like a different tool, but this one is right). For a hard case, set
+#   `neighbour:` to the tool it sounds like.
+# - Give concrete details (names, paths, values). Never 'these' or 'that'.
+# - Do NOT look at generated queries or benchmark results for this server first.
+# - Requests no tool can answer go under no_tool at the bottom.
+#
+# Leave `fingerprint` alone: it ties these requests to this exact tool list.
+version: 1
+server: ai-thiri-chord-intelligence
+tools:
+  analyze_chord:
+    # What this tool says it does:
+    #   Parse a chord symbol into its root, quality, intervals, extensions, and harmonic function. When a key is provided, returns the Roman numeral, scale degree, and whether the chord is diatonic.
+    fingerprint: 4996383ee4ad4090
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  conduct_band:
+    # What this tool says it does:
+    #   Arrange a 4-piece band from a natural-language prompt. Returns conductor tempo/groove, 4 lanes of note events, lead sheet, and base64 MIDI. Browser/client synthesizes audio via Csound; use thiri-conductor-mcp locally to render WAV.
+    fingerprint: 0e245ae432c457fc
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  generate_voicing:
+    # What this tool says it does:
+    #   Generate instrument-ready voicings for a chord in a specified style. Pass previousNotes (or a previousVoicing object) from an earlier result to get a voiceLeadingScore for the transition. Styles: rootless, bill_evans, shell, triad, pad, guide-tones, guide-tone-1, guide-tone-2, both-guide-tones, drop-2, drop-3.
+    fingerprint: 4b5734cbf4b9a04d
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  reharmonize:
+    # What this tool says it does:
+    #   Reharmonize a chord progression using jazz techniques. Returns one alternative per applicable technique, each with the new progression, the changes, and a plain-English explanation. With technique 'auto' (default) it returns every technique that applies. Techniques: tritone_sub, ii_v_insertion, modal_interchange, diminished_passing, secondary_dominant, chain_of_dominants, coltrane_changes, backdoor. (modal_interchange and backdoor require a key.)
+    fingerprint: 9146d5a8faaa36f8
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+  resolve_chord:
+    # What this tool says it does:
+    #   Resolve a chord symbol to spelled note names, frequencies in Hz, MIDI numbers, and recommended improvisation scales.
+    fingerprint: c80923bab1b8b72a
+    queries:
+    - text: ""
+      kind: straightforward
+    - text: ""
+      kind: straightforward
+no_tool:
+- text: ""
