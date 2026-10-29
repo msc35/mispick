@@ -1,8 +1,8 @@
 # Which MCP tools do models confuse, and why?
 
-**Status:** in progress. The setup and methods sections are final. Every results section is a
-placeholder until its numbers exist in `results/`. No finding is stated here before the data
-shows it.
+**Status:** Q1 results are in (2026-10-29). Q2 (cross-model) and Q3 (generated vs hand-written)
+are still to come. Every number below comes from a file in `results/`; no finding is stated here
+before the data shows it.
 
 ## Question
 
@@ -100,7 +100,123 @@ as positive ones.
 
 ## Results
 
-*Placeholder. Filled from `results/analysis.json` once the benchmark run is frozen.*
+*All numbers in this section come from [`results/analysis.json`](../results/analysis.json),
+computed from the frozen run in `analysis/data/benchmark-v1/`.*
+
+### In short
+
+- **Similar names and similar descriptions go with more mix-ups.** Both pass the pre-registered
+  test, so by the plan's rule the result for Q1 is **"effect"**.
+- **But the evidence is fragile.** With only 13 servers, a few large servers carry the pooled
+  result. When whole servers are resampled, neither effect is clearly different from zero, and
+  without the largest server the description-similarity effect reverses.
+- **The clearest signal:** when a tool's description says **when to use it**, requests meant for
+  it are less often taken by another tool. This is the only effect that also survives the strict
+  whole-server check.
+- **Mix-ups are rare but not random:** the most similar fifth of tool pairs were confused about
+  5 times as often as the least similar fifth.
+
+![What goes with an AI picking the wrong tool](../results/figures/what-matters-light.png)
+
+![Pairs with the most similar descriptions were confused 4.8× as often](../results/figures/similarity-light.png)
+
+### What was measured
+
+| | |
+|---|---|
+| Model | `gemini/gemini-3.5-flash-lite`, N=8, K=3, temperature 0 |
+| Dates | 2026-10-17 to 2026-10-29 (one consistent model and setting throughout) |
+| Servers analysed | 13 |
+| Tools | 201 |
+| Ordered tool pairs | 5,814 |
+| Test requests (trials) in the main model | 3,618 (straightforward and paraphrased only) |
+| Trial × other-tool rows | 104,652, of which 465 were a confusion |
+
+**Excluded, by the pre-registered rules:**
+- **Vaaya: every one of its trials errored.** Its tool list has a broken JSON Schema: a reference
+  to a definition that doesn't exist (`booking → baggage`). Gemini rejects the whole tool list
+  because of it, so the server cannot be used with Gemini at all. This is a finding about the
+  server, not a model decision, and it will be reported upstream.
+- **Sequential Thinking:** it has only one tool, so it has no pairs.
+- **Not measured:** 15 registry candidates, all recorded in the frozen `index.json`:
+
+  | Reason | Servers |
+  |---|---|
+  | Failed to start | 7 |
+  | Needs credentials | 5 |
+  | Needs arguments | 1 |
+  | Package unavailable | 1 |
+  | Over the 120-tool limit | 1 |
+
+- **Tools:** none fell below the 12-valid-trial minimum.
+- **Errored trials** on the analysed servers: none.
+
+<details>
+<summary><b>Full model output: odds ratios, intervals and all three sensitivity checks</b></summary>
+
+The main model is a mixed-effects logistic regression with random intercepts for server and
+for the intended tool, fit with variational Bayes. Odds ratios are per 1 SD of each predictor.
+q is the Benjamini-Hochberg adjusted p-value (family F1).
+
+| Predictor | Odds ratio | 95% interval | q |
+|---|---|---|---|
+| Name-token overlap (`name_jaccard`) | 1.28 | 1.21 to 1.36 | < 0.001 |
+| Description similarity (`cos_sim`) | 1.11 | 1.03 to 1.20 | 0.005 |
+| Intended tool states when to use it (`when_a`) | 0.72 | 0.63 to 0.82 | < 0.001 |
+| Chosen tool states when to use it (`when_b`) | 1.36 | 1.26 to 1.47 | < 0.001 |
+| Intended tool's description length (`log_len_a`) | 1.53 | 1.36 to 1.73 | < 0.001 |
+| Chosen tool's description length (`log_len_b`) | 0.73 | 0.65 to 0.83 | < 0.001 |
+| Length difference (`log_len_diff`) | 0.81 | 0.71 to 0.92 | 0.001 |
+| Intended tool's documented parameters (`param_doc_a`) | 0.74 | 0.68 to 0.82 | < 0.001 |
+| Chosen tool's documented parameters (`param_doc_b`) | 1.33 | 1.21 to 1.48 | < 0.001 |
+
+The first two are the pre-registered confirmatory tests. The others are exploratory.
+
+**Sensitivity checks.** These are reported as registered. None replaces the main result.
+
+| Predictor | S1: whole-server bootstrap | S2: with hard negatives | S3: without the largest server |
+|---|---|---|---|
+| `name_jaccard` | 1.22 (0.88 to 1.56) | 1.24 (1.19 to 1.28) | 1.23 (1.12 to 1.34) |
+| `cos_sim` | 1.17 (0.81 to 1.50) | 1.74 (1.66 to 1.82) | **0.84** (0.76 to 0.93) |
+| `when_a` | **0.77 (0.46 to 0.98)** | 0.89 (0.82 to 0.96) | 0.76 (0.64 to 0.89) |
+| `when_b` | 1.52 (0.74 to 2.36) | 1.17 (1.10 to 1.24) | 1.35 (1.27 to 1.44) |
+| `log_len_a` | 1.30 (0.38 to 2.75) | 1.13 (1.05 to 1.22) | 1.41 (1.25 to 1.58) |
+| `log_len_b` | 0.61 (0.40 to 2.27) | 0.66 (0.61 to 0.71) | **1.62** (1.44 to 1.83) |
+| `log_len_diff` | 0.91 (0.13 to 1.32) | 0.85 (0.78 to 0.92) | 0.61 (0.55 to 0.69) |
+| `param_doc_a` | 0.88 (0.68 to 3.10) | 0.79 (0.74 to 0.84) | 1.09 (0.99 to 1.20) |
+| `param_doc_b` | 1.37 (0.65 to 2.85) | 1.33 (1.25 to 1.42) | 1.31 (1.17 to 1.46) |
+
+- **S1** refits an ordinary logistic regression on 2,000 resamples of whole servers, with
+  percentile intervals; 1 resample could not be fit. Only `when_a` keeps its interval clear of 1.
+- **S2** adds the hard-negative requests. As the plan anticipated, they inflate the similarity
+  effect, from 1.11 to 1.74, because they are written to sound like the most similar tool.
+- **S3** drops `co-workix-mcp`, the 64-tool server that contributes most of the pairs.
+  Description similarity then reverses, and so does the chosen tool's description length.
+
+**How to read this.** The main model's intervals are much narrower than S1's. The main model
+treats the K=3 repeats and the many pairs of one server as more independent than they are, and
+variational Bayes is known to understate uncertainty. S1 is the more conservative read.
+Four effects keep the same direction in the main model and all three checks: `name_jaccard`,
+`when_a`, `when_b` and `param_doc_b`. Of those, only `when_a` also has a whole-server interval
+clear of 1. Effects that flip between checks (`cos_sim`, `log_len_b`, `param_doc_a`) should not
+be read as findings.
+
+**Confusion by description similarity** (descriptive; pairs split into fifths by cosine
+similarity):
+
+| Fifth | Similarity range | Confusion rate | 95% interval |
+|---|---|---|---|
+| 1 (least similar) | −0.16 to 0.08 | 0.18% | 0.13% to 0.25% |
+| 2 | 0.08 to 0.16 | 0.36% | 0.29% to 0.45% |
+| 3 | 0.16 to 0.27 | 0.33% | 0.26% to 0.42% |
+| 4 | 0.27 to 0.41 | 0.47% | 0.39% to 0.58% |
+| 5 (most similar) | 0.41 to 0.95 | 0.87% | 0.75% to 1.01% |
+
+</details>
+
+**Not shown yet:** per-server results. They stay out of this write-up until the hand-written
+comparison (Q3) is done, so that comparison can still be done blind. They are in
+`results/analysis.json` and `results/server_accuracy.png`.
 
 ## Cross-model transfer
 

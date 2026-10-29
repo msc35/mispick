@@ -17,7 +17,7 @@
 - **Free by default.** It runs on a local model through Ollama. Cloud models are optional.
 - **Status:** v0.1.0 is [on PyPI](https://pypi.org/project/mispick/). A
   [public benchmark](#benchmark) of real MCP servers is running now. A
-  [research study](#research-study) built on it is pre-registered.
+  [research study](#research-study) built on it is pre-registered, with first results in.
 
 <p align="center">
   <img src="docs/media/demo.svg" alt="mispick's terminal report: a confusion matrix showing search_docs and search_issues being mistaken for each other, per-tool precision and recall with confidence intervals, and a 0-100 score." width="900">
@@ -195,7 +195,10 @@ asks three questions:
 2. **Does a cheap model's confusion predict a stronger model's?**
 3. **Do generated test requests give the same answers as hand-written ones?**
 
-Plan: [docs/analysis-plan.md](docs/analysis-plan.md). Write-up, with no results yet: [docs/study.md](docs/study.md).
+**First results are in.** Similar tool names go with more mix-ups, but with 13 servers the
+evidence is fragile. The clearest signal: a tool whose description says *when* to use it gets
+its requests taken by other tools less often. Plan: [docs/analysis-plan.md](docs/analysis-plan.md).
+Results: [docs/study.md](docs/study.md#results).
 
 ## Limitations
 

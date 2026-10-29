@@ -1,0 +1,107 @@
+{
+  "plan": "docs/analysis-plan.md",
+  "snapshots": "benchmark/snapshots",
+  "embedder": {
+    "kind": "minilm",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "repo": "Qdrant/all-MiniLM-L6-v2-onnx",
+    "revision": "d13954661f83248295ba75c1ed411eef3b7b936e",
+    "sha256": "bbd7b466f6d58e646fdc2bd5fd67b2f5e93c0b687011bd4548c420f7bd46f0c5",
+    "fastembed": "0.9.0"
+  },
+  "when_patterns": [
+    "\\buse (?:this|it)(?: tool)? (?:when|to|for|if)\\b",
+    "\\bwhen (?:you|the user)\\b",
+    "\\bonly (?:when|if|for)\\b",
+    "\\bdo not use\\b",
+    "\\bdon't use\\b",
+    "\\binstead of\\b",
+    "\\bprefer\\b"
+  ],
+  "common_token_share": 0.5,
+  "max_tools": 120,
+  "servers": {
+    "ai-adeu-adeu": {
+      "tools": 9,
+      "sha256": "99b10acf603388b5ef3fc8670f7d716a8be40fab80374efa78c141338fcaa407",
+      "pairs": 72
+    },
+    "ai-agenticaffiliate-affiliate-networks-mcp": {
+      "tools": 682,
+      "sha256": "f5b4f4d93a1304254971972d91b5306eb1d6382918c8c7ca0a4cf61080ecd910",
+      "skipped": "over --max-tools 120, not measured by the benchmark"
+    },
+    "ai-imboard-dossier": {
+      "tools": 10,
+      "sha256": "199c169873ebc3f9b5861ea0c8f4a58f50f559fa9b5dfd4714eea54fee25317c",
+      "pairs": 90
+    },
+    "ai-kinlab-kin": {
+      "tools": 22,
+      "sha256": "c24a8de74a5958ee74bbb27ec363d7599905f8a1bcf69753f487efa47a230ddb",
+      "pairs": 462
+    },
+    "ai-knowall-reverie": {
+      "tools": 12,
+      "sha256": "c764668aa544a7e53a5bec3f9a174aa3fddd9fa7ef69d8d0ce88abd5624e93e0",
+      "pairs": 132
+    },
+    "ai-mcpcap-mcpcap": {
+      "tools": 9,
+      "sha256": "4911a9fcc97d98fc9beb9681a3c07040a22afc0bf21015f89250d8de9357b3db",
+      "pairs": 72
+    },
+    "ai-thiri-chord-intelligence": {
+      "tools": 5,
+      "sha256": "25ebbc8157c0326ef9f9658967ac74b959d0acce1e555ddf99d68863171daace",
+      "pairs": 20
+    },
+    "ai-vaaya-mcp": {
+      "tools": 15,
+      "sha256": "69163f48118885b593dd3554bd776e1e75a881d7615add7bd1b5bd5d5bad23e5",
+      "pairs": 210
+    },
+    "ai-wavespeed-mcp": {
+      "tools": 7,
+      "sha256": "08e3ddefaeb9e50e45e437e201eb40ae9c370e45ecaaee920ce735209eebe9df",
+      "pairs": 42
+    },
+    "co-workix-mcp": {
+      "tools": 64,
+      "sha256": "5877c68b5b03e230d3dc69b2cd541073100c5402edba6415d1eb1bc5a91233ab",
+      "pairs": 4032
+    },
+    "com-1102tools-acquisition-gov-mcp": {
+      "tools": 5,
+      "sha256": "878e7803e833e0db701aabbd73d843fa8ed5b56fa758b3334bbb07dab5525ac6",
+      "pairs": 20
+    },
+    "com-adrianczuczka-mason": {
+      "tools": 22,
+      "sha256": "7fa1378940b58c33821282edf9e39abe5c2b056e1550b9deb8800208b21e0842",
+      "pairs": 462
+    },
+    "io-github-modelcontextprotocol-server-everything": {
+      "tools": 13,
+      "sha256": "c6b3409f40808dae21a0e4c46f9b17ce4b35ad0b71a0cf686b758ce09850a05c",
+      "pairs": 156
+    },
+    "io-github-modelcontextprotocol-server-filesystem": {
+      "tools": 14,
+      "sha256": "ef5e469b3ca56012624db87f440fb64ba1ca4399738a9b24f2405877f2cf87c5",
+      "pairs": 182
+    },
+    "io-github-modelcontextprotocol-server-memory": {
+      "tools": 9,
+      "sha256": "6fbc0548c35dca3e55953b11a212df4cfa01ca8497b2f63a08975e178c3b6f08",
+      "pairs": 72
+    },
+    "io-github-modelcontextprotocol-server-sequential-thinking": {
+      "tools": 1,
+      "sha256": "fcad89cf745be328c657a5d371725f06b98c69f8603508f4aa4df20e9c6ef059",
+      "skipped": "one tool, so no pairs"
+    }
+  },
+  "pairs": 6024,
+  "features_sha256": "4f94888897ac988c8f5bfc114c672f8bfed3089e416e026e5f9da4e417a846b3"
+}

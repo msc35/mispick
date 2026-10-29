@@ -1,0 +1,669 @@
+{
+  "generated": "2026-10-29",
+  "plan": "docs/analysis-plan.md",
+  "benchmark": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "temperature": 0.0,
+    "dates": [
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29"
+    ],
+    "consistent": true
+  },
+  "inputs": {
+    "features": {
+      "path": "results/features.csv",
+      "sha256": "4f94888897ac988c8f5bfc114c672f8bfed3089e416e026e5f9da4e417a846b3"
+    },
+    "results": {
+      "ai-adeu-adeu": {
+        "path": "analysis/data/benchmark-v1/ai-adeu-adeu.json",
+        "sha256": "a62c168b97f659e1bc7cdf27dfb8207c18ddad656c2755bf01be88020f28c99a"
+      },
+      "ai-imboard-dossier": {
+        "path": "analysis/data/benchmark-v1/ai-imboard-dossier.json",
+        "sha256": "a1ad5960b8bc8b3780a64222f6da6836f075dc0e137d7b4d9bad9de7a373454a"
+      },
+      "ai-kinlab-kin": {
+        "path": "analysis/data/benchmark-v1/ai-kinlab-kin.json",
+        "sha256": "2b754b5bddee177bf179df8c8525a90ac3f22aa40c78630c8dbfe20b7e42069e"
+      },
+      "ai-knowall-reverie": {
+        "path": "analysis/data/benchmark-v1/ai-knowall-reverie.json",
+        "sha256": "e2b05b557aa36678a8e78ebf546e35818de13b0d4effb36f36a96eb32f7b921d"
+      },
+      "ai-mcpcap-mcpcap": {
+        "path": "analysis/data/benchmark-v1/ai-mcpcap-mcpcap.json",
+        "sha256": "0f45e17cfce395ac779ae9ba86fd0f60378aa0215d295983bbf42348580334e5"
+      },
+      "ai-thiri-chord-intelligence": {
+        "path": "analysis/data/benchmark-v1/ai-thiri-chord-intelligence.json",
+        "sha256": "c40b527f9ee1ef948db3d9a74faabe98bef2900313c19667d318fa50af8492a1"
+      },
+      "ai-vaaya-mcp": {
+        "path": "analysis/data/benchmark-v1/ai-vaaya-mcp.json",
+        "sha256": "a7605d3ea52748bea64c2599ee2c203a905b6115fdc0c50d059b77b75f97d3bb"
+      },
+      "ai-wavespeed-mcp": {
+        "path": "analysis/data/benchmark-v1/ai-wavespeed-mcp.json",
+        "sha256": "79bf4cee4f4b6d93c49c093160353cc82515d706d98df78a1415130556fa2ee4"
+      },
+      "co-workix-mcp": {
+        "path": "analysis/data/benchmark-v1/co-workix-mcp.json",
+        "sha256": "961b7b1724820df3d96b8888a8d2b4cb7c22d8c9e90d9dcc2c05ac1797e84593"
+      },
+      "com-1102tools-acquisition-gov-mcp": {
+        "path": "analysis/data/benchmark-v1/com-1102tools-acquisition-gov-mcp.json",
+        "sha256": "24a46c776030172aad895fbb4991f675a3c14cbde5e65dc77ada6a60abdf56fc"
+      },
+      "com-adrianczuczka-mason": {
+        "path": "analysis/data/benchmark-v1/com-adrianczuczka-mason.json",
+        "sha256": "38019db06eced55da9035111d1ae92e97b14d642c6447fb77c948669cb05bb26"
+      },
+      "io-github-modelcontextprotocol-server-everything": {
+        "path": "analysis/data/benchmark-v1/io-github-modelcontextprotocol-server-everything.json",
+        "sha256": "c73f6c1ebdf9cc11525119733f8fee35dc4dfa4a07af1b80d7f512402e1106cb"
+      },
+      "io-github-modelcontextprotocol-server-filesystem": {
+        "path": "analysis/data/benchmark-v1/io-github-modelcontextprotocol-server-filesystem.json",
+        "sha256": "9ca7fcaab841c9de162e7cf7ace256540a56eab83c386a2c9fa8155c40bf3ba3"
+      },
+      "io-github-modelcontextprotocol-server-memory": {
+        "path": "analysis/data/benchmark-v1/io-github-modelcontextprotocol-server-memory.json",
+        "sha256": "fbdb4f9d497c3804ec806f441a41e833b2aac7999a0734d9bcb15f8cd64b5622"
+      },
+      "io-github-modelcontextprotocol-server-sequential-thinking": {
+        "path": "analysis/data/benchmark-v1/io-github-modelcontextprotocol-server-sequential-thinking.json",
+        "sha256": "2704a4f74dad671b54a20e0cb6927b9a1da573db0f5b7873298cd3f257366b78"
+      }
+    }
+  },
+  "rules": {
+    "primary_kinds": [
+      "paraphrased",
+      "straightforward"
+    ],
+    "min_valid_trials": 12,
+    "max_server_error_share": 0.2,
+    "alpha": 0.05
+  },
+  "exclusions": {
+    "servers": {
+      "ai-vaaya-mcp": "100% of trials errored (limit 20%)"
+    },
+    "tools": {},
+    "trials": {
+      "errored": 0,
+      "other_kinds": 1332
+    }
+  },
+  "counts": {
+    "servers": 13,
+    "tools": 201,
+    "pairs": 5814,
+    "trials": 3618,
+    "rows": 104652,
+    "confusions": 465
+  },
+  "primary": {
+    "method": "statsmodels BinomialBayesMixedGLM, fit_vb (variational Bayes)",
+    "interval": "posterior mean +/- 1.96 posterior SD, exponentiated",
+    "random_effects": [
+      "server",
+      "tool"
+    ],
+    "rows": 104652,
+    "events": 465,
+    "not_estimable": [],
+    "covariate_estimable": true,
+    "effects": [
+      {
+        "predictor": "cos_sim",
+        "log_or": 0.1061465116167816,
+        "or": 1.1119847832608056,
+        "lo": 1.0322072203500225,
+        "hi": 1.197928220056704,
+        "p": 0.005197787427320051,
+        "confirmatory": true,
+        "q": 0.005197787427320051
+      },
+      {
+        "predictor": "name_jaccard",
+        "log_or": 0.24606628210693673,
+        "or": 1.2789843445094011,
+        "lo": 1.2058583937063552,
+        "hi": 1.3565448165702987,
+        "p": 2.576377049128394e-16,
+        "confirmatory": true,
+        "q": 2.3187393442155547e-15
+      },
+      {
+        "predictor": "log_len_a",
+        "log_or": 0.426837825136685,
+        "or": 1.5324041241419133,
+        "lo": 1.3611677907074662,
+        "hi": 1.7251821676346282,
+        "p": 1.6636810950082448e-12,
+        "confirmatory": false,
+        "q": 4.991043285024734e-12
+      },
+      {
+        "predictor": "log_len_b",
+        "log_or": -0.30933532912770734,
+        "or": 0.7339346191021648,
+        "lo": 0.6522148510704234,
+        "hi": 0.8258935291531372,
+        "p": 2.8061883722403026e-07,
+        "confirmatory": false,
+        "q": 4.209282558360454e-07
+      },
+      {
+        "predictor": "log_len_diff",
+        "log_or": -0.21108353969444288,
+        "or": 0.8097064214287408,
+        "lo": 0.7132744983921322,
+        "hi": 0.9191755633782651,
+        "p": 0.0011039266676836725,
+        "confirmatory": false,
+        "q": 0.0012419175011441318
+      },
+      {
+        "predictor": "param_doc_a",
+        "log_or": -0.29497861038431233,
+        "or": 0.7445475128807513,
+        "lo": 0.6773752374042608,
+        "hi": 0.8183809627603394,
+        "p": 9.677268915001294e-10,
+        "confirmatory": false,
+        "q": 2.1773855058752913e-09
+      },
+      {
+        "predictor": "param_doc_b",
+        "log_or": 0.2881957674162463,
+        "or": 1.3340184359044254,
+        "lo": 1.2058869325033759,
+        "hi": 1.4757645508592552,
+        "p": 2.2229223601813122e-08,
+        "confirmatory": false,
+        "q": 4.001260248326362e-08
+      },
+      {
+        "predictor": "when_a",
+        "log_or": -0.3256181166773206,
+        "or": 0.7220808854339035,
+        "lo": 0.6349673553426287,
+        "hi": 0.821145844305117,
+        "p": 6.902771860941696e-07,
+        "confirmatory": false,
+        "q": 8.874992392639324e-07
+      },
+      {
+        "predictor": "when_b",
+        "log_or": 0.3093299396510599,
+        "or": 1.362511843031995,
+        "lo": 1.259825800576947,
+        "hi": 1.4735676325665605,
+        "p": 1.014694249754697e-14,
+        "confirmatory": false,
+        "q": 4.566124123896137e-14
+      }
+    ]
+  },
+  "verdicts": [
+    {
+      "rq": "a",
+      "verdict": "effect",
+      "significant": [
+        "cos_sim",
+        "name_jaccard"
+      ],
+      "tested": [
+        "cos_sim",
+        "name_jaccard"
+      ],
+      "rule": "null unless cos_sim or name_jaccard has BH q < 0.05 (plan section 9)"
+    }
+  ],
+  "sensitivity": {
+    "S1_cluster_bootstrap": {
+      "method": "GLM binomial, cluster bootstrap over servers, percentile CI",
+      "resamples": 2000,
+      "failed": 1,
+      "seed": 20261016,
+      "not_estimable": [],
+      "effects": [
+        {
+          "predictor": "cos_sim",
+          "or": 1.1684514361254454,
+          "lo": 0.8070786927355735,
+          "hi": 1.5015505722663065
+        },
+        {
+          "predictor": "name_jaccard",
+          "or": 1.2218332636273723,
+          "lo": 0.8829428784301969,
+          "hi": 1.5550731219230252
+        },
+        {
+          "predictor": "log_len_a",
+          "or": 1.3034893136338366,
+          "lo": 0.37976642487583473,
+          "hi": 2.7503489612410856
+        },
+        {
+          "predictor": "log_len_b",
+          "or": 0.6098851346964905,
+          "lo": 0.40103615514234797,
+          "hi": 2.2691161087221574
+        },
+        {
+          "predictor": "log_len_diff",
+          "or": 0.9123386206352938,
+          "lo": 0.12473268159672843,
+          "hi": 1.323801617922928
+        },
+        {
+          "predictor": "param_doc_a",
+          "or": 0.8808598646984442,
+          "lo": 0.6820598538520558,
+          "hi": 3.098626039887306
+        },
+        {
+          "predictor": "param_doc_b",
+          "or": 1.3727157080144274,
+          "lo": 0.6544890874666847,
+          "hi": 2.8509526509861565
+        },
+        {
+          "predictor": "when_a",
+          "or": 0.7671671269556013,
+          "lo": 0.4561594939618632,
+          "hi": 0.9837934894272594
+        },
+        {
+          "predictor": "when_b",
+          "or": 1.5241700997942376,
+          "lo": 0.742611032302151,
+          "hi": 2.355823159358909
+        }
+      ]
+    },
+    "S2_with_hard_negatives": {
+      "method": "statsmodels BinomialBayesMixedGLM, fit_vb (variational Bayes)",
+      "interval": "posterior mean +/- 1.96 posterior SD, exponentiated",
+      "random_effects": [
+        "server",
+        "tool"
+      ],
+      "rows": 139536,
+      "events": 998,
+      "not_estimable": [],
+      "covariate_estimable": true,
+      "effects": [
+        {
+          "predictor": "cos_sim",
+          "log_or": 0.5548646292314303,
+          "or": 1.741705192844191,
+          "lo": 1.6633846134084411,
+          "hi": 1.823713502173379,
+          "p": 1.6291504996699245e-123,
+          "confirmatory": true
+        },
+        {
+          "predictor": "name_jaccard",
+          "log_or": 0.21136357009450302,
+          "or": 1.2353614138902609,
+          "lo": 1.1907906077926869,
+          "hi": 1.2816004870561064,
+          "p": 1.7695170961261412e-29,
+          "confirmatory": true
+        },
+        {
+          "predictor": "log_len_a",
+          "log_or": 0.12206990927321532,
+          "or": 1.1298330848292777,
+          "lo": 1.0478210585513612,
+          "hi": 1.2182641197721933,
+          "p": 0.0014987840632962946,
+          "confirmatory": false
+        },
+        {
+          "predictor": "log_len_b",
+          "log_or": -0.41811324256740867,
+          "or": 0.6582876780170149,
+          "lo": 0.6091983288430695,
+          "hi": 0.7113326588600392,
+          "p": 3.921960497027195e-26,
+          "confirmatory": false
+        },
+        {
+          "predictor": "log_len_diff",
+          "log_or": -0.16709191574390614,
+          "or": 0.84612183584487,
+          "lo": 0.7746405873364544,
+          "hi": 0.9241991354405269,
+          "p": 0.0002069445266075761,
+          "confirmatory": false
+        },
+        {
+          "predictor": "param_doc_a",
+          "log_or": -0.24168112282047188,
+          "or": 0.7853065539690396,
+          "lo": 0.7373248915722196,
+          "hi": 0.8364106389948492,
+          "p": 5.761114225710749e-14,
+          "confirmatory": false
+        },
+        {
+          "predictor": "param_doc_b",
+          "log_or": 0.286397928578483,
+          "or": 1.3316222403821707,
+          "lo": 1.2449671437398124,
+          "hi": 1.4243089064614054,
+          "p": 7.298440308163515e-17,
+          "confirmatory": false
+        },
+        {
+          "predictor": "when_a",
+          "log_or": -0.11647352012056122,
+          "or": 0.8900536651783826,
+          "lo": 0.8235657136806928,
+          "hi": 0.9619093094065071,
+          "p": 0.003278445171619158,
+          "confirmatory": false
+        },
+        {
+          "predictor": "when_b",
+          "log_or": 0.15418911326642887,
+          "or": 1.166711506540702,
+          "lo": 1.0956553620990415,
+          "hi": 1.242375829646538,
+          "p": 1.513887388134845e-06,
+          "confirmatory": false
+        }
+      ],
+      "exclusions": {
+        "servers": {
+          "ai-vaaya-mcp": "100% of trials errored (limit 20%)"
+        },
+        "tools": {},
+        "trials": {
+          "errored": 0,
+          "other_kinds": 126
+        }
+      }
+    },
+    "S3_without_largest_server": {
+      "method": "statsmodels BinomialBayesMixedGLM, fit_vb (variational Bayes)",
+      "interval": "posterior mean +/- 1.96 posterior SD, exponentiated",
+      "random_effects": [
+        "server",
+        "tool"
+      ],
+      "rows": 32076,
+      "events": 356,
+      "not_estimable": [],
+      "covariate_estimable": true,
+      "effects": [
+        {
+          "predictor": "cos_sim",
+          "log_or": -0.1744479147978089,
+          "or": 0.839920600524236,
+          "lo": 0.7587492019861093,
+          "hi": 0.9297757590233465,
+          "p": 0.0007679996847655963,
+          "confirmatory": true
+        },
+        {
+          "predictor": "name_jaccard",
+          "log_or": 0.20570927702879072,
+          "or": 1.2283960291349476,
+          "lo": 1.124256569245808,
+          "hi": 1.342181887722275,
+          "p": 5.332846996383981e-06,
+          "confirmatory": true
+        },
+        {
+          "predictor": "log_len_a",
+          "log_or": 0.34137947205089353,
+          "or": 1.4068870138803256,
+          "lo": 1.2493469915968836,
+          "hi": 1.584292500912952,
+          "p": 1.760229705663071e-08,
+          "confirmatory": false
+        },
+        {
+          "predictor": "log_len_b",
+          "log_or": 0.48239010673124916,
+          "or": 1.6199416121810977,
+          "lo": 1.436123745268316,
+          "hi": 1.8272874016059135,
+          "p": 4.162059813234165e-15,
+          "confirmatory": false
+        },
+        {
+          "predictor": "log_len_diff",
+          "log_or": -0.49244998570410925,
+          "or": 0.6111273053995981,
+          "lo": 0.5452027005929517,
+          "hi": 0.6850233555314159,
+          "p": 2.7770903893172674e-17,
+          "confirmatory": false
+        },
+        {
+          "predictor": "param_doc_a",
+          "log_or": 0.08914487785057405,
+          "or": 1.0932390309745352,
+          "lo": 0.9925340380786828,
+          "hi": 1.2041618050295961,
+          "p": 0.07061018876423976,
+          "confirmatory": false
+        },
+        {
+          "predictor": "param_doc_b",
+          "log_or": 0.26668889508251414,
+          "or": 1.3056341939222031,
+          "lo": 1.1672389418162925,
+          "hi": 1.460438464883889,
+          "p": 3.0864949161318654e-06,
+          "confirmatory": false
+        },
+        {
+          "predictor": "when_a",
+          "log_or": -0.2815436440185173,
+          "or": 0.7546179803954635,
+          "lo": 0.6426065225409118,
+          "hi": 0.8861539314672517,
+          "p": 0.0005941492969852566,
+          "confirmatory": false
+        },
+        {
+          "predictor": "when_b",
+          "log_or": 0.30079144965263194,
+          "or": 1.3509275757426693,
+          "lo": 1.2650743195978271,
+          "hi": 1.4426071943995695,
+          "p": 2.74220992693427e-19,
+          "confirmatory": false
+        }
+      ],
+      "dropped_server": "co-workix-mcp"
+    }
+  },
+  "descriptive": {
+    "server_accuracy": [
+      {
+        "server": "ai-adeu-adeu",
+        "trials": 162,
+        "correct": 135,
+        "accuracy": 0.8333333333333334,
+        "lo": 0.7683691896812852,
+        "hi": 0.8828551830901119
+      },
+      {
+        "server": "ai-imboard-dossier",
+        "trials": 180,
+        "correct": 168,
+        "accuracy": 0.9333333333333333,
+        "lo": 0.8871013100703046,
+        "hi": 0.9614559250642974
+      },
+      {
+        "server": "ai-kinlab-kin",
+        "trials": 396,
+        "correct": 291,
+        "accuracy": 0.7348484848484849,
+        "lo": 0.689267058870211,
+        "hi": 0.7759173183291788
+      },
+      {
+        "server": "ai-knowall-reverie",
+        "trials": 216,
+        "correct": 188,
+        "accuracy": 0.8703703703703703,
+        "lo": 0.8190279511215695,
+        "hi": 0.9087692571861608
+      },
+      {
+        "server": "ai-mcpcap-mcpcap",
+        "trials": 162,
+        "correct": 159,
+        "accuracy": 0.9814814814814815,
+        "lo": 0.9469750571819407,
+        "hi": 0.9936823701545215
+      },
+      {
+        "server": "ai-thiri-chord-intelligence",
+        "trials": 90,
+        "correct": 90,
+        "accuracy": 1.0,
+        "lo": 0.9590643744356734,
+        "hi": 1.0
+      },
+      {
+        "server": "ai-wavespeed-mcp",
+        "trials": 126,
+        "correct": 75,
+        "accuracy": 0.5952380952380952,
+        "lo": 0.5079453839824656,
+        "hi": 0.67689542278283
+      },
+      {
+        "server": "co-workix-mcp",
+        "trials": 1152,
+        "correct": 1031,
+        "accuracy": 0.8949652777777778,
+        "lo": 0.8759285583646566,
+        "hi": 0.9113766495039672
+      },
+      {
+        "server": "com-1102tools-acquisition-gov-mcp",
+        "trials": 90,
+        "correct": 90,
+        "accuracy": 1.0,
+        "lo": 0.9590643744356734,
+        "hi": 1.0
+      },
+      {
+        "server": "com-adrianczuczka-mason",
+        "trials": 396,
+        "correct": 354,
+        "accuracy": 0.8939393939393939,
+        "lo": 0.8597371434988812,
+        "hi": 0.9205721343839659
+      },
+      {
+        "server": "io-github-modelcontextprotocol-server-everything",
+        "trials": 234,
+        "correct": 210,
+        "accuracy": 0.8974358974358975,
+        "lo": 0.8519290431102617,
+        "hi": 0.9301045052973909
+      },
+      {
+        "server": "io-github-modelcontextprotocol-server-filesystem",
+        "trials": 252,
+        "correct": 187,
+        "accuracy": 0.7420634920634921,
+        "lo": 0.6846966123285102,
+        "hi": 0.792161206425187
+      },
+      {
+        "server": "io-github-modelcontextprotocol-server-memory",
+        "trials": 162,
+        "correct": 108,
+        "accuracy": 0.6666666666666666,
+        "lo": 0.5909566998344502,
+        "hi": 0.7346554865512482
+      }
+    ],
+    "confusion_by_similarity": [
+      {
+        "cos_sim_from": -0.157,
+        "cos_sim_to": 0.0775,
+        "rows": 20952,
+        "confusions": 38,
+        "rate": 0.0018136693394425352,
+        "lo": 0.001321722388328395,
+        "hi": 0.0024882634324551174
+      },
+      {
+        "cos_sim_from": 0.0775,
+        "cos_sim_to": 0.163,
+        "rows": 20916,
+        "confusions": 76,
+        "rate": 0.003633581946834959,
+        "lo": 0.0029042963127383784,
+        "hi": 0.004545160659842298
+      },
+      {
+        "cos_sim_from": 0.163,
+        "cos_sim_to": 0.272,
+        "rows": 20952,
+        "confusions": 70,
+        "rate": 0.0033409698358151966,
+        "lo": 0.0026454494429433823,
+        "hi": 0.004218577425333417
+      },
+      {
+        "cos_sim_from": 0.272,
+        "cos_sim_to": 0.413,
+        "rows": 20916,
+        "confusions": 99,
+        "rate": 0.004733218588640275,
+        "lo": 0.0038896546227250627,
+        "hi": 0.005758671786344794
+      },
+      {
+        "cos_sim_from": 0.413,
+        "cos_sim_to": 0.949,
+        "rows": 20916,
+        "confusions": 182,
+        "rate": 0.008701472556894244,
+        "lo": 0.007529917769227627,
+        "hi": 0.010053459214998828
+      }
+    ]
+  },
+  "versions": {
+    "statsmodels": "0.15.0",
+    "pandas": "3.0.6",
+    "numpy": "2.4.6"
+  },
+  "charts": [
+    "effects.png",
+    "confusion_by_similarity.png",
+    "server_accuracy.png"
+  ]
+}
