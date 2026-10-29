@@ -120,6 +120,15 @@ computed from the frozen run in `analysis/data/benchmark-v1/`.*
 
 ![Pairs with the most similar descriptions were confused 4.8× as often](../results/figures/similarity-light.png)
 
+**Three servers as confusion matrices.** Rows are the tool a request was meant for, columns what
+was picked, and the diagonal is correct. None of them is one of the four servers reserved for
+the hand-written comparison.
+
+| ai.wavespeed/mcp | Memory (reference) | Acquisition.gov |
+|---|---|---|
+| ![ai.wavespeed/mcp confusion matrix](../results/figures/matrix-ai-wavespeed-mcp-light.png) | ![Memory confusion matrix](../results/figures/matrix-io-github-modelcontextprotocol-server-memory-light.png) | ![Acquisition.gov confusion matrix](../results/figures/matrix-com-1102tools-acquisition-gov-mcp-light.png) |
+| Every `run_model` request went to `list_models` | Edits and deletes often went to `search_nodes` first | No mix-ups |
+
 ### What was measured
 
 | | |

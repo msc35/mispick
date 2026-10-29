@@ -34,6 +34,74 @@ diagonal. Anything off the diagonal is a mix-up worth fixing. Every percentage c
 
 ---
 
+## What the benchmark found
+
+We ran mispick on **14 real MCP servers** from the official registry: **3,636 test requests**
+on Gemini 3.5 Flash-Lite. Full results: [docs/study.md](docs/study.md#results).
+
+- **Most requests go to the right tool, but not all:** 85% did.
+- **Mistakes are concentrated:** only 107 of 6,024 tool pairs were ever mixed up, so a server
+  usually has a few specific problem pairs rather than general confusion.
+- **Results are repeatable:** 97% of requests got the same answer in all three runs.
+- **Overlapping names and similar descriptions go with more mix-ups,** but with 13 servers that
+  evidence is fragile.
+- **The clearest tip for server authors: say *when* to use each tool.** Tools whose description
+  does were less often mistaken for others.
+- **One server could not be used with Gemini at all,** because of a broken schema in its tool
+  list.
+
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="results/figures/similarity-dark.png">
+  <img src="results/figures/similarity-light.png" alt="Bar chart: the most similar fifth of tool pairs were confused 4.8 times as often as the least similar fifth." width="760">
+</picture>
+</p>
+
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="results/figures/what-matters-dark.png">
+  <img src="results/figures/what-matters-light.png" alt="Nine factors and how each changes the odds of a wrong pick. The right tool saying when to use it lowers the odds by 28 percent, the only factor that holds up in the strictest check." width="760">
+</picture>
+</p>
+
+**Three real servers, as confusion matrices.** Each row is the tool a request was meant for,
+and each column is what the AI picked. Numbers on the diagonal are correct.
+
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="results/figures/matrix-ai-wavespeed-mcp-dark.png">
+  <img src="results/figures/matrix-ai-wavespeed-mcp-light.png" alt="Confusion matrix for ai.wavespeed/mcp: 60 percent correct. Every run_model request went to list_models." width="640">
+</picture>
+</p>
+
+- **ai.wavespeed/mcp, 60% correct.** Every request to *run* a model went to `list_models`, and
+  so did most requests to get a price.
+
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="results/figures/matrix-io-github-modelcontextprotocol-server-memory-dark.png">
+  <img src="results/figures/matrix-io-github-modelcontextprotocol-server-memory-light.png" alt="Confusion matrix for the Memory reference server: 67 percent correct, with many edits and deletes going to search_nodes first." width="640">
+</picture>
+</p>
+
+- **Memory (MCP reference server), 67% correct.** Edit and delete requests often went to
+  `search_nodes` first. The model looked up the entry before changing it, which is sensible,
+  but mispick scores the first call, so it counts as a miss.
+
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="results/figures/matrix-com-1102tools-acquisition-gov-mcp-dark.png">
+  <img src="results/figures/matrix-com-1102tools-acquisition-gov-mcp-light.png" alt="Confusion matrix for Acquisition.gov: every request went to the right tool." width="520">
+</picture>
+</p>
+
+- **Acquisition.gov, 100% correct.** Five clearly separated tools and no mix-ups. This is what
+  a good tool surface looks like.
+
+Every number here comes from [`results/`](results/): `headline.json`, `analysis.json`, and the
+frozen run in `analysis/data/benchmark-v1/`. Results are for one model on one date; see the
+limitations below.
+
 ## Why this rather than a static linter
 
 `mcp-lint`, `mcpolish`, `oh-my-mcp`, `mcp-conform` and `mcp-cve-lint` check tool definitions

@@ -1,0 +1,14 @@
+{
+  "servers_with_requests": 14,
+  "requests": 3636,
+  "tool_pairs": 6024,
+  "tool_pairs_ever_confused": 107,
+  "correct": 3104,
+  "accuracy": 0.8536853685368537,
+  "stability": {
+    "same_answer_all_runs": 1606,
+    "queries": 1656,
+    "share": 0.9698067632850241
+  },
+  "note": "accuracy: primary requests (straightforward and paraphrased) on every measured server, errored trials excluded, so a server whose every call errored adds nothing. stability: queries whose K=3 runs all chose the same tool, from each server's own summary (all request kinds)"
+}

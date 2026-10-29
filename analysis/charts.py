@@ -38,6 +38,118 @@ THEMES = {
              "series": "#3ee6ff"},
 }
 
+#: One-hue sequential ramps, light to dark on the light surface and dark to bright on the dark one.
+RAMPS = {
+    "light": ["#fcfcfb", "#cde2fb", "#86b6ef", "#3987e5", "#256abf", "#104281"],
+    "dark": ["#101017", "#162238", "#184f95", "#2a78d6", "#6da7ec", "#cde2fb"],
+}
+
+#: Example matrices for the README. None of them is one of the four servers reserved for the
+#: hand-written comparison, which stays blind until it is done (plan, Deviations).
+MATRIX_SERVERS = [
+    "ai-wavespeed-mcp",
+    "io-github-modelcontextprotocol-server-memory",
+    "com-1102tools-acquisition-gov-mcp",
+]
+PRIMARY_KINDS = {"straightforward", "paraphrased"}
+
+
+def matrix_counts(payload: dict[str, Any]) -> tuple[list[str], list[str], list[list[int]]]:
+    """Rows: the tool each primary request was meant for. Columns: what was picked."""
+    kinds = {q["id"]: q.get("kind") for q in payload["queries"]}
+    tools = [t["name"] for t in payload["tools"]]
+    cols = [*tools, "(no tool)"]
+    index = {name: i for i, name in enumerate(cols)}
+    grid = [[0] * len(cols) for _ in tools]
+    for trial in payload["trials"]:
+        if trial.get("error") or kinds.get(trial["query_id"]) not in PRIMARY_KINDS:
+            continue
+        expected = trial.get("expected")
+        if expected not in index:
+            continue
+        chosen = trial.get("chosen") or "(no tool)"
+        grid[tools.index(expected)][index.get(chosen, index["(no tool)"])] += 1
+    return tools, cols, grid
+
+
+def matrix_chart(payload: dict[str, Any], title: str, theme_name: str, path: Path) -> None:
+    import matplotlib.pyplot as plt
+    from matplotlib.colors import LinearSegmentedColormap
+
+    theme = THEMES[theme_name]
+    rows, cols, grid = matrix_counts(payload)
+    cmap = LinearSegmentedColormap.from_list("ramp", RAMPS[theme_name])
+    shares = [[v / max(1, sum(row)) for v in row] for row in grid]
+    total = sum(map(sum, grid))
+    correct = sum(grid[i][i] for i in range(len(rows)))
+
+    size = 0.62 * len(cols) + 3.4
+    fig, ax = plt.subplots(figsize=(size, 0.55 * len(rows) + 2.6), facecolor=theme["surface"])
+    ax.set_facecolor(theme["surface"])
+    ax.imshow(shares, cmap=cmap, vmin=0, vmax=1, aspect="auto")
+    for i, row in enumerate(grid):
+        for j, value in enumerate(row):
+            if not value:
+                continue
+            r, g, b, _ = cmap(shares[i][j])
+            ink = "#0b0b0b" if 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5 else "#f4f4f7"
+            ax.text(j, i, str(value), ha="center", va="center", fontsize=8.5, color=ink,
+                    fontweight="bold" if i != j else "normal")
+    ax.set_xticks(range(len(cols)), cols, rotation=40, ha="right", fontsize=8,
+                  color=theme["text"])
+    ax.set_yticks(range(len(rows)), rows, fontsize=8, color=theme["text"])
+    ax.set_xticks([x - 0.5 for x in range(1, len(cols))], minor=True)
+    ax.set_yticks([y - 0.5 for y in range(1, len(rows))], minor=True)
+    ax.grid(which="minor", color=theme["surface"], linewidth=2)
+    ax.tick_params(which="both", length=0)
+    for side in ax.spines.values():
+        side.set_visible(False)
+    ax.set_xlabel("Tool the AI picked", color=theme["muted"], fontsize=9)
+    ax.set_ylabel("Tool the request was meant for", color=theme["muted"], fontsize=9)
+    share = correct / total if total else math.nan
+    fig.suptitle(f"{title}: {share:.0%} of requests went to the right tool", x=0.02,
+                 ha="left", fontsize=12, fontweight="bold", color=theme["text"])
+    ax.set_title("Numbers are test requests. The diagonal is correct; anything off it is a "
+                 "mix-up.", loc="left", fontsize=8.5, color=theme["muted"], pad=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=180, facecolor=theme["surface"])
+    plt.close(fig)
+
+
+def headline(data: Path) -> dict[str, Any]:
+    """Pooled accuracy and stability over every measured server, primary requests only."""
+    correct = total = stable = repeated = servers = pairs = confused_pairs = 0
+    for path in sorted(data.glob("*.json")):
+        if path.name in {"index.json", "MANIFEST.json"}:
+            continue
+        payload = json.loads(path.read_text())
+        rows, _, grid = matrix_counts(payload)
+        requests = sum(map(sum, grid))
+        servers += 1 if requests else 0
+        total += requests
+        correct += sum(grid[i][i] for i in range(len(grid)))
+        pairs += len(rows) * (len(rows) - 1)
+        confused_pairs += sum(
+            1 for i in range(len(rows)) for j in range(len(rows)) if i != j and grid[i][j]
+        )
+        stability = (payload.get("summary") or {}).get("stability") or {}
+        stable += int(stability.get("hits") or 0)
+        repeated += int(stability.get("total") or 0)
+    return {
+        "servers_with_requests": servers,
+        "requests": total,
+        "tool_pairs": pairs,
+        "tool_pairs_ever_confused": confused_pairs,
+        "correct": correct,
+        "accuracy": correct / total if total else None,
+        "stability": {"same_answer_all_runs": stable, "queries": repeated,
+                      "share": stable / repeated if repeated else None},
+        "note": "accuracy: primary requests (straightforward and paraphrased) on every measured "
+                "server, errored trials excluded, so a server whose every call errored adds "
+                "nothing. stability: queries whose K=3 runs all chose the same tool, from each "
+                "server's own summary (all request kinds)",
+    }
+
 
 def robust(primary: dict[str, Any], bootstrap: dict[str, Any]) -> set[str]:
     """Predictors whose whole-server bootstrap CI (S1) also excludes 1, in the same direction."""
@@ -130,7 +242,7 @@ def similarity_chart(analysis: dict[str, Any], theme: dict[str, str], path: Path
     ax.set_yticks([])
     ax.spines["bottom"].set_visible(False)
     ratio = bins[-1]["rate"] / bins[0]["rate"] if bins and bins[0]["rate"] else math.nan
-    fig.suptitle(f"Pairs with the most similar descriptions were confused {ratio:.1f}× as often",
+    fig.suptitle(f"Pairs with the most similar descriptions were confused {ratio:.1f}× as often",  # noqa: RUF001
                  x=0.02, ha="left", fontsize=13, fontweight="bold", color=theme["text"])
     ax.set_title(
         "Share of test requests that went to the other tool of the pair, by how similar the two "
@@ -151,6 +263,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--analysis", type=Path, default=Path("results/analysis.json"))
     parser.add_argument("--out", type=Path, default=Path("results/figures"))
+    parser.add_argument("--data", type=Path, default=Path("analysis/data/benchmark-v1"))
     args = parser.parse_args(argv)
 
     analysis = json.loads(args.analysis.read_text())
@@ -158,7 +271,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     for name, theme in THEMES.items():
         effects_chart(analysis, theme, args.out / f"what-matters-{name}.png")
         similarity_chart(analysis, theme, args.out / f"similarity-{name}.png")
-    print(f"wrote 4 figures -> {args.out}")
+    index = json.loads((args.data / "index.json").read_text())
+    titles = {row["slug"]: row["title"] for row in index.get("servers") or []}
+    for slug in MATRIX_SERVERS:
+        payload = json.loads((args.data / f"{slug}.json").read_text())
+        for name in THEMES:
+            matrix_chart(payload, titles.get(slug, slug), name,
+                         args.out / f"matrix-{slug}-{name}.png")
+    summary = headline(args.data)
+    (args.out.parent / "headline.json").write_text(json.dumps(summary, indent=2) + "\n")
+    print(f"wrote {4 + 2 * len(MATRIX_SERVERS)} figures -> {args.out}; headline -> "
+          f"{args.out.parent / 'headline.json'}")
     return 0
 
 
