@@ -1,0 +1,129 @@
+{"query_id":"get_rfo_agency_deviation#straightforward.1","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"RFO-9942-X","page_start":5},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.1","chosen":"get_rfo_agency_deviation","arguments":{"page_end":null,"source_id":"RFO-9942-X","page_start":5},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.2","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"SRC-8821","page_end":10,"page_start":10},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.1","chosen":"get_rfo_agency_deviation","arguments":{"page_start":5,"source_id":"RFO-9942-X"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.2","chosen":"get_rfo_agency_deviation","arguments":{"page_start":10,"source_id":"SRC-8821","page_end":10},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.2","chosen":"get_rfo_agency_deviation","arguments":{"page_end":10,"page_start":10,"source_id":"SRC-8821"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.3","chosen":"get_rfo_agency_deviation","arguments":{"page_start":2,"page_end":15,"source_id":"alpha-773-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.3","chosen":"get_rfo_agency_deviation","arguments":{"page_end":15,"page_start":2,"source_id":"alpha-773-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.3","chosen":"get_rfo_agency_deviation","arguments":{"page_start":2,"source_id":"alpha-773-beta","page_end":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.4","chosen":"get_rfo_agency_deviation","arguments":{"page_start":1,"page_end":12,"source_id":"delta-339"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.4","chosen":"get_rfo_agency_deviation","arguments":{"page_start":1,"source_id":"delta-339","page_end":12},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#straightforward.4","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"delta-339","page_end":12,"page_start":1},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#paraphrased.1","chosen":"get_rfo_agency_deviation","arguments":{"page_start":4,"source_id":"RFO-551"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#paraphrased.1","chosen":"get_rfo_agency_deviation","arguments":{"page_start":4,"source_id":"RFO-551"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#paraphrased.2","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"gamma-901","page_start":3,"page_end":20},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#paraphrased.1","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"RFO-551","page_start":4},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#paraphrased.2","chosen":"get_rfo_agency_deviation","arguments":{"page_end":20,"page_start":3,"source_id":"gamma-901"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#paraphrased.2","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"gamma-901","page_start":3,"page_end":20},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#hard_negative.1","chosen":"get_rfo_agency_deviation","arguments":{"page_start":6,"page_end":6,"source_id":"RFO-442"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#hard_negative.1","chosen":"get_rfo_agency_deviation","arguments":{"source_id":"RFO-442","page_start":6,"page_end":6},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_agency_deviation#hard_negative.1","chosen":"get_rfo_agency_deviation","arguments":{"page_start":6,"page_end":6,"source_id":"RFO-442"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#hard_negative.2","chosen":"get_rfo_agency_deviation","arguments":{"page_end":5,"page_start":2,"source_id":"SRC-771"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_agency_deviation#hard_negative.2","chosen":"get_rfo_agency_deviation","arguments":{"page_end":5,"page_start":2,"source_id":"SRC-771"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_agency_deviation#hard_negative.2","chosen":"get_rfo_agency_deviation","arguments":{"page_start":2,"page_end":5,"source_id":"SRC-771"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.1","chosen":"get_rfo_guidance","arguments":{"heading":"small business subcontracting plans","resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.1","chosen":"get_rfo_guidance","arguments":{"heading":"small business subcontracting plans","resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.1","chosen":"get_rfo_guidance","arguments":{"heading":"small business subcontracting plans","resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.2","chosen":"get_rfo_guidance","arguments":{"resource":"policy_and_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.2","chosen":"get_rfo_guidance","arguments":{"resource":"policy_and_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.2","chosen":"get_rfo_guidance","arguments":{"resource":"policy_and_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.3","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.3","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.3","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.4","chosen":"get_rfo_guidance","arguments":{"resource":"policy_and_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.4","chosen":"get_rfo_guidance","arguments":{"resource":"policy_and_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#straightforward.4","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#paraphrased.1","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#paraphrased.1","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#paraphrased.1","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#paraphrased.2","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#paraphrased.2","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#paraphrased.2","chosen":"get_rfo_guidance","arguments":{"resource":"faq"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_guidance#hard_negative.2","chosen":"get_rfo_guidance","arguments":{"resource":"deviation_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_guidance#hard_negative.2","chosen":"get_rfo_guidance","arguments":{"heading":"civilian headcount caps","resource":"deviation_guidance"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_guidance#hard_negative.2","chosen":"get_rfo_guidance","arguments":{"resource":"faq","heading":"civilian headcount caps"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#straightforward.1","chosen":"get_rfo_part","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#straightforward.1","chosen":"get_rfo_part","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#straightforward.1","chosen":"get_rfo_part","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#straightforward.2","chosen":"get_rfo_part","arguments":{"max_characters":500000,"part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#straightforward.2","chosen":"get_rfo_part","arguments":{"max_characters":50000,"part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#straightforward.2","chosen":"get_rfo_part","arguments":{"part":15,"max_characters":20000},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#straightforward.3","chosen":"get_rfo_part","arguments":{"max_characters":5000,"part":25},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#straightforward.3","chosen":"get_rfo_part","arguments":{"part":25,"max_characters":5000},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#straightforward.3","chosen":"get_rfo_part","arguments":{"max_characters":5000,"part":25},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#straightforward.4","chosen":"get_rfo_part","arguments":{"part":12,"section":"3"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#straightforward.4","chosen":"get_rfo_part","arguments":{"section":"3","part":12},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#straightforward.4","chosen":"get_rfo_part","arguments":{"part":12,"section":"3"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#paraphrased.1","chosen":"get_rfo_part","arguments":{"part":31},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#paraphrased.1","chosen":"get_rfo_part","arguments":{"part":31},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#paraphrased.1","chosen":"get_rfo_part","arguments":{"part":31},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#paraphrased.2","chosen":"get_rfo_part","arguments":{"part":8,"page_start":3},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#paraphrased.2","chosen":"get_rfo_part","arguments":{"page_start":3,"part":8,"page_end":null},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#paraphrased.2","chosen":"get_rfo_part","arguments":{"page_start":3,"part":8},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#hard_negative.1","chosen":"get_rfo_part","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#hard_negative.1","chosen":"get_rfo_part","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#hard_negative.1","chosen":"get_rfo_part","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_rfo_part#hard_negative.2","chosen":"list_rfo_parts","arguments":{"part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_rfo_part#hard_negative.2","chosen":"list_rfo_parts","arguments":{"part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_rfo_part#hard_negative.2","chosen":"list_rfo_parts","arguments":{"part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.1","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Transportation"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.1","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Transportation"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.1","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Transportation"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.2","chosen":"list_rfo_agency_deviations","arguments":{"part":52,"limit":10},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.2","chosen":"list_rfo_agency_deviations","arguments":{"part":52,"limit":10},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.2","chosen":"list_rfo_agency_deviations","arguments":{"limit":10,"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.3","chosen":"list_rfo_agency_deviations","arguments":{"agency":"NASA"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.3","chosen":"list_rfo_agency_deviations","arguments":{"agency":"NASA"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.3","chosen":"list_rfo_agency_deviations","arguments":{"agency":"NASA"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.4","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense","part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.4","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense","part":15},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#paraphrased.1","chosen":"list_rfo_agency_deviations","arguments":{"part":30},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#paraphrased.1","chosen":"list_rfo_agency_deviations","arguments":{"part":30},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#straightforward.4","chosen":"list_rfo_agency_deviations","arguments":{"part":15,"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#paraphrased.1","chosen":"list_rfo_agency_deviations","arguments":{"part":30},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#paraphrased.2","chosen":"list_rfo_agency_deviations","arguments":{"agency":"EPA","limit":25},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#paraphrased.2","chosen":"list_rfo_agency_deviations","arguments":{"limit":25,"agency":"EPA"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{"part":52},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_agency_deviations#hard_negative.2","chosen":"list_rfo_agency_deviations","arguments":{"part":12},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#paraphrased.2","chosen":"list_rfo_agency_deviations","arguments":{"limit":25,"agency":"EPA"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_agency_deviations#hard_negative.2","chosen":"list_rfo_agency_deviations","arguments":{"part":12},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_agency_deviations#hard_negative.2","chosen":"list_rfo_agency_deviations","arguments":{"part":12},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#straightforward.1","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#straightforward.1","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#straightforward.1","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#straightforward.2","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#straightforward.2","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#straightforward.3","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#straightforward.3","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#straightforward.3","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#straightforward.2","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#straightforward.4","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#straightforward.4","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#paraphrased.1","chosen":"list_rfo_parts","arguments":{"updated_since":"last Tuesday"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#straightforward.4","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#paraphrased.1","chosen":"list_rfo_parts","arguments":{"updated_since":"last Tuesday"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#paraphrased.1","chosen":"list_rfo_parts","arguments":{"updated_since":"last Tuesday"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#paraphrased.2","chosen":"list_rfo_parts","arguments":{"agency":"aviation"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#paraphrased.2","chosen":"list_rfo_parts","arguments":{"agency":"aviation"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#paraphrased.2","chosen":"list_rfo_parts","arguments":{"agency":"aviation"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_rfo_parts#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#hard_negative.2","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#hard_negative.1","chosen":"list_rfo_agency_deviations","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_rfo_parts#hard_negative.2","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_rfo_parts#hard_negative.2","chosen":"list_rfo_parts","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#2","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#2","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#2","chosen":"list_rfo_agency_deviations","arguments":{"agency":"Department of Defense"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#3","chosen":"list_rfo_parts","arguments":{"agency":"DFARS"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#3","chosen":"list_rfo_parts","arguments":{"agency":"DFARS"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#3","chosen":"list_rfo_parts","arguments":{"agency":"DFARS"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}

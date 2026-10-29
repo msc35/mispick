@@ -1,0 +1,4553 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-18",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "ai-imboard-dossier",
+      "name": "@ai-dossier/mcp-server",
+      "version": "1.0.4",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "cancel_journey",
+      "server": null,
+      "title": null,
+      "description": "Cancel an active journey session. Returns a summary of what completed before cancellation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "journey_id": {
+            "type": "string",
+            "description": "Journey session ID (from start_journey)"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Optional reason for cancellation"
+          }
+        },
+        "required": [
+          "journey_id"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "get_journey_status",
+      "server": null,
+      "title": null,
+      "description": "Get the current state of a journey session: completed steps, current step, remaining steps, and collected outputs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "journey_id": {
+            "type": "string",
+            "description": "Journey session ID (from start_journey)"
+          }
+        },
+        "required": [
+          "journey_id"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "list_dossiers",
+      "server": null,
+      "title": null,
+      "description": "Discover available dossiers in a directory. Scans for *.ds.md files and returns metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Directory to search (default: current working directory)"
+          },
+          "recursive": {
+            "type": "boolean",
+            "description": "Search subdirectories recursively (default: true)"
+          }
+        }
+      },
+      "annotations": {}
+    },
+    {
+      "name": "read_dossier",
+      "server": null,
+      "title": null,
+      "description": "Read and parse a dossier file. Returns metadata and content. Should be called AFTER verify_dossier passes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md)"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "resolve_graph",
+      "server": null,
+      "title": null,
+      "description": "Resolve a dossier dependency graph into an execution plan. Reads relationships (preceded_by, followed_by, conflicts_with) and produces a DAG with ordered phases, parallel groups, and conflict detection.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dossier": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md) or registry name"
+          }
+        },
+        "required": [
+          "dossier"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "search_dossiers",
+      "server": null,
+      "title": null,
+      "description": "Search the dossier registry for available dossiers by keyword. Returns matching dossiers with metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search keywords"
+          },
+          "category": {
+            "type": "string",
+            "description": "Filter by category (devops, database, development, security, etc.)"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "start_journey",
+      "server": null,
+      "title": null,
+      "description": "Start a journey session from a resolved and verified graph. Creates a session, returns the first step's dossier content with any injected context. Call step_complete after executing each step.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "graph_id": {
+            "type": "string",
+            "description": "ID of a previously resolved graph (from resolve_graph)"
+          }
+        },
+        "required": [
+          "graph_id"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "step_complete",
+      "server": null,
+      "title": null,
+      "description": "Mark the current journey step as complete or failed. Advances to the next step and returns its dossier content with injected context from previous outputs. Returns a summary when the last step completes or a step fails.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "journey_id": {
+            "type": "string",
+            "description": "Journey session ID (from start_journey)"
+          },
+          "outputs": {
+            "type": "object",
+            "description": "Key-value outputs collected during this step (e.g. { cluster_arn: \"arn:...\" })"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed"
+            ],
+            "description": "Whether this step succeeded or failed"
+          }
+        },
+        "required": [
+          "journey_id",
+          "status"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "verify_dossier",
+      "server": null,
+      "title": null,
+      "description": "Security verification - Verify integrity (checksum) and authenticity (signature) of a dossier. Returns pass/fail with stage details.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md)"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "verify_graph",
+      "server": null,
+      "title": null,
+      "description": "Batch security verification for a dossier dependency graph. Verifies all dossiers in a resolved graph and returns an aggregate security report with per-dossier breakdown and overall recommendation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "graph_id": {
+            "type": "string",
+            "description": "ID of a previously resolved graph (from resolve_graph)"
+          },
+          "dossier": {
+            "type": "string",
+            "description": "Path to dossier file (.ds.md) or registry name. Resolves and verifies in one shot."
+          }
+        }
+      },
+      "annotations": {}
+    }
+  ],
+  "score": 90,
+  "summary": {
+    "accuracy": {
+      "hits": 213,
+      "total": 249,
+      "value": 0.8554,
+      "ci95": [
+        0.8063,
+        0.8937
+      ]
+    },
+    "stability": {
+      "hits": 83,
+      "total": 83,
+      "value": 1.0,
+      "ci95": [
+        0.9558,
+        1.0
+      ]
+    },
+    "argumentValidity": {
+      "hits": 237,
+      "total": 237,
+      "value": 1.0,
+      "ci95": [
+        0.984,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 0,
+      "total": 9,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.2991
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 249,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0152
+      ]
+    },
+    "trials": 249,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 928
+  },
+  "confusionMatrix": {
+    "rows": [
+      "cancel_journey",
+      "get_journey_status",
+      "list_dossiers",
+      "read_dossier",
+      "resolve_graph",
+      "search_dossiers",
+      "start_journey",
+      "step_complete",
+      "verify_dossier",
+      "verify_graph",
+      "(none)"
+    ],
+    "columns": [
+      "cancel_journey",
+      "get_journey_status",
+      "list_dossiers",
+      "read_dossier",
+      "resolve_graph",
+      "search_dossiers",
+      "start_journey",
+      "step_complete",
+      "verify_dossier",
+      "verify_graph",
+      "(none)"
+    ],
+    "counts": {
+      "cancel_journey": {
+        "cancel_journey": 24
+      },
+      "get_journey_status": {
+        "get_journey_status": 24
+      },
+      "list_dossiers": {
+        "list_dossiers": 21,
+        "search_dossiers": 3
+      },
+      "read_dossier": {
+        "read_dossier": 9,
+        "verify_dossier": 6,
+        "(none)": 3
+      },
+      "resolve_graph": {
+        "resolve_graph": 18
+      },
+      "search_dossiers": {
+        "search_dossiers": 24
+      },
+      "start_journey": {
+        "start_journey": 21,
+        "search_dossiers": 3
+      },
+      "step_complete": {
+        "start_journey": 6,
+        "step_complete": 18
+      },
+      "verify_dossier": {
+        "read_dossier": 6,
+        "verify_dossier": 18,
+        "verify_graph": 6
+      },
+      "verify_graph": {
+        "verify_graph": 27,
+        "resolve_graph": 3
+      },
+      "(none)": {
+        "(none)": 9
+      }
+    }
+  },
+  "perTool": {
+    "cancel_journey": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "get_journey_status": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "list_dossiers": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 21,
+        "value": 1.0,
+        "ci95": [
+          0.8454,
+          1.0
+        ]
+      },
+      "f1": 0.9333
+    },
+    "read_dossier": {
+      "recall": {
+        "hits": 9,
+        "total": 18,
+        "value": 0.5,
+        "ci95": [
+          0.2903,
+          0.7097
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 15,
+        "value": 0.6,
+        "ci95": [
+          0.3575,
+          0.8018
+        ]
+      },
+      "f1": 0.5455
+    },
+    "resolve_graph": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.9231
+    },
+    "search_dossiers": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "f1": 0.8889
+    },
+    "start_journey": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 27,
+        "value": 0.7778,
+        "ci95": [
+          0.5924,
+          0.8939
+        ]
+      },
+      "f1": 0.8235
+    },
+    "step_complete": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 0.8571
+    },
+    "verify_dossier": {
+      "recall": {
+        "hits": 18,
+        "total": 30,
+        "value": 0.6,
+        "ci95": [
+          0.4232,
+          0.7541
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "f1": 0.6667
+    },
+    "verify_graph": {
+      "recall": {
+        "hits": 27,
+        "total": 30,
+        "value": 0.9,
+        "ci95": [
+          0.7438,
+          0.9654
+        ]
+      },
+      "precision": {
+        "hits": 27,
+        "total": 33,
+        "value": 0.8182,
+        "ci95": [
+          0.6561,
+          0.9139
+        ]
+      },
+      "f1": 0.8571
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "read_dossier",
+      "chosen": "verify_dossier",
+      "count": 6,
+      "share": 0.3333
+    },
+    {
+      "expected": "step_complete",
+      "chosen": "start_journey",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "verify_dossier",
+      "chosen": "read_dossier",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "verify_dossier",
+      "chosen": "verify_graph",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "read_dossier",
+      "chosen": "(none)",
+      "count": 3,
+      "share": 0.1667
+    },
+    {
+      "expected": "list_dossiers",
+      "chosen": "search_dossiers",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "start_journey",
+      "chosen": "search_dossiers",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "verify_graph",
+      "chosen": "resolve_graph",
+      "count": 3,
+      "share": 0.1
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "read_dossier",
+      "chosen": "verify_dossier",
+      "count": 6
+    },
+    {
+      "expected": "step_complete",
+      "chosen": "start_journey",
+      "count": 6
+    },
+    {
+      "expected": "verify_dossier",
+      "chosen": "verify_graph",
+      "count": 6
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 10,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [],
+  "queries": [
+    {
+      "id": "cancel_journey#straightforward.1",
+      "text": "Please cancel my active commute session with journey id J-88392 because my meeting got rescheduled.",
+      "expected": "cancel_journey",
+      "kind": "straightforward",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#straightforward.2",
+      "text": "Terminate journey session 4491-X immediately due to a sudden vehicle breakdown.",
+      "expected": "cancel_journey",
+      "kind": "straightforward",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#straightforward.3",
+      "text": "I need to stop the ongoing trip tracker for ID 7720-Alpha right now.",
+      "expected": "cancel_journey",
+      "kind": "straightforward",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#straightforward.4",
+      "text": "Abort the current navigation session 10928 because I am staying home instead.",
+      "expected": "cancel_journey",
+      "kind": "straightforward",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#paraphrased.1",
+      "text": "Kill session 9934 before it goes any further, plans changed completely.",
+      "expected": "cancel_journey",
+      "kind": "paraphrased",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#paraphrased.2",
+      "text": "Dump the active route 3321-beta right this second, I'm done traveling today.",
+      "expected": "cancel_journey",
+      "kind": "paraphrased",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#hard_negative.1",
+      "text": "Check where journey session J-55412 stands right now before I decide to abort it.",
+      "expected": "get_journey_status",
+      "kind": "hard_negative",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "cancel_journey#hard_negative.2",
+      "text": "Pull up the current progress report for trip ID 992-delta to see if I should kill it.",
+      "expected": "get_journey_status",
+      "kind": "hard_negative",
+      "neighbour": "get_journey_status"
+    },
+    {
+      "id": "get_journey_status#straightforward.1",
+      "text": "Can you check the current state of journey session jrn_99812a?",
+      "expected": "get_journey_status",
+      "kind": "straightforward",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#straightforward.2",
+      "text": "What are the remaining steps and completed tasks for journey id jrn_4432b?",
+      "expected": "get_journey_status",
+      "kind": "straightforward",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#straightforward.3",
+      "text": "Show me the progress and collected outputs for journey jrn_77190x.",
+      "expected": "get_journey_status",
+      "kind": "straightforward",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#straightforward.4",
+      "text": "I need to see where journey session jrn_1102c is currently at.",
+      "expected": "get_journey_status",
+      "kind": "straightforward",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#paraphrased.1",
+      "text": "Where am I at in jrn_55431f right now?",
+      "expected": "get_journey_status",
+      "kind": "paraphrased",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#paraphrased.2",
+      "text": "Pull up the latest progress report on session jrn_8834k.",
+      "expected": "get_journey_status",
+      "kind": "paraphrased",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#hard_negative.1",
+      "text": "Can you stop and terminate journey session jrn_33219d right now?",
+      "expected": "cancel_journey",
+      "kind": "hard_negative",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "get_journey_status#hard_negative.2",
+      "text": "I need to halt the progress on journey id jrn_6654e immediately.",
+      "expected": "cancel_journey",
+      "kind": "hard_negative",
+      "neighbour": "cancel_journey"
+    },
+    {
+      "id": "list_dossiers#straightforward.1",
+      "text": "Can you scan the documents folder and show me all the available dossiers?",
+      "expected": "list_dossiers",
+      "kind": "straightforward",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#straightforward.2",
+      "text": "Please list every dossier file located inside the project directory.",
+      "expected": "list_dossiers",
+      "kind": "straightforward",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#straightforward.3",
+      "text": "I need to see the metadata for all dossiers in the root path.",
+      "expected": "list_dossiers",
+      "kind": "straightforward",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#straightforward.4",
+      "text": "Run a scan on the archive folder to discover all existing dossiers.",
+      "expected": "list_dossiers",
+      "kind": "straightforward",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#paraphrased.1",
+      "text": "pull up all dossier files in my notes folder including subdirectories",
+      "expected": "list_dossiers",
+      "kind": "paraphrased",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#paraphrased.2",
+      "text": "what dossiers do we have sitting in the workspace right now",
+      "expected": "list_dossiers",
+      "kind": "paraphrased",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#hard_negative.1",
+      "text": "Can you find all dossiers containing the word budget in the finance folder?",
+      "expected": "search_dossiers",
+      "kind": "hard_negative",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "list_dossiers#hard_negative.2",
+      "text": "Please look up dossiers matching the quarterly review in the documents path.",
+      "expected": "search_dossiers",
+      "kind": "hard_negative",
+      "neighbour": "search_dossiers"
+    },
+    {
+      "id": "read_dossier#straightforward.1",
+      "text": "Please open and parse the dossier file located at /home/user/cases/case_441.json.",
+      "expected": "read_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#straightforward.2",
+      "text": "I need to read the dossier at /var/data/dossiers/client_alpha.dat and check its contents.",
+      "expected": "read_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#straightforward.3",
+      "text": "Run the read_dossier function on the file /storage/records/project_delta.json.",
+      "expected": "read_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#straightforward.4",
+      "text": "Can you fetch the metadata and content from the dossier at /docs/investigations/target_zero.json?",
+      "expected": "read_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#paraphrased.1",
+      "text": "Pull up everything inside /records/archive_99.json so I can review the notes.",
+      "expected": "read_dossier",
+      "kind": "paraphrased",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#paraphrased.2",
+      "text": "Show me what's written in that dossier at /shared/files/audit_2024.dat right away.",
+      "expected": "read_dossier",
+      "kind": "paraphrased",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#hard_negative.1",
+      "text": "Go ahead and read the dossier at /secure/vault/suspect_88.json now.",
+      "expected": "verify_dossier",
+      "kind": "hard_negative",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "read_dossier#hard_negative.2",
+      "text": "I want you to read through the dossier stored at /audits/quarterly_review.dat immediately.",
+      "expected": "verify_dossier",
+      "kind": "hard_negative",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "resolve_graph#straightforward.1",
+      "text": "Please run resolve_graph on the project dossier located at dossiers/alpha_release.json.",
+      "expected": "resolve_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#straightforward.2",
+      "text": "Call the resolve_graph tool using the input dossier path records/q3_financials.yaml.",
+      "expected": "resolve_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#straightforward.3",
+      "text": "Execute resolve_graph for the target dossier named migration_plan_v2.",
+      "expected": "resolve_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#straightforward.4",
+      "text": "Can you use resolve_graph on the dossier at data/customer_onboarding.json?",
+      "expected": "resolve_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#paraphrased.1",
+      "text": "Figure out the execution sequence for project_omega based on its dependency connections.",
+      "expected": "resolve_graph",
+      "kind": "paraphrased",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#paraphrased.2",
+      "text": "Turn the supply_chain_2024 dossier into a sequenced timeline of tasks and bottlenecks.",
+      "expected": "resolve_graph",
+      "kind": "paraphrased",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#hard_negative.1",
+      "text": "Check the dependency graph integrity for the deployment dossier stored at audits/v4_release.json.",
+      "expected": "verify_graph",
+      "kind": "hard_negative",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "resolve_graph#hard_negative.2",
+      "text": "Validate the structural soundness of the dossier connections found in security_patch_audit.yaml.",
+      "expected": "verify_graph",
+      "kind": "hard_negative",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "search_dossiers#straightforward.1",
+      "text": "Search the dossier registry for files related to Project Vanguard.",
+      "expected": "search_dossiers",
+      "kind": "straightforward",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#straightforward.2",
+      "text": "Find any dossiers containing the keyword budget audit in the financial category.",
+      "expected": "search_dossiers",
+      "kind": "straightforward",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#straightforward.3",
+      "text": "Can you look up dossiers matching the query security protocols?",
+      "expected": "search_dossiers",
+      "kind": "straightforward",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#straightforward.4",
+      "text": "Query the dossier database for personnel records under the HR tag.",
+      "expected": "search_dossiers",
+      "kind": "straightforward",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#paraphrased.1",
+      "text": "pull up whatever you've got on the Henderson merger",
+      "expected": "search_dossiers",
+      "kind": "paraphrased",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#paraphrased.2",
+      "text": "need to dig up those old safety incident files from last quarter",
+      "expected": "search_dossiers",
+      "kind": "paraphrased",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#hard_negative.1",
+      "text": "Search the dossier registry to show every single file we currently have on record.",
+      "expected": "list_dossiers",
+      "kind": "hard_negative",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "search_dossiers#hard_negative.2",
+      "text": "Find and display the entire index of dossiers currently stored in the system.",
+      "expected": "list_dossiers",
+      "kind": "hard_negative",
+      "neighbour": "list_dossiers"
+    },
+    {
+      "id": "start_journey#straightforward.1",
+      "text": "Please initiate a journey session using the verified graph g_prod_9921.",
+      "expected": "start_journey",
+      "kind": "straightforward",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#straightforward.2",
+      "text": "Call start_journey with graph_id set to net_topology_v4.",
+      "expected": "start_journey",
+      "kind": "straightforward",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#straightforward.3",
+      "text": "Launch the new session for the validated execution graph identified by node_sequence_77.",
+      "expected": "start_journey",
+      "kind": "straightforward",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#straightforward.4",
+      "text": "Execute start_journey passing financial_audit_graph_v2 as the graph ID.",
+      "expected": "start_journey",
+      "kind": "straightforward",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#paraphrased.1",
+      "text": "Kick off the onboarding workflow using our locked-in graph structure for Acme Corp.",
+      "expected": "start_journey",
+      "kind": "paraphrased",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#paraphrased.2",
+      "text": "Fire up the pipeline session already mapped out in enterprise_migration_final.",
+      "expected": "start_journey",
+      "kind": "paraphrased",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#hard_negative.1",
+      "text": "We just finished this phase of the onboarding workflow, so kick off the next one using graph_id onboarding_flow_v3.",
+      "expected": "step_complete",
+      "kind": "hard_negative",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "start_journey#hard_negative.2",
+      "text": "Go ahead and initiate the subsequent phase of the journey for graph_id pipeline_v2 now that we're past the block.",
+      "expected": "step_complete",
+      "kind": "hard_negative",
+      "neighbour": "step_complete"
+    },
+    {
+      "id": "step_complete#straightforward.1",
+      "text": "Mark step 3 of journey_884 as complete and save the output score as 95.",
+      "expected": "step_complete",
+      "kind": "straightforward",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#straightforward.2",
+      "text": "Please update journey_id j-100 with status complete and pass the final review text in the outputs payload.",
+      "expected": "step_complete",
+      "kind": "straightforward",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#straightforward.3",
+      "text": "Record that journey 402 failed at the validation phase due to a schema mismatch.",
+      "expected": "step_complete",
+      "kind": "straightforward",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#straightforward.4",
+      "text": "The current task in journey_909 is finished successfully, so send the confirmation response data now.",
+      "expected": "step_complete",
+      "kind": "straightforward",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#paraphrased.1",
+      "text": "Wrap up job 772 right now, it passed all checks.",
+      "expected": "step_complete",
+      "kind": "paraphrased",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#paraphrased.2",
+      "text": "I'm done with this phase of proc_331, log the final payload and push it forward.",
+      "expected": "step_complete",
+      "kind": "paraphrased",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#hard_negative.1",
+      "text": "Begin a brand new journey with ID journey_773 using the onboarding template.",
+      "expected": "start_journey",
+      "kind": "hard_negative",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "step_complete#hard_negative.2",
+      "text": "Kick off the initial setup for journey_441 and load the first step dossier.",
+      "expected": "start_journey",
+      "kind": "hard_negative",
+      "neighbour": "start_journey"
+    },
+    {
+      "id": "verify_dossier#straightforward.1",
+      "text": "Can you run a security check on the dossier located at /secure/records/dossier_402.enc to confirm its signature and checksum?",
+      "expected": "verify_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#straightforward.2",
+      "text": "Verify the integrity and authenticity of the dossier file at /var/data/incoming/target_dossier.dat.",
+      "expected": "verify_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#straightforward.3",
+      "text": "Please execute the verify_dossier check for /home/analyst/evidence/dossier_99.bin.",
+      "expected": "verify_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#straightforward.4",
+      "text": "I need to run the verification process on the dossier at /opt/audit/files/subject_alpha.dossier.",
+      "expected": "verify_dossier",
+      "kind": "straightforward",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#paraphrased.1",
+      "text": "Check if /mnt/storage/top_secret.enc is untampered and properly signed before I open it.",
+      "expected": "verify_dossier",
+      "kind": "paraphrased",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#paraphrased.2",
+      "text": "Quickly validate the hashes and credentials on /var/log/dossiers/batch_seven.dat so we can proceed.",
+      "expected": "verify_dossier",
+      "kind": "paraphrased",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#hard_negative.1",
+      "text": "Please check the signature and checksum for the dossier graph stored at /graphs/network_v2.json.",
+      "expected": "verify_graph",
+      "kind": "hard_negative",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_dossier#hard_negative.2",
+      "text": "Run the integrity and authenticity verification on the dossier dependency graph located at /data/relations/node_map.dot.",
+      "expected": "verify_graph",
+      "kind": "hard_negative",
+      "neighbour": "verify_graph"
+    },
+    {
+      "id": "verify_graph#straightforward.1",
+      "text": "Run a batch security verification on the dependency graph identified by graph-9982 for the deployment dossier called payment-service.",
+      "expected": "verify_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#straightforward.2",
+      "text": "Please execute verify_graph using graph id net-topo-441 and the dossier target auth-module.",
+      "expected": "verify_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#straightforward.3",
+      "text": "I need to check the entire dossier dependency graph 773a-b2c9 for the microservices dossier to get an aggregate security report.",
+      "expected": "verify_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#straightforward.4",
+      "text": "Perform a complete security check on dependency graph alpha-v1 using the core-api dossier specification.",
+      "expected": "verify_graph",
+      "kind": "straightforward",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#paraphrased.1",
+      "text": "Can you sweep through graph 339-beta and run the security pipeline for the billing component?",
+      "expected": "verify_graph",
+      "kind": "paraphrased",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#paraphrased.2",
+      "text": "Check all nodes in the database-cluster graph against the user-service spec and give me the final sign-off.",
+      "expected": "verify_graph",
+      "kind": "paraphrased",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#hard_negative.1",
+      "text": "Run a security check on the dependency graph identified by graph-9982 for just the single payment-service dossier without doing the whole batch.",
+      "expected": "verify_dossier",
+      "kind": "hard_negative",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "verify_graph#hard_negative.2",
+      "text": "Please execute the safety verification using graph id net-topo-441 focusing exclusively on the auth-module dossier rather than the aggregated tree.",
+      "expected": "verify_dossier",
+      "kind": "hard_negative",
+      "neighbour": "verify_dossier"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you summarize the company policy on remote work expenses outlined in the employee handbook PDF on my desktop?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What is the capital of Australia and how many time zones does the country span?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Draft a professional email to my manager requesting two weeks of parental leave starting on November first.",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "cancel_journey#straightforward.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "J-88392",
+        "reason": "Meeting got rescheduled"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "J-88392",
+        "reason": "Meeting got rescheduled"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "meeting got rescheduled",
+        "journey_id": "J-88392"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "4491-X",
+        "reason": "sudden vehicle breakdown"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "4491-X",
+        "reason": "Sudden vehicle breakdown"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "4491-X",
+        "reason": "Sudden vehicle breakdown"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.3",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "7720-Alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.3",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "7720-Alpha",
+        "reason": "User requested to stop the ongoing trip tracker immediately."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.3",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "Stopped by user request",
+        "journey_id": "7720-Alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.4",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "10928",
+        "reason": "Staying home instead"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.4",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "Staying home instead",
+        "journey_id": "10928"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#straightforward.4",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "10928",
+        "reason": "staying home instead"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#paraphrased.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "Plans changed completely",
+        "journey_id": "9934"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#paraphrased.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "9934",
+        "reason": "Plans changed completely"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#paraphrased.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "9934",
+        "reason": "Plans changed completely"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#paraphrased.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "Done traveling today",
+        "journey_id": "3321-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#paraphrased.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "User is done traveling today",
+        "journey_id": "3321-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#paraphrased.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "3321-beta",
+        "reason": "User is done traveling today"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "cancel_journey#hard_negative.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "J-55412"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "cancel_journey#hard_negative.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "J-55412"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "cancel_journey#hard_negative.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "J-55412"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "cancel_journey#hard_negative.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "992-delta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "cancel_journey#hard_negative.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "992-delta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "cancel_journey#hard_negative.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "992-delta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_99812a"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_99812a"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_99812a"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_4432b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_4432b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_4432b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.3",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_77190x"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.3",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_77190x"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.3",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_77190x"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.4",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_1102c"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.4",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_1102c"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#straightforward.4",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_1102c"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#paraphrased.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_55431f"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#paraphrased.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_55431f"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#paraphrased.1",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_55431f"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#paraphrased.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_8834k"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#paraphrased.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_8834k"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#paraphrased.2",
+      "chosen": "get_journey_status",
+      "arguments": {
+        "journey_id": "jrn_8834k"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_journey_status"
+    },
+    {
+      "query_id": "get_journey_status#hard_negative.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "jrn_33219d"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "get_journey_status#hard_negative.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "jrn_33219d"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "get_journey_status#hard_negative.1",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "reason": "Terminated by user request",
+        "journey_id": "jrn_33219d"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "get_journey_status#hard_negative.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "jrn_6654e"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "get_journey_status#hard_negative.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "jrn_6654e"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "get_journey_status#hard_negative.2",
+      "chosen": "cancel_journey",
+      "arguments": {
+        "journey_id": "jrn_6654e"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "cancel_journey"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.1",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.1",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.1",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.2",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "recursive": true,
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.2",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": ".",
+        "recursive": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.3",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.3",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "recursive": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.3",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "recursive": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.4",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "archive"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.4",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "archive"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#straightforward.4",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "archive"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#paraphrased.1",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "notes",
+        "recursive": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#paraphrased.1",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "notes",
+        "recursive": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#paraphrased.1",
+      "chosen": "list_dossiers",
+      "arguments": {
+        "path": "notes",
+        "recursive": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#paraphrased.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#paraphrased.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#paraphrased.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#hard_negative.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "budget",
+        "category": "finance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#hard_negative.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "budget",
+        "category": "finance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#hard_negative.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "budget",
+        "category": "finance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#hard_negative.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "quarterly review"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#hard_negative.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "quarterly review"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "list_dossiers#hard_negative.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "quarterly review"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "read_dossier#straightforward.1",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/home/user/cases/case_441.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.1",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/home/user/cases/case_441.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.1",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/home/user/cases/case_441.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/data/dossiers/client_alpha.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/data/dossiers/client_alpha.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/data/dossiers/client_alpha.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.3",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/storage/records/project_delta.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.3",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/storage/records/project_delta.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.3",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/storage/records/project_delta.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.4",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/docs/investigations/target_zero.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.4",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/docs/investigations/target_zero.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#straightforward.4",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/docs/investigations/target_zero.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#paraphrased.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/shared/files/audit_2024.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#paraphrased.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/shared/files/audit_2024.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#paraphrased.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/shared/files/audit_2024.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_dossier"
+    },
+    {
+      "query_id": "read_dossier#hard_negative.1",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/secure/vault/suspect_88.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "read_dossier#hard_negative.1",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/secure/vault/suspect_88.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "read_dossier#hard_negative.1",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/secure/vault/suspect_88.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "read_dossier#hard_negative.2",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/audits/quarterly_review.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "read_dossier#hard_negative.2",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/audits/quarterly_review.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "read_dossier#hard_negative.2",
+      "chosen": "read_dossier",
+      "arguments": {
+        "path": "/audits/quarterly_review.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.1",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "dossiers/alpha_release.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.1",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "dossiers/alpha_release.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.1",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "dossiers/alpha_release.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "records/q3_financials.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "records/q3_financials.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "records/q3_financials.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.3",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "migration_plan_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.3",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "migration_plan_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.3",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "migration_plan_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.4",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "data/customer_onboarding.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.4",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "data/customer_onboarding.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#straightforward.4",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "data/customer_onboarding.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#paraphrased.1",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "project_omega"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#paraphrased.1",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "project_omega"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#paraphrased.1",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "project_omega"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#paraphrased.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "supply_chain_2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#paraphrased.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "supply_chain_2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#paraphrased.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "supply_chain_2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_graph"
+    },
+    {
+      "query_id": "resolve_graph#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "audits/v4_release.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "resolve_graph#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "audits/v4_release.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "resolve_graph#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "audits/v4_release.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "resolve_graph#hard_negative.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "security_patch_audit.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "resolve_graph#hard_negative.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "security_patch_audit.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "resolve_graph#hard_negative.2",
+      "chosen": "resolve_graph",
+      "arguments": {
+        "dossier": "security_patch_audit.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Project Vanguard"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Project Vanguard"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Project Vanguard"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "category": "financial",
+        "query": "budget audit"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "category": "financial",
+        "query": "budget audit"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "category": "financial",
+        "query": "budget audit"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.3",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "security protocols"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.3",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "security protocols"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.3",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "security protocols"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.4",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "category": "HR",
+        "query": "personnel records"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.4",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "category": "HR",
+        "query": "personnel records"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#straightforward.4",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "personnel records",
+        "category": "hr"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#paraphrased.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Henderson merger"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#paraphrased.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Henderson merger"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#paraphrased.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "safety incident",
+        "category": "security"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#paraphrased.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "category": "security",
+        "query": "safety incident files last quarter"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#paraphrased.2",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "safety incident last quarter",
+        "category": "security"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#hard_negative.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#hard_negative.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#paraphrased.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Henderson merger"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#hard_negative.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#hard_negative.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#hard_negative.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "search_dossiers#hard_negative.2",
+      "chosen": "list_dossiers",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_dossiers"
+    },
+    {
+      "query_id": "start_journey#straightforward.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "g_prod_9921"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "g_prod_9921"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "g_prod_9921"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "net_topology_v4"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "net_topology_v4"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "net_topology_v4"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.3",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "node_sequence_77"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.3",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "node_sequence_77"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.3",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "node_sequence_77"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.4",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "financial_audit_graph_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.4",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "financial_audit_graph_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#straightforward.4",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "financial_audit_graph_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#paraphrased.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Acme Corp onboarding"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#paraphrased.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Acme Corp onboarding"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#paraphrased.1",
+      "chosen": "search_dossiers",
+      "arguments": {
+        "query": "Acme Corp onboarding"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#paraphrased.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "enterprise_migration_final"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#paraphrased.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "enterprise_migration_final"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#hard_negative.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "onboarding_flow_v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "start_journey#paraphrased.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "enterprise_migration_final"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "start_journey#hard_negative.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "onboarding_flow_v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "start_journey#hard_negative.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "onboarding_flow_v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "start_journey#hard_negative.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "pipeline_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "start_journey#hard_negative.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "pipeline_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "start_journey#hard_negative.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "pipeline_v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.1",
+      "chosen": "step_complete",
+      "arguments": {
+        "journey_id": "journey_884",
+        "outputs": {
+          "score": 95
+        },
+        "status": "completed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.1",
+      "chosen": "step_complete",
+      "arguments": {
+        "journey_id": "journey_884",
+        "outputs": {
+          "score": 95
+        },
+        "status": "completed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.1",
+      "chosen": "step_complete",
+      "arguments": {
+        "journey_id": "journey_884",
+        "outputs": {
+          "score": 95
+        },
+        "status": "completed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.2",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "j-100",
+        "outputs": {
+          "final_review": "complete"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.2",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "j-100",
+        "outputs": {
+          "review": "final review text"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.3",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "failed",
+        "journey_id": "402",
+        "outputs": {
+          "error": "schema mismatch"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.2",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "outputs": {
+          "review": "final review text"
+        },
+        "journey_id": "j-100"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.3",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "failed",
+        "outputs": {
+          "error": "schema mismatch"
+        },
+        "journey_id": "402"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.3",
+      "chosen": "step_complete",
+      "arguments": {
+        "outputs": {
+          "error": "schema mismatch"
+        },
+        "journey_id": "402",
+        "status": "failed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.4",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "journey_909"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.4",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "journey_909"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#straightforward.4",
+      "chosen": "step_complete",
+      "arguments": {
+        "journey_id": "journey_909",
+        "status": "completed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#paraphrased.1",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "772"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#paraphrased.1",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "772"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#paraphrased.1",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "outputs": {
+          "status": "passed"
+        },
+        "journey_id": "772"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#paraphrased.2",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "proc_331"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#paraphrased.2",
+      "chosen": "step_complete",
+      "arguments": {
+        "status": "completed",
+        "journey_id": "proc_331",
+        "outputs": {
+          "payload": "final payload logged"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#paraphrased.2",
+      "chosen": "step_complete",
+      "arguments": {
+        "journey_id": "proc_331",
+        "status": "completed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "step_complete"
+    },
+    {
+      "query_id": "step_complete#hard_negative.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "journey_773"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "step_complete#hard_negative.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "journey_773"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "step_complete#hard_negative.1",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "journey_773"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "step_complete#hard_negative.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "journey_441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "step_complete#hard_negative.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "journey_441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "step_complete#hard_negative.2",
+      "chosen": "start_journey",
+      "arguments": {
+        "graph_id": "journey_441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "start_journey"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.1",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/secure/records/dossier_402.enc"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.1",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/secure/records/dossier_402.enc"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.1",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/secure/records/dossier_402.enc"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/data/incoming/target_dossier.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/data/incoming/target_dossier.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/data/incoming/target_dossier.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.3",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/home/analyst/evidence/dossier_99.bin"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.3",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/home/analyst/evidence/dossier_99.bin"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.3",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/home/analyst/evidence/dossier_99.bin"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.4",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/opt/audit/files/subject_alpha.dossier"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.4",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/opt/audit/files/subject_alpha.dossier"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#straightforward.4",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/opt/audit/files/subject_alpha.dossier"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#paraphrased.1",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/mnt/storage/top_secret.enc"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#paraphrased.1",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/mnt/storage/top_secret.enc"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#paraphrased.1",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/mnt/storage/top_secret.enc"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#paraphrased.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/log/dossiers/batch_seven.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#paraphrased.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/log/dossiers/batch_seven.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#paraphrased.2",
+      "chosen": "verify_dossier",
+      "arguments": {
+        "path": "/var/log/dossiers/batch_seven.dat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_dossier#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "/graphs/network_v2.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_dossier#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "/graphs/network_v2.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_dossier#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "/graphs/network_v2.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_dossier#hard_negative.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "/data/relations/node_map.dot"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_dossier#hard_negative.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "/data/relations/node_map.dot"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_dossier#hard_negative.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "/data/relations/node_map.dot"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "payment-service",
+        "graph_id": "graph-9982"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "graph-9982",
+        "dossier": "payment-service"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "payment-service",
+        "graph_id": "graph-9982"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "auth-module",
+        "graph_id": "net-topo-441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "auth-module",
+        "graph_id": "net-topo-441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "net-topo-441",
+        "dossier": "auth-module"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.3",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "773a-b2c9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.3",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "microservices",
+        "graph_id": "773a-b2c9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.3",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "773a-b2c9",
+        "dossier": "microservices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.4",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "core-api"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.4",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "core-api"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#straightforward.4",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "alpha-v1"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#paraphrased.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "billing",
+        "graph_id": "339-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#paraphrased.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "339-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#paraphrased.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "339-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#paraphrased.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "database-cluster"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#paraphrased.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "database-cluster"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#paraphrased.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "database-cluster"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_graph"
+    },
+    {
+      "query_id": "verify_graph#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "graph-9982",
+        "dossier": "payment-service"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_graph#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "graph-9982",
+        "dossier": "payment-service"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_graph#hard_negative.1",
+      "chosen": "verify_graph",
+      "arguments": {
+        "dossier": "payment-service",
+        "graph_id": "graph-9982"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_graph#hard_negative.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "net-topo-441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_graph#hard_negative.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "net-topo-441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "verify_graph#hard_negative.2",
+      "chosen": "verify_graph",
+      "arguments": {
+        "graph_id": "net-topo-441"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "verify_dossier"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "ai-imboard-dossier.json",
+    "slug": "ai-imboard-dossier",
+    "registry_name": "ai.imboard/dossier",
+    "title": "ai.imboard/dossier",
+    "repository": "https://github.com/imboard-ai/ai-dossier"
+  }
+}

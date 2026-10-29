@@ -1,0 +1,615 @@
+version: 1
+tools:
+  echo:
+    fingerprint: 4de1c145bde0dd05
+    queries:
+    - id: echo#straightforward.1
+      text: 'Please repeat this exact phrase back to me: System check complete.'
+      expected: echo
+      kind: straightforward
+      neighbour: get-sum
+    - id: echo#straightforward.2
+      text: 'Send back the following text in your response: Ready for deployment.'
+      expected: echo
+      kind: straightforward
+      neighbour: get-sum
+    - id: echo#straightforward.3
+      text: 'Can you echo the words: Connection established.'
+      expected: echo
+      kind: straightforward
+      neighbour: get-sum
+    - id: echo#straightforward.4
+      text: 'Just output this message verbatim: Backup successful.'
+      expected: echo
+      kind: straightforward
+      neighbour: get-sum
+    - id: echo#paraphrased.1
+      text: 'throw this line back at me quick: alpha Bravo 99'
+      expected: echo
+      kind: paraphrased
+      neighbour: get-sum
+    - id: echo#paraphrased.2
+      text: 'parrot my words: update pending'
+      expected: echo
+      kind: paraphrased
+      neighbour: get-sum
+    - id: echo#hard_negative.1
+      text: Please echo the total sum of 45 and 89.
+      expected: get-sum
+      kind: hard_negative
+      neighbour: get-sum
+    - id: echo#hard_negative.2
+      text: Repeat back the combined sum of 120 and 350.
+      expected: get-sum
+      kind: hard_negative
+      neighbour: get-sum
+  get-annotated-message:
+    fingerprint: 844677d4e31187c4
+    queries:
+    - id: get-annotated-message#straightforward.1
+      text: Get the annotated message where the message type is urgent and include
+        the image.
+      expected: get-annotated-message
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-annotated-message#straightforward.2
+      text: Fetch the annotated message of type notification without including the
+        image.
+      expected: get-annotated-message
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-annotated-message#straightforward.3
+      text: Retrieve the annotated message using message type system_alert and set
+        include image to true.
+      expected: get-annotated-message
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-annotated-message#straightforward.4
+      text: Show me the annotated message for message type reminder and make sure
+        to include the image.
+      expected: get-annotated-message
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-annotated-message#paraphrased.1
+      text: Pull up that tagged broadcast regarding security updates and grab its
+        visual attachment too.
+      expected: get-annotated-message
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: get-annotated-message#paraphrased.2
+      text: I need the metadata-tagged bulletin for the maintenance window, skip the
+        picture though.
+      expected: get-annotated-message
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: get-annotated-message#hard_negative.1
+      text: Get the resource reference for the message type urgent including the image
+        metadata.
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+    - id: get-annotated-message#hard_negative.2
+      text: Fetch the resource reference where message type is notification and include
+        image is set.
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+  get-env:
+    fingerprint: 1349e68f89cb30a4
+    queries:
+    - id: get-env#straightforward.1
+      text: Call get-env to show me every active system variable currently loaded
+        in the shell.
+      expected: get-env
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-env#straightforward.2
+      text: Run get-env so I can see all environment settings available to the current
+        process.
+      expected: get-env
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-env#straightforward.3
+      text: Execute get-env to output a complete list of all environment variables
+        present in the runtime.
+      expected: get-env
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-env#straightforward.4
+      text: Trigger get-env to fetch all environment variables configured for this
+        session.
+      expected: get-env
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-env#paraphrased.1
+      text: Dump all the runtime config variables so I can figure out why this integration
+        is failing.
+      expected: get-env
+      kind: paraphrased
+      neighbour: get-tiny-image
+    - id: get-env#paraphrased.2
+      text: List the active process settings right now because something is misconfigured.
+      expected: get-env
+      kind: paraphrased
+      neighbour: get-tiny-image
+    - id: get-env#hard_negative.1
+      text: Grab get-tiny-image to dump all configuration settings and runtime variables
+        for debugging the setup.
+      expected: get-tiny-image
+      kind: hard_negative
+      neighbour: get-tiny-image
+    - id: get-env#hard_negative.2
+      text: Execute get-tiny-image so I can inspect every active system variable and
+        process parameter.
+      expected: get-tiny-image
+      kind: hard_negative
+      neighbour: get-tiny-image
+  get-resource-links:
+    fingerprint: e3f64227cde0390b
+    queries:
+    - id: get-resource-links#straightforward.1
+      text: Can you fetch me five external asset URLs?
+      expected: get-resource-links
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-resource-links#straightforward.2
+      text: Please provide three reference links for documentation.
+      expected: get-resource-links
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-resource-links#straightforward.3
+      text: I need a list of ten learning material addresses.
+      expected: get-resource-links
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-resource-links#straightforward.4
+      text: Show me six helpful reference items.
+      expected: get-resource-links
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-resource-links#paraphrased.1
+      text: Drop a few helpful URLs I can check out real quick.
+      expected: get-resource-links
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: get-resource-links#paraphrased.2
+      text: Need a handful of reference pointers ASAP.
+      expected: get-resource-links
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: get-resource-links#hard_negative.1
+      text: Can you grab ten resource links for me?
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+    - id: get-resource-links#hard_negative.2
+      text: Please return resource links for the project.
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+  get-resource-reference:
+    fingerprint: 7d282480dcc6a606
+    queries:
+    - id: get-resource-reference#straightforward.1
+      text: Call get-resource-reference with resourceType user and resourceId 45.
+      expected: get-resource-reference
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-resource-reference#straightforward.2
+      text: I need a resource reference for resourceType document and resourceId 102.
+      expected: get-resource-reference
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-resource-reference#straightforward.3
+      text: Please fetch the resource reference where resourceType is project and
+        resourceId is 789.
+      expected: get-resource-reference
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-resource-reference#straightforward.4
+      text: Run get-resource-reference for resourceType item and resourceId 5.
+      expected: get-resource-reference
+      kind: straightforward
+      neighbour: get-tiny-image
+    - id: get-resource-reference#paraphrased.1
+      text: Pull up item 88 in the system so I can link it.
+      expected: get-resource-reference
+      kind: paraphrased
+      neighbour: get-tiny-image
+    - id: get-resource-reference#paraphrased.2
+      text: Gimme the pointer for user record 331 quick.
+      expected: get-resource-reference
+      kind: paraphrased
+      neighbour: get-tiny-image
+    - id: get-resource-reference#hard_negative.1
+      text: Get a tiny image of resourceType icon and resourceId 12.
+      expected: get-tiny-image
+      kind: hard_negative
+      neighbour: get-tiny-image
+    - id: get-resource-reference#hard_negative.2
+      text: I need to get-tiny-image for resourceType avatar and resourceId 99.
+      expected: get-tiny-image
+      kind: hard_negative
+      neighbour: get-tiny-image
+  get-structured-content:
+    fingerprint: 4b21b1e6b23c6152
+    queries:
+    - id: get-structured-content#straightforward.1
+      text: Pull the latest user profile details from the production database located
+        in us-east-1.
+      expected: get-structured-content
+      kind: straightforward
+      neighbour: get-env
+    - id: get-structured-content#straightforward.2
+      text: Fetch the configuration object stored at config/settings.json.
+      expected: get-structured-content
+      kind: straightforward
+      neighbour: get-env
+    - id: get-structured-content#straightforward.3
+      text: Retrieve the JSON payload for the inventory catalog at warehouse/stock/main.json.
+      expected: get-structured-content
+      kind: straightforward
+      neighbour: get-env
+    - id: get-structured-content#straightforward.4
+      text: Grab the customer onboarding form data from the bucket at s3://company-forms-2024/intake.json.
+      expected: get-structured-content
+      kind: straightforward
+      neighbour: get-env
+    - id: get-structured-content#paraphrased.1
+      text: Pull the data schema for the main app residing in production.
+      expected: get-structured-content
+      kind: paraphrased
+      neighbour: get-env
+    - id: get-structured-content#paraphrased.2
+      text: Grab the configuration layout from the primary server path.
+      expected: get-structured-content
+      kind: paraphrased
+      neighbour: get-env
+    - id: get-structured-content#hard_negative.1
+      text: Fetch the runtime variables located in the production environment.
+      expected: get-env
+      kind: hard_negative
+      neighbour: get-env
+    - id: get-structured-content#hard_negative.2
+      text: Pull the system configurations defined for the staging deployment.
+      expected: get-env
+      kind: hard_negative
+      neighbour: get-env
+  get-sum:
+    fingerprint: c9342d11a16ed091
+    queries:
+    - id: get-sum#straightforward.1
+      text: Add 45 and 89 together.
+      expected: get-sum
+      kind: straightforward
+      neighbour: get-resource-links
+    - id: get-sum#straightforward.2
+      text: What is the total of 1056 and 3892?
+      expected: get-sum
+      kind: straightforward
+      neighbour: get-resource-links
+    - id: get-sum#straightforward.3
+      text: Calculate the sum of 12.5 and 7.8.
+      expected: get-sum
+      kind: straightforward
+      neighbour: get-resource-links
+    - id: get-sum#straightforward.4
+      text: Compute 500 plus 350.
+      expected: get-sum
+      kind: straightforward
+      neighbour: get-resource-links
+    - id: get-sum#paraphrased.1
+      text: throw 14 and 9 together quick
+      expected: get-sum
+      kind: paraphrased
+      neighbour: get-resource-links
+    - id: get-sum#paraphrased.2
+      text: need the total for 99 + 450
+      expected: get-sum
+      kind: paraphrased
+      neighbour: get-resource-links
+    - id: get-sum#hard_negative.1
+      text: Add the source files and documentation.
+      expected: get-resource-links
+      kind: hard_negative
+      neighbour: get-resource-links
+    - id: get-sum#hard_negative.2
+      text: Combine the asset and document locations.
+      expected: get-resource-links
+      kind: hard_negative
+      neighbour: get-resource-links
+  get-tiny-image:
+    fingerprint: 864ccce1450a0e44
+    queries:
+    - id: get-tiny-image#straightforward.1
+      text: Please fetch the little Model Context Protocol logo graphic.
+      expected: get-tiny-image
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-tiny-image#straightforward.2
+      text: Display the tiny MCP brand picture for me right now.
+      expected: get-tiny-image
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-tiny-image#straightforward.3
+      text: I need to view the micro-sized image of the Model Context Protocol icon.
+      expected: get-tiny-image
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-tiny-image#straightforward.4
+      text: Can you pull up the compact logo for MCP?
+      expected: get-tiny-image
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: get-tiny-image#paraphrased.1
+      text: drop that little protocol icon in the chat
+      expected: get-tiny-image
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: get-tiny-image#paraphrased.2
+      text: need the mini square brand asset fast
+      expected: get-tiny-image
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: get-tiny-image#hard_negative.1
+      text: Please fetch the little Model Context Protocol resource link.
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+    - id: get-tiny-image#hard_negative.2
+      text: Can you pull up the compact pointer for the MCP asset?
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+  gzip-file-as-resource:
+    fingerprint: ea80de651d033c90
+    queries:
+    - id: gzip-file-as-resource#straightforward.1
+      text: Please compress the document report.txt using gzip format.
+      expected: gzip-file-as-resource
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#straightforward.2
+      text: Run gzip on database.sql and provide the compressed output as a downloadable
+        resource.
+      expected: gzip-file-as-resource
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#straightforward.3
+      text: I need to zip the file archive.tar with gzip and return it as a resource.
+      expected: gzip-file-as-resource
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#straightforward.4
+      text: Compress backup.log using the gzip tool and make the output available
+        as a resource link.
+      expected: gzip-file-as-resource
+      kind: straightforward
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#paraphrased.1
+      text: gzip config.json real quick and hand me the link.
+      expected: gzip-file-as-resource
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#paraphrased.2
+      text: pack up data.csv into a gzipped file so I can download it.
+      expected: gzip-file-as-resource
+      kind: paraphrased
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#hard_negative.1
+      text: Get me the resource reference for the file that was just compressed using
+        gzip.
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+    - id: gzip-file-as-resource#hard_negative.2
+      text: Retrieve the downloadable resource link for the gzipped archive created
+        earlier.
+      expected: get-resource-reference
+      kind: hard_negative
+      neighbour: get-resource-reference
+  simulate-research-query:
+    fingerprint: 1b50d028758b0fb9
+    queries:
+    - id: simulate-research-query#straightforward.1
+      text: Run a deep research operation on the economic impacts of quantum computing
+        in the financial sector.
+      expected: simulate-research-query
+      kind: straightforward
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#straightforward.2
+      text: Please simulate a comprehensive research query regarding current regulatory
+        frameworks for artificial intelligence in the European Union.
+      expected: simulate-research-query
+      kind: straightforward
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#straightforward.3
+      text: Execute a full research simulation on lithium-ion battery recycling technologies
+        and supply chain bottlenecks.
+      expected: simulate-research-query
+      kind: straightforward
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#straightforward.4
+      text: Perform a deep investigation and synthesize findings about the history
+        of mRNA vaccine development.
+      expected: simulate-research-query
+      kind: straightforward
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#paraphrased.1
+      text: Dig into how modern microprocessors are designed and put together a thorough
+        breakdown of the current state of the art.
+      expected: simulate-research-query
+      kind: paraphrased
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#paraphrased.2
+      text: I need a deep dive into the 2008 financial crisis root causes, so pull
+        together and analyze everything relevant.
+      expected: simulate-research-query
+      kind: paraphrased
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#hard_negative.1
+      text: Trigger a long-running operation to synthesize and research the effects
+        of deep sea mining on marine ecosystems.
+      expected: trigger-long-running-operation
+      kind: hard_negative
+      neighbour: trigger-long-running-operation
+    - id: simulate-research-query#hard_negative.2
+      text: Initiate the long-running process to gather and analyze data on global
+        semiconductor manufacturing output.
+      expected: trigger-long-running-operation
+      kind: hard_negative
+      neighbour: trigger-long-running-operation
+  toggle-simulated-logging:
+    fingerprint: cd6d001c754bc87c
+    queries:
+    - id: toggle-simulated-logging#straightforward.1
+      text: Turn on simulated logging right now.
+      expected: toggle-simulated-logging
+      kind: straightforward
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#straightforward.2
+      text: Please disable simulated random-leveled logging.
+      expected: toggle-simulated-logging
+      kind: straightforward
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#straightforward.3
+      text: Activate the background log generator.
+      expected: toggle-simulated-logging
+      kind: straightforward
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#straightforward.4
+      text: Stop the simulated logging feature.
+      expected: toggle-simulated-logging
+      kind: straightforward
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#paraphrased.1
+      text: make the fake logs start firing off
+      expected: toggle-simulated-logging
+      kind: paraphrased
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#paraphrased.2
+      text: kill that endless stream of dummy output
+      expected: toggle-simulated-logging
+      kind: paraphrased
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#hard_negative.1
+      text: Turn on subscriber updates immediately.
+      expected: toggle-subscriber-updates
+      kind: hard_negative
+      neighbour: toggle-subscriber-updates
+    - id: toggle-simulated-logging#hard_negative.2
+      text: Stop sending those subscriber alerts to the feed.
+      expected: toggle-subscriber-updates
+      kind: hard_negative
+      neighbour: toggle-subscriber-updates
+  toggle-subscriber-updates:
+    fingerprint: a95780fa0049b792
+    queries:
+    - id: toggle-subscriber-updates#straightforward.1
+      text: Please turn off the simulated subscription updates right now.
+      expected: toggle-subscriber-updates
+      kind: straightforward
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#straightforward.2
+      text: Toggle the subscription update simulation to enabled.
+      expected: toggle-subscriber-updates
+      kind: straightforward
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#straightforward.3
+      text: Switch on simulated updates for my subscriptions.
+      expected: toggle-subscriber-updates
+      kind: straightforward
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#straightforward.4
+      text: Disable the resource subscription update notifications.
+      expected: toggle-subscriber-updates
+      kind: straightforward
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#paraphrased.1
+      text: stop sending me all those fake email alerts about my feed followers.
+      expected: toggle-subscriber-updates
+      kind: paraphrased
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#paraphrased.2
+      text: flip the switch for incoming client notification feeds so they start coming
+        through again.
+      expected: toggle-subscriber-updates
+      kind: paraphrased
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#hard_negative.1
+      text: Turn off the simulated logging output for my active subscriptions.
+      expected: toggle-simulated-logging
+      kind: hard_negative
+      neighbour: toggle-simulated-logging
+    - id: toggle-subscriber-updates#hard_negative.2
+      text: Toggle the system logging updates to on.
+      expected: toggle-simulated-logging
+      kind: hard_negative
+      neighbour: toggle-simulated-logging
+  trigger-long-running-operation:
+    fingerprint: 172b5ac0510f06b1
+    queries:
+    - id: trigger-long-running-operation#straightforward.1
+      text: Start a long operation that lasts for 120 seconds and has 6 progress updates.
+      expected: trigger-long-running-operation
+      kind: straightforward
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#straightforward.2
+      text: Run the progression test for 300 seconds across 10 steps.
+      expected: trigger-long-running-operation
+      kind: straightforward
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#straightforward.3
+      text: Execute the timed task with a duration of 45 seconds divided into 3 steps.
+      expected: trigger-long-running-operation
+      kind: straightforward
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#straightforward.4
+      text: Trigger a progress-enabled job lasting 60 seconds with 5 intervals.
+      expected: trigger-long-running-operation
+      kind: straightforward
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#paraphrased.1
+      text: run a 10 min progress job in 4 chunks
+      expected: trigger-long-running-operation
+      kind: paraphrased
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#paraphrased.2
+      text: kick off a task that takes about two minutes and updates four times
+      expected: trigger-long-running-operation
+      kind: paraphrased
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#hard_negative.1
+      text: Simulate a research query about the 120-second progress metric across
+        6 steps.
+      expected: simulate-research-query
+      kind: hard_negative
+      neighbour: simulate-research-query
+    - id: trigger-long-running-operation#hard_negative.2
+      text: Run a research query simulating a 300-second duration with 10 steps.
+      expected: simulate-research-query
+      kind: hard_negative
+      neighbour: simulate-research-query
+no_tool:
+- id: (none)#1
+  text: Can you compress the backup archive located at /var/backups/db_dump.sql using
+    the 7z format and password protect the output file?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: Please calculate the exact sum of all invoice amounts listed in the CSV file
+    at /home/user/finance/Q3_revenue.csv.
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Can you echo the current system environment variables containing database
+    connection strings to the system output?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-27'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

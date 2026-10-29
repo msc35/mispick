@@ -1,0 +1,2598 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-26",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "com-1102tools-acquisition-gov-mcp",
+      "name": "acquisition-gov",
+      "version": "1.0.8",
+      "protocol_version": "2026-07-28",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_rfo_agency_deviation",
+      "server": null,
+      "title": null,
+      "description": "Resolve an indexed source ID and return page-numbered official PDF text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "page_start": {
+            "default": 1,
+            "title": "Page Start",
+            "type": "integer"
+          },
+          "page_end": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page End"
+          }
+        },
+        "required": [
+          "source_id"
+        ],
+        "title": "get_rfo_agency_deviationArguments"
+      },
+      "annotations": {
+        "title": "Get posted agency RFO deviation",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_rfo_guidance",
+      "server": null,
+      "title": null,
+      "description": "Return an allowlisted Acquisition.gov RFO FAQ or guidance resource.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "enum": [
+              "faq",
+              "policy_and_guidance",
+              "deviation_guidance"
+            ],
+            "title": "Resource",
+            "type": "string"
+          },
+          "heading": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Heading"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cursor"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "title": "get_rfo_guidanceArguments"
+      },
+      "annotations": {
+        "title": "Get approved RFO guidance",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_rfo_part",
+      "server": null,
+      "title": null,
+      "description": "Return parsed, paginated model-deviation text for one FAR part.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "title": "Part",
+            "type": "integer"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Section"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cursor"
+          },
+          "max_characters": {
+            "default": 20000,
+            "title": "Max Characters",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "part"
+        ],
+        "title": "get_rfo_partArguments"
+      },
+      "annotations": {
+        "title": "Get FAR Overhaul model part",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_rfo_agency_deviations",
+      "server": null,
+      "title": null,
+      "description": "List official agency-deviation links discovered through the RFO index.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "agency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Agency"
+          },
+          "part": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Part"
+          },
+          "limit": {
+            "default": 100,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "list_rfo_agency_deviationsArguments"
+      },
+      "annotations": {
+        "title": "List posted agency RFO deviations",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_rfo_parts",
+      "server": null,
+      "title": null,
+      "description": "List official RFO model parts and counts of posted agency deviations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Part"
+          },
+          "agency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Agency"
+          },
+          "updated_since": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Updated Since"
+          }
+        },
+        "title": "list_rfo_partsArguments"
+      },
+      "annotations": {
+        "title": "List FAR Overhaul parts",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    }
+  ],
+  "score": 82,
+  "summary": {
+    "accuracy": {
+      "hits": 96,
+      "total": 129,
+      "value": 0.7442,
+      "ci95": [
+        0.6626,
+        0.8117
+      ]
+    },
+    "stability": {
+      "hits": 43,
+      "total": 43,
+      "value": 1.0,
+      "ci95": [
+        0.918,
+        1.0
+      ]
+    },
+    "argumentValidity": {
+      "hits": 126,
+      "total": 126,
+      "value": 1.0,
+      "ci95": [
+        0.9704,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 6,
+      "total": 9,
+      "value": 0.6667,
+      "ci95": [
+        0.3542,
+        0.8794
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 129,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0289
+      ]
+    },
+    "trials": 129,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 575
+  },
+  "confusionMatrix": {
+    "rows": [
+      "get_rfo_agency_deviation",
+      "get_rfo_guidance",
+      "get_rfo_part",
+      "list_rfo_agency_deviations",
+      "list_rfo_parts",
+      "(none)"
+    ],
+    "columns": [
+      "get_rfo_agency_deviation",
+      "get_rfo_guidance",
+      "get_rfo_part",
+      "list_rfo_agency_deviations",
+      "list_rfo_parts",
+      "(none)"
+    ],
+    "counts": {
+      "get_rfo_agency_deviation": {
+        "get_rfo_agency_deviation": 18,
+        "list_rfo_agency_deviations": 3,
+        "get_rfo_guidance": 3,
+        "get_rfo_part": 3,
+        "list_rfo_parts": 3
+      },
+      "get_rfo_guidance": {
+        "get_rfo_guidance": 18
+      },
+      "get_rfo_part": {
+        "get_rfo_agency_deviation": 6,
+        "get_rfo_part": 18
+      },
+      "list_rfo_agency_deviations": {
+        "list_rfo_agency_deviations": 21,
+        "list_rfo_parts": 3
+      },
+      "list_rfo_parts": {
+        "list_rfo_agency_deviations": 6,
+        "list_rfo_parts": 18
+      },
+      "(none)": {
+        "(none)": 3,
+        "list_rfo_agency_deviations": 3,
+        "list_rfo_parts": 3
+      }
+    }
+  },
+  "perTool": {
+    "get_rfo_agency_deviation": {
+      "recall": {
+        "hits": 18,
+        "total": 30,
+        "value": 0.6,
+        "ci95": [
+          0.4232,
+          0.7541
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "f1": 0.6667
+    },
+    "get_rfo_guidance": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.9231
+    },
+    "get_rfo_part": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.8
+    },
+    "list_rfo_agency_deviations": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 33,
+        "value": 0.6364,
+        "ci95": [
+          0.4662,
+          0.7781
+        ]
+      },
+      "f1": 0.7368
+    },
+    "list_rfo_parts": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 27,
+        "value": 0.6667,
+        "ci95": [
+          0.4782,
+          0.8136
+        ]
+      },
+      "f1": 0.7059
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "get_rfo_part",
+      "chosen": "get_rfo_agency_deviation",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "list_rfo_parts",
+      "chosen": "list_rfo_agency_deviations",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "(none)",
+      "chosen": "list_rfo_agency_deviations",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "(none)",
+      "chosen": "list_rfo_parts",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "list_rfo_agency_deviations",
+      "chosen": "list_rfo_parts",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "get_rfo_agency_deviation",
+      "chosen": "get_rfo_guidance",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "get_rfo_agency_deviation",
+      "chosen": "get_rfo_part",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "get_rfo_agency_deviation",
+      "chosen": "list_rfo_agency_deviations",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "get_rfo_agency_deviation",
+      "chosen": "list_rfo_parts",
+      "count": 3,
+      "share": 0.1
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "get_rfo_part",
+      "chosen": "get_rfo_agency_deviation",
+      "count": 6
+    },
+    {
+      "expected": "list_rfo_parts",
+      "chosen": "list_rfo_agency_deviations",
+      "count": 6
+    },
+    {
+      "expected": "get_rfo_agency_deviation",
+      "chosen": "get_rfo_guidance",
+      "count": 3
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 5,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [],
+  "queries": [
+    {
+      "id": "get_rfo_agency_deviation#straightforward.1",
+      "text": "Pull the official PDF text for source ID RFO-9942-X starting on page five through the end.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#straightforward.2",
+      "text": "Fetch the page-numbered official PDF text for index ID SRC-8821 on page 10.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#straightforward.3",
+      "text": "Get the official PDF content for source reference alpha-773-beta from page two to page fifteen.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#straightforward.4",
+      "text": "Retrieve the official PDF text indexed under source delta-339 covering pages one through twelve.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#paraphrased.1",
+      "text": "Pull the text for RFO-551 from page four onward.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "paraphrased",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#paraphrased.2",
+      "text": "Grab the official PDF pages 3 through 20 for source ID gamma-901.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "paraphrased",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#hard_negative.1",
+      "text": "Get the official PDF text for part RFO-442 on page six.",
+      "expected": "get_rfo_part",
+      "kind": "hard_negative",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_agency_deviation#hard_negative.2",
+      "text": "Pull the official PDF text for part ID SRC-771 covering pages two through five.",
+      "expected": "get_rfo_part",
+      "kind": "hard_negative",
+      "neighbour": "get_rfo_part"
+    },
+    {
+      "id": "get_rfo_guidance#straightforward.1",
+      "text": "Fetch the Acquisition.gov RFO FAQ resource for small business subcontracting plans.",
+      "expected": "get_rfo_guidance",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#straightforward.2",
+      "text": "Get the official RFO guidance document regarding emergency acquisitions and disaster relief.",
+      "expected": "get_rfo_guidance",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#straightforward.3",
+      "text": "Pull up the Acquisition.gov RFO FAQ on commercial item determinations.",
+      "expected": "get_rfo_guidance",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#straightforward.4",
+      "text": "Display the allowlisted RFO guidance resource for simplified acquisition procedures.",
+      "expected": "get_rfo_guidance",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#paraphrased.1",
+      "text": "Need the Acquisition.gov help page on RFO rules before my noon deadline.",
+      "expected": "get_rfo_guidance",
+      "kind": "paraphrased",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#paraphrased.2",
+      "text": "Where is the standard Q and A file for RFO compliance stuff?",
+      "expected": "get_rfo_guidance",
+      "kind": "paraphrased",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#hard_negative.1",
+      "text": "Fetch the Acquisition.gov RFO agency deviation document for the Department of Defense.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "hard_negative",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_guidance#hard_negative.2",
+      "text": "Get the official RFO agency deviation resource regarding civilian headcount caps.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "hard_negative",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#straightforward.1",
+      "text": "Pull up the deviation text for FAR part 52.",
+      "expected": "get_rfo_part",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#straightforward.2",
+      "text": "Show me part 15 deviations, starting at the beginning with pagination disabled.",
+      "expected": "get_rfo_part",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#straightforward.3",
+      "text": "Get the model deviation details for FAR part 25, limited to 5000 characters.",
+      "expected": "get_rfo_part",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#straightforward.4",
+      "text": "Retrieve parsed deviation records for FAR part 12 under section 3.",
+      "expected": "get_rfo_part",
+      "kind": "straightforward",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#paraphrased.1",
+      "text": "Need the text on rule changes for part 31, just grab whatever comes up first.",
+      "expected": "get_rfo_part",
+      "kind": "paraphrased",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#paraphrased.2",
+      "text": "Pull up the exceptions file for part 8 since page three won't load.",
+      "expected": "get_rfo_part",
+      "kind": "paraphrased",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#hard_negative.1",
+      "text": "Pull up the deviation text for agency rule 52.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "hard_negative",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "get_rfo_part#hard_negative.2",
+      "text": "Show me agency deviations under part 15 starting from the current cursor.",
+      "expected": "get_rfo_agency_deviation",
+      "kind": "hard_negative",
+      "neighbour": "get_rfo_agency_deviation"
+    },
+    {
+      "id": "list_rfo_agency_deviations#straightforward.1",
+      "text": "Can you list the official agency deviation links from the RFO index for the Department of Transportation?",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#straightforward.2",
+      "text": "Show me RFO index agency deviations restricted to part 52 with a maximum limit of ten items.",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#straightforward.3",
+      "text": "Fetch the agency deviation links discovered through the RFO index for NASA.",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#straightforward.4",
+      "text": "Please run list_rfo_agency_deviations for the Department of Defense looking at part 15.",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#paraphrased.1",
+      "text": "pull up the deviations agencies filed per the rfo index for part 30",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "paraphrased",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#paraphrased.2",
+      "text": "need all agency-level deviation urls from rfo for EPA capped at 25 results",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "paraphrased",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#hard_negative.1",
+      "text": "List the RFO index agency deviation sections contained in part 52.",
+      "expected": "list_rfo_parts",
+      "kind": "hard_negative",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_agency_deviations#hard_negative.2",
+      "text": "Show me the RFO agency deviation subsections for part 12.",
+      "expected": "list_rfo_parts",
+      "kind": "hard_negative",
+      "neighbour": "list_rfo_parts"
+    },
+    {
+      "id": "list_rfo_parts#straightforward.1",
+      "text": "Show me all the official model parts along with their agency deviation counts.",
+      "expected": "list_rfo_parts",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#straightforward.2",
+      "text": "Can you list the RFO parts and how many agency deviations are posted for each?",
+      "expected": "list_rfo_parts",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#straightforward.3",
+      "text": "Retrieve the RFO components and their associated deviation counts.",
+      "expected": "list_rfo_parts",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#straightforward.4",
+      "text": "I need a list of all model parts under RFO and the tally of agency deviations.",
+      "expected": "list_rfo_parts",
+      "kind": "straightforward",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#paraphrased.1",
+      "text": "Pull up the component inventory for RFO with deviation tallies updated since last Tuesday.",
+      "expected": "list_rfo_parts",
+      "kind": "paraphrased",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#paraphrased.2",
+      "text": "Get the current parts and deviation stats for the aviation agency.",
+      "expected": "list_rfo_parts",
+      "kind": "paraphrased",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#hard_negative.1",
+      "text": "List the agency deviations registered for the standard RFO catalog.",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "hard_negative",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "list_rfo_parts#hard_negative.2",
+      "text": "Show me the breakdown of posted RFO deviations by agency.",
+      "expected": "list_rfo_agency_deviations",
+      "kind": "hard_negative",
+      "neighbour": "list_rfo_agency_deviations"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Could you draft the formal justification memo for sole source procurement under FAR 13.501 for our upcoming IT modernization contract?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What are the specific small business subcontracting goals mandated for Department of Defense prime contractors in fiscal year 2025?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Can you summarize the key changes between the previous version of the Defense Federal Acquisition Regulation Supplement and the current update?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "RFO-9942-X",
+        "page_start": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_end": null,
+        "source_id": "RFO-9942-X",
+        "page_start": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "SRC-8821",
+        "page_end": 10,
+        "page_start": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 5,
+        "source_id": "RFO-9942-X"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 10,
+        "source_id": "SRC-8821",
+        "page_end": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_end": 10,
+        "page_start": 10,
+        "source_id": "SRC-8821"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.3",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 2,
+        "page_end": 15,
+        "source_id": "alpha-773-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.3",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_end": 15,
+        "page_start": 2,
+        "source_id": "alpha-773-beta"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.3",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 2,
+        "source_id": "alpha-773-beta",
+        "page_end": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.4",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 1,
+        "page_end": 12,
+        "source_id": "delta-339"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.4",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 1,
+        "source_id": "delta-339",
+        "page_end": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#straightforward.4",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "delta-339",
+        "page_end": 12,
+        "page_start": 1
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#paraphrased.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 4,
+        "source_id": "RFO-551"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#paraphrased.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 4,
+        "source_id": "RFO-551"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#paraphrased.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "gamma-901",
+        "page_start": 3,
+        "page_end": 20
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#paraphrased.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "RFO-551",
+        "page_start": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#paraphrased.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_end": 20,
+        "page_start": 3,
+        "source_id": "gamma-901"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#paraphrased.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "gamma-901",
+        "page_start": 3,
+        "page_end": 20
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#hard_negative.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 6,
+        "page_end": 6,
+        "source_id": "RFO-442"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#hard_negative.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "source_id": "RFO-442",
+        "page_start": 6,
+        "page_end": 6
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#hard_negative.1",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 6,
+        "page_end": 6,
+        "source_id": "RFO-442"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#hard_negative.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_end": 5,
+        "page_start": 2,
+        "source_id": "SRC-771"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#hard_negative.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_end": 5,
+        "page_start": 2,
+        "source_id": "SRC-771"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_agency_deviation#hard_negative.2",
+      "chosen": "get_rfo_agency_deviation",
+      "arguments": {
+        "page_start": 2,
+        "page_end": 5,
+        "source_id": "SRC-771"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.1",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "heading": "small business subcontracting plans",
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.1",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "heading": "small business subcontracting plans",
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.1",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "heading": "small business subcontracting plans",
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "policy_and_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "policy_and_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "policy_and_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.3",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.3",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.3",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.4",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "policy_and_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.4",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "policy_and_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#straightforward.4",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#paraphrased.1",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#paraphrased.1",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#paraphrased.1",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#paraphrased.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#paraphrased.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#paraphrased.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_guidance"
+    },
+    {
+      "query_id": "get_rfo_guidance#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_guidance#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_guidance#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_guidance#hard_negative.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "deviation_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_guidance#hard_negative.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "heading": "civilian headcount caps",
+        "resource": "deviation_guidance"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_guidance#hard_negative.2",
+      "chosen": "get_rfo_guidance",
+      "arguments": {
+        "resource": "faq",
+        "heading": "civilian headcount caps"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.2",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "max_characters": 500000,
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.2",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "max_characters": 50000,
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.2",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 15,
+        "max_characters": 20000
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.3",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "max_characters": 5000,
+        "part": 25
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.3",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 25,
+        "max_characters": 5000
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.3",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "max_characters": 5000,
+        "part": 25
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.4",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 12,
+        "section": "3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.4",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "section": "3",
+        "part": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#straightforward.4",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 12,
+        "section": "3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#paraphrased.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 31
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#paraphrased.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 31
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#paraphrased.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 31
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#paraphrased.2",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 8,
+        "page_start": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#paraphrased.2",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "page_start": 3,
+        "part": 8,
+        "page_end": null
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#paraphrased.2",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "page_start": 3,
+        "part": 8
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_part"
+    },
+    {
+      "query_id": "get_rfo_part#hard_negative.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_part#hard_negative.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_part#hard_negative.1",
+      "chosen": "get_rfo_part",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_part#hard_negative.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_part#hard_negative.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "get_rfo_part#hard_negative.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_rfo_agency_deviation"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Transportation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Transportation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Transportation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 52,
+        "limit": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 52,
+        "limit": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "limit": 10,
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.3",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "NASA"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.3",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "NASA"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.3",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "NASA"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.4",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense",
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.4",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense",
+        "part": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#paraphrased.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 30
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#paraphrased.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 30
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#straightforward.4",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 15,
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#paraphrased.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 30
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#paraphrased.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "EPA",
+        "limit": 25
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#paraphrased.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "limit": 25,
+        "agency": "EPA"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 52
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#hard_negative.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#paraphrased.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "limit": 25,
+        "agency": "EPA"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#hard_negative.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_agency_deviations#hard_negative.2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "part": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.1",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.1",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.1",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.3",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.3",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.3",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.4",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.4",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#paraphrased.1",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "updated_since": "last Tuesday"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#straightforward.4",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#paraphrased.1",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "updated_since": "last Tuesday"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#paraphrased.1",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "updated_since": "last Tuesday"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#paraphrased.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "agency": "aviation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#paraphrased.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "agency": "aviation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#paraphrased.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "agency": "aviation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_parts"
+    },
+    {
+      "query_id": "list_rfo_parts#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_parts#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_parts#hard_negative.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_parts#hard_negative.1",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "list_rfo_parts#hard_negative.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "list_rfo_parts#hard_negative.2",
+      "chosen": "list_rfo_parts",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_rfo_agency_deviations"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "list_rfo_agency_deviations",
+      "arguments": {
+        "agency": "Department of Defense"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "agency": "DFARS"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "agency": "DFARS"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "list_rfo_parts",
+      "arguments": {
+        "agency": "DFARS"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "com-1102tools-acquisition-gov-mcp.json",
+    "slug": "com-1102tools-acquisition-gov-mcp",
+    "registry_name": "com.1102tools/acquisition-gov-mcp",
+    "title": "Acquisition.gov",
+    "repository": "https://github.com/1102tools-dev/federal-contracting-mcps"
+  }
+}

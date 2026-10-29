@@ -1,0 +1,580 @@
+version: 1
+tools:
+  create_connection:
+    fingerprint: b415040c0b399977
+    queries:
+    - id: create_connection#straightforward.1
+      text: Link memory 105 to memory 208 as a reference type.
+      expected: create_connection
+      kind: straightforward
+      neighbour: delete_connection
+    - id: create_connection#straightforward.2
+      text: Make a connection from memory 42 to memory 99 using the parent relationship.
+      expected: create_connection
+      kind: straightforward
+      neighbour: delete_connection
+    - id: create_connection#straightforward.3
+      text: Establish a new relationship between memory 310 and memory 115 labeled
+        dependency.
+      expected: create_connection
+      kind: straightforward
+      neighbour: delete_connection
+    - id: create_connection#straightforward.4
+      text: Connect memory 7 to memory 14 with a child link and set priority to high.
+      expected: create_connection
+      kind: straightforward
+      neighbour: delete_connection
+    - id: create_connection#paraphrased.1
+      text: Tie memory 88 into memory 45 as related.
+      expected: create_connection
+      kind: paraphrased
+      neighbour: delete_connection
+    - id: create_connection#paraphrased.2
+      text: Map a path from memory 500 over to memory 600.
+      expected: create_connection
+      kind: paraphrased
+      neighbour: delete_connection
+    - id: create_connection#hard_negative.1
+      text: Connect memory 12 and memory 34 by removing their existing link.
+      expected: delete_connection
+      kind: hard_negative
+      neighbour: delete_connection
+    - id: create_connection#hard_negative.2
+      text: Link memory 90 to memory 80 but cut the connection between them.
+      expected: delete_connection
+      kind: hard_negative
+      neighbour: delete_connection
+  create_memory:
+    fingerprint: 4b31d62d797fc372
+    queries:
+    - id: create_memory#straightforward.1
+      text: Add a new fact to the knowledge base stating that Python 3.11 is installed
+        on the primary server with the status active.
+      expected: create_memory
+      kind: straightforward
+      neighbour: create_connection
+    - id: create_memory#straightforward.2
+      text: Store a record for Sarah Jenkins who works as the lead designer in the
+        product department.
+      expected: create_memory
+      kind: straightforward
+      neighbour: create_connection
+    - id: create_memory#straightforward.3
+      text: Create an entry in the graph for Project Phoenix with a budget of fifty
+        thousand dollars and a deadline of next quarter.
+      expected: create_memory
+      kind: straightforward
+      neighbour: create_connection
+    - id: create_memory#straightforward.4
+      text: Make a new node for the database migration task assigning it a high priority
+        tag.
+      expected: create_memory
+      kind: straightforward
+      neighbour: create_connection
+    - id: create_memory#paraphrased.1
+      text: Log that I prefer dark mode across all my applications.
+      expected: create_memory
+      kind: paraphrased
+      neighbour: create_connection
+    - id: create_memory#paraphrased.2
+      text: Remember that my flight leaves from terminal two on Tuesday morning.
+      expected: create_memory
+      kind: paraphrased
+      neighbour: create_connection
+    - id: create_memory#hard_negative.1
+      text: Link the database migration task to the existing Project Phoenix node
+        in the graph.
+      expected: create_connection
+      kind: hard_negative
+      neighbour: create_connection
+    - id: create_memory#hard_negative.2
+      text: Establish a relationship between Sarah Jenkins and the product department
+        entry.
+      expected: create_connection
+      kind: hard_negative
+      neighbour: create_connection
+  delete_connection:
+    fingerprint: 1d62fb22c7b0ec1b
+    queries:
+    - id: delete_connection#straightforward.1
+      text: Please delete the connection between memory 104 and memory 205 that has
+        the type associated_with.
+      expected: delete_connection
+      kind: straightforward
+      neighbour: delete_memory
+    - id: delete_connection#straightforward.2
+      text: Remove the link of type parent_child connecting node 42 to node 89.
+      expected: delete_connection
+      kind: straightforward
+      neighbour: delete_memory
+    - id: delete_connection#straightforward.3
+      text: I need to delete the reference relation going from memory 512 to memory
+        301.
+      expected: delete_connection
+      kind: straightforward
+      neighbour: delete_memory
+    - id: delete_connection#straightforward.4
+      text: Drop the dependency edge between memory ID 11 and memory ID 77.
+      expected: delete_connection
+      kind: straightforward
+      neighbour: delete_memory
+    - id: delete_connection#paraphrased.1
+      text: Unlink 88 from 45, cut that exact tagged pathway right now.
+      expected: delete_connection
+      kind: paraphrased
+      neighbour: delete_memory
+    - id: delete_connection#paraphrased.2
+      text: Sever the bridge labeled follows that jumps from record 300 to record
+        500.
+      expected: delete_connection
+      kind: paraphrased
+      neighbour: delete_memory
+    - id: delete_connection#hard_negative.1
+      text: Delete the connection memory numbered 402.
+      expected: delete_memory
+      kind: hard_negative
+      neighbour: delete_memory
+    - id: delete_connection#hard_negative.2
+      text: Remove the relationship memory identified as 915.
+      expected: delete_memory
+      kind: hard_negative
+      neighbour: delete_memory
+  delete_memory:
+    fingerprint: f8fd354bc6af5ce1
+    queries:
+    - id: delete_memory#straightforward.1
+      text: Please remove node 402 along with all of its associated links from the
+        database.
+      expected: delete_memory
+      kind: straightforward
+      neighbour: delete_connection
+    - id: delete_memory#straightforward.2
+      text: Permanently erase node 15 from my memory graph.
+      expected: delete_memory
+      kind: straightforward
+      neighbour: delete_connection
+    - id: delete_memory#straightforward.3
+      text: I need to completely delete the memory unit numbered 89.
+      expected: delete_memory
+      kind: straightforward
+      neighbour: delete_connection
+    - id: delete_memory#straightforward.4
+      text: Wipe node 234 and every connection tied to it right now.
+      expected: delete_memory
+      kind: straightforward
+      neighbour: delete_connection
+    - id: delete_memory#paraphrased.1
+      text: Get rid of node 77 and whatever it's hooked into.
+      expected: delete_memory
+      kind: paraphrased
+      neighbour: delete_connection
+    - id: delete_memory#paraphrased.2
+      text: Clean out entry 51 and all its related baggage.
+      expected: delete_memory
+      kind: paraphrased
+      neighbour: delete_connection
+    - id: delete_memory#hard_negative.1
+      text: Sever the link between node 12 and node 45.
+      expected: delete_connection
+      kind: hard_negative
+      neighbour: delete_connection
+    - id: delete_memory#hard_negative.2
+      text: Just cut the connection attached to node 303.
+      expected: delete_connection
+      kind: hard_negative
+      neighbour: delete_connection
+  dream:
+    fingerprint: e7dc4355b4724cb8
+    queries:
+    - id: dream#straightforward.1
+      text: Please relabel the nodes in the knowledge graph, merge any duplicate entities,
+        and refresh the search embeddings right now.
+      expected: dream
+      kind: straightforward
+      neighbour: delete_memory
+    - id: dream#straightforward.2
+      text: Run the dream tool with dry_run set to true to preview the database cleanup.
+      expected: dream
+      kind: straightforward
+      neighbour: delete_memory
+    - id: dream#straightforward.3
+      text: Execute a full entity consolidation and embedding refresh on the workspace
+        database.
+      expected: dream
+      kind: straightforward
+      neighbour: delete_memory
+    - id: dream#straightforward.4
+      text: Perform a deterministic relabeling and merge identical records, and make
+        sure to refresh all vector embeddings.
+      expected: dream
+      kind: straightforward
+      neighbour: delete_memory
+    - id: dream#paraphrased.1
+      text: Hey, tidy up the vector store by squashing identical records and updating
+        the index vectors real quick.
+      expected: dream
+      kind: paraphrased
+      neighbour: delete_memory
+    - id: dream#paraphrased.2
+      text: Can you do a test run of cleaning up the duplicate tags and fixing up
+        our semantic search cache?
+      expected: dream
+      kind: paraphrased
+      neighbour: delete_memory
+    - id: dream#hard_negative.1
+      text: Go ahead and permanently wipe out the obsolete user memories and duplicate
+        entries from the database.
+      expected: delete_memory
+      kind: hard_negative
+      neighbour: delete_memory
+    - id: dream#hard_negative.2
+      text: Purge all the outdated contextual memories that match these duplicate
+        records.
+      expected: delete_memory
+      kind: hard_negative
+      neighbour: delete_memory
+  get_guidance:
+    fingerprint: 43e43c7442c7b26e
+    queries:
+    - id: get_guidance#straightforward.1
+      text: Can you show me how to use the memory tools properly?
+      expected: get_guidance
+      kind: straightforward
+      neighbour: memory_stats
+    - id: get_guidance#straightforward.2
+      text: I need help understanding the memory features.
+      expected: get_guidance
+      kind: straightforward
+      neighbour: memory_stats
+    - id: get_guidance#straightforward.3
+      text: Where can I find instructions for the memory utilities?
+      expected: get_guidance
+      kind: straightforward
+      neighbour: memory_stats
+    - id: get_guidance#straightforward.4
+      text: Teach me the best practices for storing things in memory.
+      expected: get_guidance
+      kind: straightforward
+      neighbour: memory_stats
+    - id: get_guidance#paraphrased.1
+      text: How do I make the most of my saved notes without messing up the system?
+      expected: get_guidance
+      kind: paraphrased
+      neighbour: memory_stats
+    - id: get_guidance#paraphrased.2
+      text: Give me a quick rundown on working with saved data efficiently.
+      expected: get_guidance
+      kind: paraphrased
+      neighbour: memory_stats
+    - id: get_guidance#hard_negative.1
+      text: How do I check the current status and metrics of my memory usage?
+      expected: memory_stats
+      kind: hard_negative
+      neighbour: memory_stats
+    - id: get_guidance#hard_negative.2
+      text: I need a report on my memory capacity and statistics right now.
+      expected: memory_stats
+      kind: hard_negative
+      neighbour: memory_stats
+  list_memory_labels:
+    fingerprint: 4f93f95606898a8d
+    queries:
+    - id: list_memory_labels#straightforward.1
+      text: Show me a complete list of every memory label along with how many times
+        each is used.
+      expected: list_memory_labels
+      kind: straightforward
+      neighbour: memory_stats
+    - id: list_memory_labels#straightforward.2
+      text: Can you fetch all existing memory tags and their corresponding counts?
+      expected: list_memory_labels
+      kind: straightforward
+      neighbour: memory_stats
+    - id: list_memory_labels#straightforward.3
+      text: I need to see every unique memory label currently in use and their totals.
+      expected: list_memory_labels
+      kind: straightforward
+      neighbour: memory_stats
+    - id: list_memory_labels#straightforward.4
+      text: List all active memory labels along with their usage counts, including
+        any archived ones.
+      expected: list_memory_labels
+      kind: straightforward
+      neighbour: memory_stats
+    - id: list_memory_labels#paraphrased.1
+      text: Give me a rundown of the tags on my stored facts so I can see what categories
+        exist.
+      expected: list_memory_labels
+      kind: paraphrased
+      neighbour: memory_stats
+    - id: list_memory_labels#paraphrased.2
+      text: What are all the custom buckets I've used for my saved notes?
+      expected: list_memory_labels
+      kind: paraphrased
+      neighbour: memory_stats
+    - id: list_memory_labels#hard_negative.1
+      text: Show me the overall metrics and totals for my memory database.
+      expected: memory_stats
+      kind: hard_negative
+      neighbour: memory_stats
+    - id: list_memory_labels#hard_negative.2
+      text: Give me a summary report of the memory system usage statistics.
+      expected: memory_stats
+      kind: hard_negative
+      neighbour: memory_stats
+  memory_stats:
+    fingerprint: 44a2988d75eb3d42
+    queries:
+    - id: memory_stats#straightforward.1
+      text: Can you give me a breakdown of how many nodes and relationships are currently
+        in the graph?
+      expected: memory_stats
+      kind: straightforward
+      neighbour: list_memory_labels
+    - id: memory_stats#straightforward.2
+      text: Run a quick check to count the total labels, embeddings, and orphans in
+        the database.
+      expected: memory_stats
+      kind: straightforward
+      neighbour: list_memory_labels
+    - id: memory_stats#straightforward.3
+      text: I need a full statistical summary of all entities and connections stored
+        in the system.
+      expected: memory_stats
+      kind: straightforward
+      neighbour: list_memory_labels
+    - id: memory_stats#straightforward.4
+      text: Show me the current counts for every node type and relationship type in
+        our knowledge base.
+      expected: memory_stats
+      kind: straightforward
+      neighbour: list_memory_labels
+    - id: memory_stats#paraphrased.1
+      text: how big is the graph right now
+      expected: memory_stats
+      kind: paraphrased
+      neighbour: list_memory_labels
+    - id: memory_stats#paraphrased.2
+      text: need quick counts on database contents
+      expected: memory_stats
+      kind: paraphrased
+      neighbour: list_memory_labels
+    - id: memory_stats#hard_negative.1
+      text: Give me a complete list of all memory labels currently defined in the
+        system.
+      expected: list_memory_labels
+      kind: hard_negative
+      neighbour: list_memory_labels
+    - id: memory_stats#hard_negative.2
+      text: Can you output the full catalogue of label names stored in the database
+        memory?
+      expected: list_memory_labels
+      kind: hard_negative
+      neighbour: list_memory_labels
+  query_memories:
+    fingerprint: e9fa50fdf81effaf
+    queries:
+    - id: query_memories#straightforward.1
+      text: Run a Cypher query to retrieve all user profiles stored in the graph database.
+      expected: query_memories
+      kind: straightforward
+      neighbour: create_connection
+    - id: query_memories#straightforward.2
+      text: Execute a read-only graph search using Cypher to find nodes connected
+        to project alpha.
+      expected: query_memories
+      kind: straightforward
+      neighbour: create_connection
+    - id: query_memories#straightforward.3
+      text: Fetch up to two hundred scrubbed rows by running a Cypher match statement
+        on the knowledge base.
+      expected: query_memories
+      kind: straightforward
+      neighbour: create_connection
+    - id: query_memories#straightforward.4
+      text: Query the memory graph using Cypher to list all active sessions.
+      expected: query_memories
+      kind: straightforward
+      neighbour: create_connection
+    - id: query_memories#paraphrased.1
+      text: pull up what we talked about regarding the server migration graph last
+        Tuesday.
+      expected: query_memories
+      kind: paraphrased
+      neighbour: create_connection
+    - id: query_memories#paraphrased.2
+      text: grab the nodes linking Sarah to the budgeting project from the underlying
+        store real quick.
+      expected: query_memories
+      kind: paraphrased
+      neighbour: create_connection
+    - id: query_memories#hard_negative.1
+      text: Run a Cypher query to establish a new link between user alice and the
+        database server.
+      expected: create_connection
+      kind: hard_negative
+      neighbour: create_connection
+    - id: query_memories#hard_negative.2
+      text: Execute a read-only Cypher statement to build a connection between node
+        one and node two.
+      expected: create_connection
+      kind: hard_negative
+      neighbour: create_connection
+  search_memories:
+    fingerprint: f7cc61ea48bc82b8
+    queries:
+    - id: search_memories#straightforward.1
+      text: Run a hybrid search for Benjamin Weeks in the knowledge graph.
+      expected: search_memories
+      kind: straightforward
+      neighbour: create_memory
+    - id: search_memories#straightforward.2
+      text: Search memories for project roadmap using semantic matching with a limit
+        of five results.
+      expected: search_memories
+      kind: straightforward
+      neighbour: create_memory
+    - id: search_memories#straightforward.3
+      text: Look up notes about the quarterly budget meeting ordered by score.
+      expected: search_memories
+      kind: straightforward
+      neighbour: create_memory
+    - id: search_memories#straightforward.4
+      text: Find archived entries related to the server migration since last month.
+      expected: search_memories
+      kind: straightforward
+      neighbour: create_memory
+    - id: search_memories#paraphrased.1
+      text: pull up whatever we talked about regarding Sarah's promotion last week
+      expected: search_memories
+      kind: paraphrased
+      neighbour: create_memory
+    - id: search_memories#paraphrased.2
+      text: dig through the graph for that restaurant recommendation in Austin
+      expected: search_memories
+      kind: paraphrased
+      neighbour: create_memory
+    - id: search_memories#hard_negative.1
+      text: Search for the grocery list to add milk and eggs to it.
+      expected: create_memory
+      kind: hard_negative
+      neighbour: create_memory
+    - id: search_memories#hard_negative.2
+      text: Find the notes from today's sync and store a new entry for the action
+        items.
+      expected: create_memory
+      kind: hard_negative
+      neighbour: create_memory
+  update_connection:
+    fingerprint: ec5c45dd89e8274e
+    queries:
+    - id: update_connection#straightforward.1
+      text: Change the relationship type between memory 42 and memory 88 to parent-child.
+      expected: update_connection
+      kind: straightforward
+      neighbour: update_memory
+    - id: update_connection#straightforward.2
+      text: 'Modify the properties of the link from memory 15 to memory 22 to include
+        confirmed: true.'
+      expected: update_connection
+      kind: straightforward
+      neighbour: update_memory
+    - id: update_connection#straightforward.3
+      text: Update the connection linking memory 7 and memory 19 with a new strength
+        rating of 0.9.
+      expected: update_connection
+      kind: straightforward
+      neighbour: update_memory
+    - id: update_connection#straightforward.4
+      text: Revise the association between memory 101 and memory 205 to use the bidirectional
+        type.
+      expected: update_connection
+      kind: straightforward
+      neighbour: update_memory
+    - id: update_connection#paraphrased.1
+      text: fix the link between 12 and 34, make it a strong tie now
+      expected: update_connection
+      kind: paraphrased
+      neighbour: update_memory
+    - id: update_connection#paraphrased.2
+      text: switch properties on the bond connecting node 5 and node 9 to expired
+        status
+      expected: update_connection
+      kind: paraphrased
+      neighbour: update_memory
+    - id: update_connection#hard_negative.1
+      text: Update the connection properties for memory 42.
+      expected: update_memory
+      kind: hard_negative
+      neighbour: update_memory
+    - id: update_connection#hard_negative.2
+      text: Change the link type for memory 88.
+      expected: update_memory
+      kind: hard_negative
+      neighbour: update_memory
+  update_memory:
+    fingerprint: 3234d5b9337d604c
+    queries:
+    - id: update_memory#straightforward.1
+      text: Change node 42 to include my new phone number.
+      expected: update_memory
+      kind: straightforward
+      neighbour: update_connection
+    - id: update_memory#straightforward.2
+      text: Update the properties on node 105 with the revised project deadlines.
+      expected: update_memory
+      kind: straightforward
+      neighbour: update_connection
+    - id: update_memory#straightforward.3
+      text: Modify the stored entry for node 8 to reflect that the office moved downtown.
+      expected: update_memory
+      kind: straightforward
+      neighbour: update_connection
+    - id: update_memory#straightforward.4
+      text: Run an update on node 15 to add my dietary restriction as vegan.
+      expected: update_memory
+      kind: straightforward
+      neighbour: update_connection
+    - id: update_memory#paraphrased.1
+      text: fix node 99, my title is actually senior engineer now
+      expected: update_memory
+      kind: paraphrased
+      neighbour: update_connection
+    - id: update_memory#paraphrased.2
+      text: add this new email to node 44 please
+      expected: update_memory
+      kind: paraphrased
+      neighbour: update_connection
+    - id: update_memory#hard_negative.1
+      text: Update the connection linking node 12 to node 15 with a new relation type.
+      expected: update_connection
+      kind: hard_negative
+      neighbour: update_connection
+    - id: update_memory#hard_negative.2
+      text: Modify the link properties between node 7 and node 8 to show they are
+        now partners.
+      expected: update_connection
+      kind: hard_negative
+      neighbour: update_connection
+no_tool:
+- id: (none)#1
+  text: Can you summarize all the diary entries I wrote last Tuesday into three bullet
+    points about my mood?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the capital of Australia and how many people live there?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Please write a Python script that reads a CSV file of my expenses and plots
+    a monthly bar chart.
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-19'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

@@ -1,0 +1,321 @@
+{"query_id":"echo#straightforward.1","chosen":"echo","arguments":{"message":"System check complete."},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#straightforward.1","chosen":"echo","arguments":{"message":"System check complete."},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#straightforward.2","chosen":"echo","arguments":{"message":"Ready for deployment."},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#straightforward.1","chosen":"echo","arguments":{"message":"System check complete."},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#straightforward.2","chosen":"echo","arguments":{"message":"Ready for deployment."},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#straightforward.2","chosen":"echo","arguments":{"message":"Ready for deployment."},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#straightforward.3","chosen":"echo","arguments":{"message":"Connection established."},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#straightforward.3","chosen":"echo","arguments":{"message":"Connection established."},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#straightforward.3","chosen":"echo","arguments":{"message":"Connection established."},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#straightforward.4","chosen":"echo","arguments":{"message":"Backup successful."},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#straightforward.4","chosen":"echo","arguments":{"message":"Backup successful."},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#straightforward.4","chosen":"echo","arguments":{"message":"Backup successful."},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#paraphrased.1","chosen":"echo","arguments":{"message":"alpha Bravo 99"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#paraphrased.1","chosen":"echo","arguments":{"message":"alpha Bravo 99"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#paraphrased.2","chosen":"echo","arguments":{"message":"update pending"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#paraphrased.1","chosen":"echo","arguments":{"message":"alpha Bravo 99"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#paraphrased.2","chosen":"echo","arguments":{"message":"update pending"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#paraphrased.2","chosen":"echo","arguments":{"message":"update pending"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#hard_negative.1","chosen":"get-sum","arguments":{"a":45,"b":89},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#hard_negative.1","chosen":"get-sum","arguments":{"a":45,"b":89},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#hard_negative.1","chosen":"get-sum","arguments":{"b":89,"a":45},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"echo#hard_negative.2","chosen":"get-sum","arguments":{"a":120,"b":350},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"echo#hard_negative.2","chosen":"get-sum","arguments":{"b":350,"a":120},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"echo#hard_negative.2","chosen":"get-sum","arguments":{"a":120,"b":350},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#straightforward.1","chosen":"get-annotated-message","arguments":{"messageType":"error","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#straightforward.1","chosen":"get-annotated-message","arguments":{"messageType":"error","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#straightforward.1","chosen":"get-annotated-message","arguments":{"messageType":"error","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#straightforward.2","chosen":"get-annotated-message","arguments":{"includeImage":false,"messageType":"error"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#straightforward.2","chosen":"get-annotated-message","arguments":{"includeImage":false,"messageType":"debug"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#straightforward.2","chosen":"get-annotated-message","arguments":{"includeImage":false,"messageType":"debug"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#straightforward.3","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"debug"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#straightforward.3","chosen":"get-annotated-message","arguments":{"messageType":"debug","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#straightforward.4","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#straightforward.3","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"debug"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#straightforward.4","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"error"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#straightforward.4","chosen":"get-annotated-message","arguments":{"messageType":"debug","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#paraphrased.1","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#paraphrased.1","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#paraphrased.1","chosen":"get-annotated-message","arguments":{"messageType":"success","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#paraphrased.2","chosen":"get-annotated-message","arguments":{"includeImage":false,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#paraphrased.2","chosen":"get-annotated-message","arguments":{"includeImage":false,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#paraphrased.2","chosen":"get-annotated-message","arguments":{"messageType":"success","includeImage":false},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#hard_negative.1","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"error"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#hard_negative.1","chosen":"get-resource-reference","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-annotated-message#hard_negative.2","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-annotated-message#hard_negative.2","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#hard_negative.1","chosen":"get-annotated-message","arguments":{"messageType":"error","includeImage":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-annotated-message#hard_negative.2","chosen":"get-annotated-message","arguments":{"includeImage":true,"messageType":"success"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#straightforward.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#straightforward.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#straightforward.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#straightforward.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#straightforward.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#straightforward.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#straightforward.3","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#straightforward.3","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#straightforward.4","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#straightforward.3","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#straightforward.4","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#paraphrased.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#paraphrased.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#straightforward.4","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#paraphrased.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#paraphrased.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#paraphrased.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#paraphrased.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#hard_negative.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#hard_negative.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#hard_negative.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-env#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-env#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-env#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#straightforward.1","chosen":"get-resource-links","arguments":{"count":5},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#straightforward.1","chosen":"get-resource-links","arguments":{"count":5},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#straightforward.1","chosen":"get-resource-links","arguments":{"count":5},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#straightforward.2","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#straightforward.2","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#straightforward.3","chosen":"get-resource-links","arguments":{"count":10},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#straightforward.3","chosen":"get-resource-links","arguments":{"count":10},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#straightforward.2","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#straightforward.4","chosen":"get-resource-links","arguments":{"count":6},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#straightforward.3","chosen":"get-resource-links","arguments":{"count":10},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#straightforward.4","chosen":"get-resource-links","arguments":{"count":6},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#straightforward.4","chosen":"get-resource-links","arguments":{"count":6},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#paraphrased.1","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#paraphrased.1","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#paraphrased.2","chosen":"get-resource-links","arguments":{"count":5},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#paraphrased.2","chosen":"get-resource-links","arguments":{"count":5},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#paraphrased.1","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#hard_negative.1","chosen":"get-resource-links","arguments":{"count":10},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#hard_negative.1","chosen":"get-resource-links","arguments":{"count":10},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#paraphrased.2","chosen":"get-resource-links","arguments":{"count":5},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#hard_negative.2","chosen":"get-resource-links","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-links#hard_negative.2","chosen":"get-resource-links","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-links#hard_negative.1","chosen":"get-resource-links","arguments":{"count":10},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-links#hard_negative.2","chosen":"get-resource-links","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#straightforward.1","chosen":"get-resource-reference","arguments":{"resourceId":45,"resourceType":"Blob"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#straightforward.1","chosen":"get-resource-reference","arguments":{"resourceType":"Text","resourceId":45},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#straightforward.2","chosen":"get-resource-reference","arguments":{"resourceId":102,"resourceType":"Blob"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#straightforward.2","chosen":"get-resource-reference","arguments":{"resourceType":"Text","resourceId":102},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#straightforward.2","chosen":"get-resource-reference","arguments":{"resourceType":"Blob","resourceId":102},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#straightforward.1","chosen":"get-resource-reference","arguments":{"resourceType":"Text","resourceId":45},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#straightforward.3","chosen":"get-resource-reference","arguments":{"resourceType":"Text","resourceId":789},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#straightforward.3","chosen":"get-resource-reference","arguments":{"resourceType":"Text","resourceId":789},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#straightforward.3","chosen":"get-resource-reference","arguments":{"resourceType":"Text","resourceId":789},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#straightforward.4","chosen":"get-resource-reference","arguments":{"resourceType":"Blob","resourceId":5},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#straightforward.4","chosen":"get-resource-reference","arguments":{"resourceId":5,"resourceType":"Blob"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#straightforward.4","chosen":"get-resource-reference","arguments":{"resourceId":5,"resourceType":"Blob"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#paraphrased.1","chosen":"get-resource-reference","arguments":{"resourceId":88},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#paraphrased.1","chosen":"get-resource-reference","arguments":{"resourceId":88},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#paraphrased.1","chosen":"get-resource-reference","arguments":{"resourceId":88},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#paraphrased.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#paraphrased.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#paraphrased.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#hard_negative.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-resource-reference#hard_negative.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#hard_negative.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-resource-reference#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-resource-reference#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#straightforward.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#straightforward.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#straightforward.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#straightforward.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#straightforward.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#straightforward.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#straightforward.3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#straightforward.3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#straightforward.4","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#straightforward.4","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#straightforward.3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#straightforward.4","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#paraphrased.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#paraphrased.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#hard_negative.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#paraphrased.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#hard_negative.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-structured-content#hard_negative.1","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#hard_negative.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-structured-content#hard_negative.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-structured-content#hard_negative.2","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#straightforward.1","chosen":"get-sum","arguments":{"b":89,"a":45},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#straightforward.1","chosen":"get-sum","arguments":{"a":45,"b":89},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#straightforward.2","chosen":"get-sum","arguments":{"b":3892,"a":1056},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#straightforward.2","chosen":"get-sum","arguments":{"a":1056,"b":3892},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#straightforward.2","chosen":"get-sum","arguments":{"a":1056,"b":3892},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#straightforward.1","chosen":"get-sum","arguments":{"b":89,"a":45},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#straightforward.3","chosen":"get-sum","arguments":{"b":7.8,"a":12.5},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#straightforward.3","chosen":"get-sum","arguments":{"b":7.8,"a":12.5},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#straightforward.4","chosen":"get-sum","arguments":{"a":500,"b":350},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#straightforward.3","chosen":"get-sum","arguments":{"b":7.8,"a":12.5},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#straightforward.4","chosen":"get-sum","arguments":{"a":500,"b":350},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#straightforward.4","chosen":"get-sum","arguments":{"b":350,"a":500},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#paraphrased.1","chosen":"get-sum","arguments":{"b":9,"a":14},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#paraphrased.1","chosen":"get-sum","arguments":{"b":9,"a":14},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#paraphrased.1","chosen":"get-sum","arguments":{"b":9,"a":14},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#paraphrased.2","chosen":"get-sum","arguments":{"a":99,"b":450},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#paraphrased.2","chosen":"get-sum","arguments":{"b":450,"a":99},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#paraphrased.2","chosen":"get-sum","arguments":{"b":450,"a":99},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#hard_negative.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#hard_negative.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#hard_negative.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-sum#hard_negative.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-sum#hard_negative.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-sum#hard_negative.2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#straightforward.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#straightforward.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#straightforward.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#straightforward.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#straightforward.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#straightforward.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#straightforward.3","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#straightforward.3","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#straightforward.3","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#straightforward.4","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#straightforward.4","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#straightforward.4","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#paraphrased.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#paraphrased.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#paraphrased.1","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#paraphrased.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#paraphrased.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#hard_negative.1","chosen":"get-resource-links","arguments":{"count":3},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#paraphrased.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#hard_negative.1","chosen":"get-resource-links","arguments":{"count":1},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#hard_negative.1","chosen":"get-resource-links","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get-tiny-image#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get-tiny-image#hard_negative.2","chosen":"get-resource-reference","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get-tiny-image#hard_negative.2","chosen":"get-tiny-image","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.1","chosen":"gzip-file-as-resource","arguments":{"name":"report.txt.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.1","chosen":"gzip-file-as-resource","arguments":{"name":"report.txt.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.1","chosen":"gzip-file-as-resource","arguments":{"name":"report.txt.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.2","chosen":"gzip-file-as-resource","arguments":{"name":"database.sql.gz","outputType":"resourceLink","data":"https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.2","chosen":"gzip-file-as-resource","arguments":{"data":"database.sql","outputType":"resourceLink","name":"database.sql.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.3","chosen":"gzip-file-as-resource","arguments":{"outputType":"resource"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.3","chosen":"gzip-file-as-resource","arguments":{"outputType":"resource"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.2","chosen":"gzip-file-as-resource","arguments":{"data":"database.sql","outputType":"resourceLink","name":"database.sql.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.3","chosen":"gzip-file-as-resource","arguments":{"outputType":"resource"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.4","chosen":"gzip-file-as-resource","arguments":{"data":"backup.log","outputType":"resourceLink","name":"backup.log.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.4","chosen":"gzip-file-as-resource","arguments":{"outputType":"resourceLink","data":"backup.log","name":"backup.log.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#paraphrased.1","chosen":"gzip-file-as-resource","arguments":{"outputType":"resourceLink","data":"https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md","name":"config.json.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#paraphrased.1","chosen":"gzip-file-as-resource","arguments":{"data":"file:///config.json","outputType":"resourceLink","name":"config.json.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#straightforward.4","chosen":"gzip-file-as-resource","arguments":{"outputType":"resourceLink","data":"https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md","name":"backup.log.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#paraphrased.2","chosen":"gzip-file-as-resource","arguments":{"data":"data.csv","outputType":"resourceLink","name":"data.csv.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#paraphrased.1","chosen":"gzip-file-as-resource","arguments":{"outputType":"resourceLink","name":"config.json.gz","data":"https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#paraphrased.2","chosen":"gzip-file-as-resource","arguments":{"outputType":"resourceLink","data":"data.csv","name":"data.csv.gz"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#hard_negative.1","chosen":"get-resource-reference","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#hard_negative.1","chosen":"get-resource-reference","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#paraphrased.2","chosen":"gzip-file-as-resource","arguments":{"data":"data.csv","name":"data.csv.gz","outputType":"resourceLink"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#hard_negative.1","chosen":"get-resource-reference","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"gzip-file-as-resource#hard_negative.2","chosen":"gzip-file-as-resource","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"gzip-file-as-resource#hard_negative.2","chosen":"gzip-file-as-resource","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"gzip-file-as-resource#hard_negative.2","chosen":"gzip-file-as-resource","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#straightforward.1","chosen":"simulate-research-query","arguments":{"topic":"economic impacts of quantum computing in the financial sector"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#straightforward.1","chosen":"simulate-research-query","arguments":{"topic":"economic impacts of quantum computing in the financial sector"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#straightforward.2","chosen":"simulate-research-query","arguments":{"ambiguous":false,"topic":"Current regulatory frameworks for artificial intelligence in the European Union"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#straightforward.1","chosen":"simulate-research-query","arguments":{"topic":"economic impacts of quantum computing in the financial sector"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#straightforward.2","chosen":"simulate-research-query","arguments":{"ambiguous":false,"topic":"current regulatory frameworks for artificial intelligence in the European Union"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#straightforward.2","chosen":"simulate-research-query","arguments":{"ambiguous":false,"topic":"current regulatory frameworks for artificial intelligence in the European Union"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#straightforward.3","chosen":"simulate-research-query","arguments":{"topic":"lithium-ion battery recycling technologies and supply chain bottlenecks"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#straightforward.3","chosen":"simulate-research-query","arguments":{"ambiguous":false,"topic":"lithium-ion battery recycling technologies and supply chain bottlenecks"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#straightforward.3","chosen":"simulate-research-query","arguments":{"topic":"lithium-ion battery recycling technologies and supply chain bottlenecks"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#straightforward.4","chosen":"simulate-research-query","arguments":{"topic":"history of mRNA vaccine development"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#straightforward.4","chosen":"simulate-research-query","arguments":{"topic":"history of mRNA vaccine development"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#paraphrased.1","chosen":"simulate-research-query","arguments":{"topic":"modern microprocessors design and state of the art"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#paraphrased.1","chosen":"simulate-research-query","arguments":{"topic":"modern microprocessor design state of the art"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#straightforward.4","chosen":"simulate-research-query","arguments":{"topic":"history of mRNA vaccine development"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#paraphrased.1","chosen":"simulate-research-query","arguments":{"topic":"modern microprocessors design state of the art"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#paraphrased.2","chosen":"simulate-research-query","arguments":{"topic":"2008 financial crisis root causes"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#paraphrased.2","chosen":"simulate-research-query","arguments":{"topic":"2008 financial crisis root causes"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#paraphrased.2","chosen":"simulate-research-query","arguments":{"topic":"2008 financial crisis root causes"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#hard_negative.1","chosen":"simulate-research-query","arguments":{"topic":"effects of deep sea mining on marine ecosystems"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"simulate-research-query#hard_negative.1","chosen":"trigger-long-running-operation","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#hard_negative.2","chosen":"simulate-research-query","arguments":{"topic":"global semiconductor manufacturing output"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#hard_negative.1","chosen":"trigger-long-running-operation","arguments":{"steps":5,"duration":10},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"simulate-research-query#hard_negative.2","chosen":"simulate-research-query","arguments":{"topic":"global semiconductor manufacturing output"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"simulate-research-query#hard_negative.2","chosen":"simulate-research-query","arguments":{"topic":"global semiconductor manufacturing output"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.3","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.3","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.3","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.4","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.4","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#straightforward.4","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#paraphrased.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#paraphrased.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#paraphrased.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#paraphrased.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#paraphrased.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#paraphrased.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#hard_negative.1","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#hard_negative.1","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-simulated-logging#hard_negative.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#hard_negative.1","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-simulated-logging#hard_negative.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-simulated-logging#hard_negative.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.1","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.1","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.1","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.3","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.3","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.4","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.4","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.4","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#paraphrased.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#paraphrased.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#paraphrased.2","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#hard_negative.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#hard_negative.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#straightforward.3","chosen":"toggle-subscriber-updates","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#hard_negative.1","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"toggle-subscriber-updates#hard_negative.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"toggle-subscriber-updates#hard_negative.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"toggle-subscriber-updates#hard_negative.2","chosen":"toggle-simulated-logging","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.1","chosen":"trigger-long-running-operation","arguments":{"steps":6,"duration":120},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.1","chosen":"trigger-long-running-operation","arguments":{"duration":120,"steps":6},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.1","chosen":"trigger-long-running-operation","arguments":{"steps":6,"duration":120},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.2","chosen":"trigger-long-running-operation","arguments":{"steps":10,"duration":300},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.2","chosen":"trigger-long-running-operation","arguments":{"steps":10,"duration":300},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.2","chosen":"trigger-long-running-operation","arguments":{"duration":300,"steps":10},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.3","chosen":"trigger-long-running-operation","arguments":{"duration":45,"steps":3},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.3","chosen":"trigger-long-running-operation","arguments":{"steps":3,"duration":45},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.3","chosen":"trigger-long-running-operation","arguments":{"duration":45,"steps":3},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.4","chosen":"trigger-long-running-operation","arguments":{"duration":60,"steps":5},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.4","chosen":"trigger-long-running-operation","arguments":{"duration":60,"steps":5},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#paraphrased.1","chosen":"trigger-long-running-operation","arguments":{"duration":600,"steps":4},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#paraphrased.1","chosen":"trigger-long-running-operation","arguments":{"steps":4,"duration":600},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#straightforward.4","chosen":"trigger-long-running-operation","arguments":{"duration":60,"steps":5},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#paraphrased.1","chosen":"trigger-long-running-operation","arguments":{"duration":600,"steps":4},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#paraphrased.2","chosen":"trigger-long-running-operation","arguments":{"duration":120,"steps":4},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#paraphrased.2","chosen":"trigger-long-running-operation","arguments":{"duration":120,"steps":4},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#paraphrased.2","chosen":"trigger-long-running-operation","arguments":{"duration":120,"steps":4},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#hard_negative.1","chosen":"trigger-long-running-operation","arguments":{"steps":6,"duration":120},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#hard_negative.1","chosen":"trigger-long-running-operation","arguments":{"duration":120,"steps":6},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#hard_negative.1","chosen":"trigger-long-running-operation","arguments":{"steps":6,"duration":120},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"trigger-long-running-operation#hard_negative.2","chosen":"trigger-long-running-operation","arguments":{"steps":10,"duration":300},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"trigger-long-running-operation#hard_negative.2","chosen":"trigger-long-running-operation","arguments":{"steps":10,"duration":300},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"trigger-long-running-operation#hard_negative.2","chosen":"trigger-long-running-operation","arguments":{"steps":10,"duration":300},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#3","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#3","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#3","chosen":"get-env","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}

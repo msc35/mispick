@@ -1,0 +1,673 @@
+version: 1
+tools:
+  create_directory:
+    fingerprint: 95e2361967d63835
+    queries:
+    - id: create_directory#straightforward.1
+      text: Please make a new folder called project_docs in the current workspace.
+      expected: create_directory
+      kind: straightforward
+      neighbour: move_file
+    - id: create_directory#straightforward.2
+      text: I need you to create a directory named src/components/ui for my frontend
+        work.
+      expected: create_directory
+      kind: straightforward
+      neighbour: move_file
+    - id: create_directory#straightforward.3
+      text: Set up a logs folder inside the root directory so the application can
+        write output files.
+      expected: create_directory
+      kind: straightforward
+      neighbour: move_file
+    - id: create_directory#straightforward.4
+      text: Run the command to generate the build/output path before compiling the
+        code.
+      expected: create_directory
+      kind: straightforward
+      neighbour: move_file
+    - id: create_directory#paraphrased.1
+      text: gimme a fresh folder named backups right away
+      expected: create_directory
+      kind: paraphrased
+      neighbour: move_file
+    - id: create_directory#paraphrased.2
+      text: make sure the tmp/cache path is ready to go for the script I'm about to
+        run
+      expected: create_directory
+      kind: paraphrased
+      neighbour: move_file
+    - id: create_directory#hard_negative.1
+      text: Make a new folder structure called backup_old inside the archive path.
+      expected: move_file
+      kind: hard_negative
+      neighbour: move_file
+    - id: create_directory#hard_negative.2
+      text: Set up a destination directory named archive_2024 for the files we are
+        relocating.
+      expected: move_file
+      kind: hard_negative
+      neighbour: move_file
+  directory_tree:
+    fingerprint: fba7f184b165748f
+    queries:
+    - id: directory_tree#straightforward.1
+      text: Get a recursive tree view of files and directories for the /var/www/html
+        folder as a JSON structure.
+      expected: directory_tree
+      kind: straightforward
+      neighbour: list_directory
+    - id: directory_tree#straightforward.2
+      text: Generate a nested directory listing for /home/user/projects in JSON format
+        with children included for all folders.
+      expected: directory_tree
+      kind: straightforward
+      neighbour: list_directory
+    - id: directory_tree#straightforward.3
+      text: Run a recursive directory scan on C:\Users\Admin\Documents and return
+        the full hierarchy as a JSON tree.
+      expected: directory_tree
+      kind: straightforward
+      neighbour: list_directory
+    - id: directory_tree#straightforward.4
+      text: Produce a complete JSON tree structure of the /opt/app/data directory
+        including all nested subfolders.
+      expected: directory_tree
+      kind: straightforward
+      neighbour: list_directory
+    - id: directory_tree#paraphrased.1
+      text: Map out the whole folder hierarchy under /var/log into a JSON object so
+        I can see what is nested inside where.
+      expected: directory_tree
+      kind: paraphrased
+      neighbour: list_directory
+    - id: directory_tree#paraphrased.2
+      text: Dump the complete file and folder nest for my workspace at /home/dev/repo
+        as a formatted JSON payload.
+      expected: directory_tree
+      kind: paraphrased
+      neighbour: list_directory
+    - id: directory_tree#hard_negative.1
+      text: Give me a recursive tree view of the /etc/nginx folder formatted as JSON,
+        but omit any backup files.
+      expected: list_directory
+      kind: hard_negative
+      neighbour: list_directory
+    - id: directory_tree#hard_negative.2
+      text: Show me a recursive tree view of /var/log in JSON format with two-space
+        indentation.
+      expected: list_directory
+      kind: hard_negative
+      neighbour: list_directory
+  edit_file:
+    fingerprint: 4e97b117d9b1ab18
+    queries:
+    - id: edit_file#straightforward.1
+      text: Please modify lines 10 through 15 in src/main.py to update the database
+        connection timeout.
+      expected: edit_file
+      kind: straightforward
+      neighbour: write_file
+    - id: edit_file#straightforward.2
+      text: Change the return statement in the calculate_total function located in
+        app/utils.js.
+      expected: edit_file
+      kind: straightforward
+      neighbour: write_file
+    - id: edit_file#straightforward.3
+      text: Replace the configuration block in config/settings.json to use the new
+        API endpoint URL.
+      expected: edit_file
+      kind: straightforward
+      neighbour: write_file
+    - id: edit_file#straightforward.4
+      text: Update the copyright year in the header section of index.html.
+      expected: edit_file
+      kind: straightforward
+      neighbour: write_file
+    - id: edit_file#paraphrased.1
+      text: Fix that typo on line 42 of docs/readme.md right away.
+      expected: edit_file
+      kind: paraphrased
+      neighbour: write_file
+    - id: edit_file#paraphrased.2
+      text: Swab out the old log path for the new one in scripts/deploy.sh.
+      expected: edit_file
+      kind: paraphrased
+      neighbour: write_file
+    - id: edit_file#hard_negative.1
+      text: Modify the routing table in src/routes.py by replacing the old endpoints
+        with the new ones.
+      expected: write_file
+      kind: hard_negative
+      neighbour: write_file
+    - id: edit_file#hard_negative.2
+      text: Update the CSS rules inside styles/main.css to change the primary button
+        color.
+      expected: write_file
+      kind: hard_negative
+      neighbour: write_file
+  get_file_info:
+    fingerprint: c1eff6287779e270
+    queries:
+    - id: get_file_info#straightforward.1
+      text: Can you check the file size and creation date for /var/log/syslog?
+      expected: get_file_info
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#straightforward.2
+      text: What are the permissions and last modified time on /etc/passwd?
+      expected: get_file_info
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#straightforward.3
+      text: Retrieve the metadata for the script located at /home/user/scripts/deploy.sh.
+      expected: get_file_info
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#straightforward.4
+      text: Please run a check on /var/www/html/index.html to see its file type and
+        attributes.
+      expected: get_file_info
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#paraphrased.1
+      text: how big is /opt/app/data.db and when was it last touched
+      expected: get_file_info
+      kind: paraphrased
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#paraphrased.2
+      text: need stats on /var/backups/db_dump.sql
+      expected: get_file_info
+      kind: paraphrased
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#hard_negative.1
+      text: Check the sizes of everything inside /var/log so I can see how much space
+        each log file is taking up.
+      expected: list_directory_with_sizes
+      kind: hard_negative
+      neighbour: list_directory_with_sizes
+    - id: get_file_info#hard_negative.2
+      text: Get the file sizes for all items located in /home/user/downloads.
+      expected: list_directory_with_sizes
+      kind: hard_negative
+      neighbour: list_directory_with_sizes
+  list_allowed_directories:
+    fingerprint: eb5bf7b5ecf1ea8d
+    queries:
+    - id: list_allowed_directories#straightforward.1
+      text: Can you give me the list of directories that this server is allowed to
+        access?
+      expected: list_allowed_directories
+      kind: straightforward
+      neighbour: search_files
+    - id: list_allowed_directories#straightforward.2
+      text: What folders am I permitted to read files from on this machine?
+      expected: list_allowed_directories
+      kind: straightforward
+      neighbour: search_files
+    - id: list_allowed_directories#straightforward.3
+      text: Please show me all the approved root paths available for file operations.
+      expected: list_allowed_directories
+      kind: straightforward
+      neighbour: search_files
+    - id: list_allowed_directories#straightforward.4
+      text: Which base directories currently have permission enabled for access?
+      expected: list_allowed_directories
+      kind: straightforward
+      neighbour: search_files
+    - id: list_allowed_directories#paraphrased.1
+      text: Where am I even allowed to look around in the file system?
+      expected: list_allowed_directories
+      kind: paraphrased
+      neighbour: search_files
+    - id: list_allowed_directories#paraphrased.2
+      text: dump accessible paths
+      expected: list_allowed_directories
+      kind: paraphrased
+      neighbour: search_files
+    - id: list_allowed_directories#hard_negative.1
+      text: Show me the directories that contain files matching my search terms across
+        the allowed paths.
+      expected: search_files
+      kind: hard_negative
+      neighbour: search_files
+    - id: list_allowed_directories#hard_negative.2
+      text: List the matching file paths inside the permitted directories.
+      expected: search_files
+      kind: hard_negative
+      neighbour: search_files
+  list_directory:
+    fingerprint: 141874637796acaa
+    queries:
+    - id: list_directory#straightforward.1
+      text: Show me everything inside the var/log folder.
+      expected: list_directory
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: list_directory#straightforward.2
+      text: Can you list the contents of the /home/user/documents directory?
+      expected: list_directory
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: list_directory#straightforward.3
+      text: What files and folders are currently located in /tmp?
+      expected: list_directory
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: list_directory#straightforward.4
+      text: Print a detailed directory listing for /var/www/html.
+      expected: list_directory
+      kind: straightforward
+      neighbour: list_directory_with_sizes
+    - id: list_directory#paraphrased.1
+      text: what's in /etc right now
+      expected: list_directory
+      kind: paraphrased
+      neighbour: list_directory_with_sizes
+    - id: list_directory#paraphrased.2
+      text: dump the contents of projects/webapp
+      expected: list_directory
+      kind: paraphrased
+      neighbour: list_directory_with_sizes
+    - id: list_directory#hard_negative.1
+      text: List the contents of /var/log including how large every file is.
+      expected: list_directory_with_sizes
+      kind: hard_negative
+      neighbour: list_directory_with_sizes
+    - id: list_directory#hard_negative.2
+      text: Show me what is inside /home/user/downloads along with the exact size
+        of each item.
+      expected: list_directory_with_sizes
+      kind: hard_negative
+      neighbour: list_directory_with_sizes
+  list_directory_with_sizes:
+    fingerprint: 92cf130748680c65
+    queries:
+    - id: list_directory_with_sizes#straightforward.1
+      text: Can you show me every item inside the /var/log folder along with how large
+        each one is?
+      expected: list_directory_with_sizes
+      kind: straightforward
+      neighbour: list_directory
+    - id: list_directory_with_sizes#straightforward.2
+      text: List all the files and folders in /home/user/documents and include their
+        sizes.
+      expected: list_directory_with_sizes
+      kind: straightforward
+      neighbour: list_directory
+    - id: list_directory_with_sizes#straightforward.3
+      text: Run a detailed directory listing for /var/www/html with file and folder
+        sizes included.
+      expected: list_directory_with_sizes
+      kind: straightforward
+      neighbour: list_directory
+    - id: list_directory_with_sizes#straightforward.4
+      text: What is the contents and file size breakdown of the /etc/nginx directory?
+      expected: list_directory_with_sizes
+      kind: straightforward
+      neighbour: list_directory
+    - id: list_directory_with_sizes#paraphrased.1
+      text: check storage usage inside /var/lib/docker by file
+      expected: list_directory_with_sizes
+      kind: paraphrased
+      neighbour: list_directory
+    - id: list_directory_with_sizes#paraphrased.2
+      text: whats taking up space in /tmp
+      expected: list_directory_with_sizes
+      kind: paraphrased
+      neighbour: list_directory
+    - id: list_directory_with_sizes#hard_negative.1
+      text: Show me a detailed listing of all files and directories in /var/log including
+        their sizes.
+      expected: list_directory
+      kind: hard_negative
+      neighbour: list_directory
+    - id: list_directory_with_sizes#hard_negative.2
+      text: Get a detailed listing of all files and directories in /home/user/documents,
+        including sizes, distinguishing files with [FILE] and [DIR].
+      expected: list_directory
+      kind: hard_negative
+      neighbour: list_directory
+  move_file:
+    fingerprint: fac1cd7f8f01b613
+    queries:
+    - id: move_file#straightforward.1
+      text: Please move report.pdf from the downloads folder to the archive directory.
+      expected: move_file
+      kind: straightforward
+      neighbour: create_directory
+    - id: move_file#straightforward.2
+      text: Rename old_logo.png to new_logo.png in the assets folder.
+      expected: move_file
+      kind: straightforward
+      neighbour: create_directory
+    - id: move_file#straightforward.3
+      text: Shift budget_2023.xlsx from documents to the financial_records directory.
+      expected: move_file
+      kind: straightforward
+      neighbour: create_directory
+    - id: move_file#straightforward.4
+      text: Transfer index.html from the backup folder into the public_html directory.
+      expected: move_file
+      kind: straightforward
+      neighbour: create_directory
+    - id: move_file#paraphrased.1
+      text: can u shove that quarterly presentation into my work folder already
+      expected: move_file
+      kind: paraphrased
+      neighbour: create_directory
+    - id: move_file#paraphrased.2
+      text: swap the name of draft_v1.txt to final_v1.txt real quick
+      expected: move_file
+      kind: paraphrased
+      neighbour: create_directory
+    - id: move_file#hard_negative.1
+      text: Set up a new folder named project_alpha inside documents.
+      expected: create_directory
+      kind: hard_negative
+      neighbour: create_directory
+    - id: move_file#hard_negative.2
+      text: Make a fresh directory called client_files under the workspace path.
+      expected: create_directory
+      kind: hard_negative
+      neighbour: create_directory
+  read_file:
+    fingerprint: a3df431073a83b9e
+    queries:
+    - id: read_file#straightforward.1
+      text: Please read the complete contents of package.json as text.
+      expected: read_file
+      kind: straightforward
+      neighbour: read_text_file
+    - id: read_file#straightforward.2
+      text: Can you open and read_file the config/settings.yaml file?
+      expected: read_file
+      kind: straightforward
+      neighbour: read_text_file
+    - id: read_file#straightforward.3
+      text: Execute read_file on /var/log/syslog now.
+      expected: read_file
+      kind: straightforward
+      neighbour: read_text_file
+    - id: read_file#straightforward.4
+      text: I need you to use the read_file tool on docs/api.md.
+      expected: read_file
+      kind: straightforward
+      neighbour: read_text_file
+    - id: read_file#paraphrased.1
+      text: Dump src/main.py.
+      expected: read_file
+      kind: paraphrased
+      neighbour: read_text_file
+    - id: read_file#paraphrased.2
+      text: Grab everything inside notes.txt.
+      expected: read_file
+      kind: paraphrased
+      neighbour: read_text_file
+    - id: read_file#hard_negative.1
+      text: Read the entire contents of README.md from start to finish.
+      expected: read_text_file
+      kind: hard_negative
+      neighbour: read_text_file
+    - id: read_file#hard_negative.2
+      text: Pull up the full text stored in data/users.csv.
+      expected: read_text_file
+      kind: hard_negative
+      neighbour: read_text_file
+  read_media_file:
+    fingerprint: 22f080d7078952b7
+    queries:
+    - id: read_media_file#straightforward.1
+      text: Can you open and read the contents of /home/user/photos/vacation.jpg?
+      expected: read_media_file
+      kind: straightforward
+      neighbour: write_file
+    - id: read_media_file#straightforward.2
+      text: Please fetch the audio file located at /var/data/sounds/notification.mp3.
+      expected: read_media_file
+      kind: straightforward
+      neighbour: write_file
+    - id: read_media_file#straightforward.3
+      text: I need you to load the document at /shared/docs/report.pdf into the context.
+      expected: read_media_file
+      kind: straightforward
+      neighbour: write_file
+    - id: read_media_file#straightforward.4
+      text: Pull the raw data from /opt/config/settings.json so I can inspect it.
+      expected: read_media_file
+      kind: straightforward
+      neighbour: write_file
+    - id: read_media_file#paraphrased.1
+      text: Grab that picture from my downloads folder at /home/user/Downloads/logo.png
+        real quick.
+      expected: read_media_file
+      kind: paraphrased
+      neighbour: write_file
+    - id: read_media_file#paraphrased.2
+      text: Pull up the voice memo sitting in /tmp/recording.wav.
+      expected: read_media_file
+      kind: paraphrased
+      neighbour: write_file
+    - id: read_media_file#hard_negative.1
+      text: Save the text of my new python script directly into /home/user/projects/main.py.
+      expected: write_file
+      kind: hard_negative
+      neighbour: write_file
+    - id: read_media_file#hard_negative.2
+      text: Output the final translated document straight to /var/www/html/output.html.
+      expected: write_file
+      kind: hard_negative
+      neighbour: write_file
+  read_multiple_files:
+    fingerprint: d3574de6e207331e
+    queries:
+    - id: read_multiple_files#straightforward.1
+      text: Can you open src/main.rs and src/lib.rs at the same time and show me what's
+        inside?
+      expected: read_multiple_files
+      kind: straightforward
+      neighbour: read_media_file
+    - id: read_multiple_files#straightforward.2
+      text: Please read config.json, package.json, and README.md simultaneously so
+        I can check their contents.
+      expected: read_multiple_files
+      kind: straightforward
+      neighbour: read_media_file
+    - id: read_multiple_files#straightforward.3
+      text: I need to inspect the contents of logs/error.log and logs/output.log together.
+      expected: read_multiple_files
+      kind: straightforward
+      neighbour: read_media_file
+    - id: read_multiple_files#straightforward.4
+      text: Fetch the contents of data/users.csv and data/orders.csv in one go.
+      expected: read_multiple_files
+      kind: straightforward
+      neighbour: read_media_file
+    - id: read_multiple_files#paraphrased.1
+      text: grab notes.txt and TODO.md for me real quick
+      expected: read_multiple_files
+      kind: paraphrased
+      neighbour: read_media_file
+    - id: read_multiple_files#paraphrased.2
+      text: pull up both index.js and server.js so I can look at them side by side
+      expected: read_multiple_files
+      kind: paraphrased
+      neighbour: read_media_file
+    - id: read_multiple_files#hard_negative.1
+      text: Can you open clip1.mp4 and clip2.mp4 at the same time and show me what's
+        inside?
+      expected: read_media_file
+      kind: hard_negative
+      neighbour: read_media_file
+    - id: read_multiple_files#hard_negative.2
+      text: Please read audio1.wav and audio2.mp3 simultaneously so I can check their
+        contents.
+      expected: read_media_file
+      kind: hard_negative
+      neighbour: read_media_file
+  read_text_file:
+    fingerprint: bb3b671ea9ed00e6
+    queries:
+    - id: read_text_file#straightforward.1
+      text: Can you open up /var/log/application.log and show me everything inside
+        it?
+      expected: read_text_file
+      kind: straightforward
+      neighbour: read_multiple_files
+    - id: read_text_file#straightforward.2
+      text: Read the entire contents of config.json located in the project root directory.
+      expected: read_text_file
+      kind: straightforward
+      neighbour: read_multiple_files
+    - id: read_text_file#straightforward.3
+      text: Please use the read_text_file tool to load notes.txt from the documents
+        folder.
+      expected: read_text_file
+      kind: straightforward
+      neighbour: read_multiple_files
+    - id: read_text_file#straightforward.4
+      text: I need you to fetch the complete text from /home/user/script.py so I can
+        review the code.
+      expected: read_text_file
+      kind: straightforward
+      neighbour: read_multiple_files
+    - id: read_text_file#paraphrased.1
+      text: grab readme.md quick
+      expected: read_text_file
+      kind: paraphrased
+      neighbour: read_multiple_files
+    - id: read_text_file#paraphrased.2
+      text: whats in the package.json file
+      expected: read_text_file
+      kind: paraphrased
+      neighbour: read_multiple_files
+    - id: read_text_file#hard_negative.1
+      text: Read the entire contents of file_one.txt and file_two.txt from the current
+        directory.
+      expected: read_multiple_files
+      kind: hard_negative
+      neighbour: read_multiple_files
+    - id: read_text_file#hard_negative.2
+      text: Can you open up /var/log/app1.log and /var/log/app2.log to show me what
+        is inside both of them?
+      expected: read_multiple_files
+      kind: hard_negative
+      neighbour: read_multiple_files
+  search_files:
+    fingerprint: 2528a7ea1e748b16
+    queries:
+    - id: search_files#straightforward.1
+      text: Find all Python script files located anywhere inside the src directory.
+      expected: search_files
+      kind: straightforward
+      neighbour: list_allowed_directories
+    - id: search_files#straightforward.2
+      text: Recursively search the project folder for any files ending with the .log
+        extension.
+      expected: search_files
+      kind: straightforward
+      neighbour: list_allowed_directories
+    - id: search_files#straightforward.3
+      text: Run a pattern match for configuration files matching *.json across the
+        workspace.
+      expected: search_files
+      kind: straightforward
+      neighbour: list_allowed_directories
+    - id: search_files#straightforward.4
+      text: Locate every markdown document throughout all subdirectories of the documentation
+        folder.
+      expected: search_files
+      kind: straightforward
+      neighbour: list_allowed_directories
+    - id: search_files#paraphrased.1
+      text: Where did I put all my old backup archives buried in the data folders?
+      expected: search_files
+      kind: paraphrased
+      neighbour: list_allowed_directories
+    - id: search_files#paraphrased.2
+      text: Dig through the repo to sniff out any hidden image assets.
+      expected: search_files
+      kind: paraphrased
+      neighbour: list_allowed_directories
+    - id: search_files#hard_negative.1
+      text: Find out what folders I am permitted to search in for our project files.
+      expected: list_allowed_directories
+      kind: hard_negative
+      neighbour: list_allowed_directories
+    - id: search_files#hard_negative.2
+      text: List the base directory paths that we have access permissions to access
+        right now.
+      expected: list_allowed_directories
+      kind: hard_negative
+      neighbour: list_allowed_directories
+  write_file:
+    fingerprint: 41a0dfa3143d99fb
+    queries:
+    - id: write_file#straightforward.1
+      text: Please create a text file at /home/user/notes.txt and put the meeting
+        minutes inside it.
+      expected: write_file
+      kind: straightforward
+      neighbour: read_media_file
+    - id: write_file#straightforward.2
+      text: Overwrite /var/www/html/index.html with the new HTML code I just pasted.
+      expected: write_file
+      kind: straightforward
+      neighbour: read_media_file
+    - id: write_file#straightforward.3
+      text: Save this python script to /usr/local/bin/script.py right now.
+      expected: write_file
+      kind: straightforward
+      neighbour: read_media_file
+    - id: write_file#straightforward.4
+      text: Make a new configuration file at /etc/app.conf containing the default
+        server settings.
+      expected: write_file
+      kind: straightforward
+      neighbour: read_media_file
+    - id: write_file#paraphrased.1
+      text: drop a quick todo list into notes.txt
+      expected: write_file
+      kind: paraphrased
+      neighbour: read_media_file
+    - id: write_file#paraphrased.2
+      text: dump the raw json payload into /tmp/output.json
+      expected: write_file
+      kind: paraphrased
+      neighbour: read_media_file
+    - id: write_file#hard_negative.1
+      text: Save the recorded voice clip to /media/audio/podcast.mp3 so I can edit
+        it later.
+      expected: read_media_file
+      kind: hard_negative
+      neighbour: read_media_file
+    - id: write_file#hard_negative.2
+      text: Put the exported video file into /var/media/exports/final_cut.mp4 right
+        away.
+      expected: read_media_file
+      kind: hard_negative
+      neighbour: read_media_file
+no_tool:
+- id: (none)#1
+  text: Could you analyze the runtime complexity of the sorting algorithm implemented
+    in /src/utils/sorter.py and explain how to optimize it for large datasets?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: Please translate the error handling documentation located at /docs/errors.md
+    from English into fluent Spanish while keeping all technical terms intact.
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Can you review the CSS styling in /styles/main.css and rewrite it to use modern
+    CSS Grid layouts instead of floats for the main dashboard container?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-28'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

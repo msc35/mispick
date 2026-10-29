@@ -1,0 +1,297 @@
+{"query_id":"create_connection#straightforward.1","chosen":"create_connection","arguments":{"fromMemoryId":105,"type":"REFERENCE","toMemoryId":208},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#straightforward.1","chosen":"create_connection","arguments":{"toMemoryId":208,"type":"REFERENCE","fromMemoryId":105},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#straightforward.1","chosen":"create_connection","arguments":{"type":"REFERENCE","toMemoryId":208,"fromMemoryId":105},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_connection#straightforward.2","chosen":"create_connection","arguments":{"toMemoryId":99,"fromMemoryId":42,"type":"PARENT"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#straightforward.2","chosen":"create_connection","arguments":{"toMemoryId":99,"type":"PARENT","fromMemoryId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#straightforward.3","chosen":"create_connection","arguments":{"type":"DEPENDENCY","toMemoryId":115,"fromMemoryId":310},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#straightforward.3","chosen":"create_connection","arguments":{"toMemoryId":115,"type":"DEPENDENCY","fromMemoryId":310},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#straightforward.2","chosen":"create_connection","arguments":{"fromMemoryId":42,"toMemoryId":99,"type":"PARENT"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_connection#straightforward.3","chosen":"create_connection","arguments":{"toMemoryId":115,"type":"DEPENDENCY","fromMemoryId":310},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_connection#straightforward.4","chosen":"create_connection","arguments":{"properties":{"priority":"high"},"toMemoryId":14,"fromMemoryId":7,"type":"CHILD"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#straightforward.4","chosen":"create_connection","arguments":{"properties":{"priority":"high"},"fromMemoryId":7,"type":"CHILD","toMemoryId":14},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#paraphrased.1","chosen":"create_connection","arguments":{"fromMemoryId":88,"type":"RELATED_TO","toMemoryId":45},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#paraphrased.1","chosen":"create_connection","arguments":{"toMemoryId":45,"fromMemoryId":88,"type":"RELATED_TO"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#paraphrased.1","chosen":"create_connection","arguments":{"type":"RELATED_TO","fromMemoryId":88,"toMemoryId":45},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_connection#paraphrased.2","chosen":"query_memories","arguments":{"cypher":"MATCH path = shortestPath((a)-[*]-(b)) WHERE id(a) = 500 AND id(b) = 600 RETURN path"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#paraphrased.2","chosen":"query_memories","arguments":{"cypher":"MATCH path = shortestPath((a)-[*]-(b)) WHERE id(a) = 500 AND id(b) = 600 RETURN path"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#paraphrased.2","chosen":"query_memories","arguments":{"cypher":"MATCH p = shortestPath((a)-[*..5]-(b)) WHERE ID(a) = 500 AND ID(b) = 600 RETURN p"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_connection#hard_negative.1","chosen":"delete_connection","arguments":{"type":"LINK","fromMemoryId":12,"toMemoryId":34},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#hard_negative.1","chosen":"delete_connection","arguments":{"toMemoryId":34,"type":"LINK","fromMemoryId":12},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#hard_negative.1","chosen":"delete_connection","arguments":{"fromMemoryId":12,"toMemoryId":34,"type":"LINK"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_connection#hard_negative.2","chosen":"delete_connection","arguments":{"type":"LINK","toMemoryId":80,"fromMemoryId":90},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_connection#hard_negative.2","chosen":"delete_connection","arguments":{"type":"LINK","fromMemoryId":90,"toMemoryId":80},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#hard_negative.2","chosen":"delete_connection","arguments":{"toMemoryId":80,"type":"LINK","fromMemoryId":90},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#straightforward.1","chosen":"search_memories","arguments":{"search_mode":"exact","query":"primary server Python 3.11"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#straightforward.1","chosen":"search_memories","arguments":{"query":"Python 3.11 primary server","search_mode":"exact"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#straightforward.1","chosen":"search_memories","arguments":{"query":"Python 3.11 primary server","search_mode":"exact"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#straightforward.2","chosen":"search_memories","arguments":{"search_mode":"exact","query":"Sarah Jenkins"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#straightforward.2","chosen":"search_memories","arguments":{"search_mode":"exact","query":"Sarah Jenkins"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#straightforward.2","chosen":"search_memories","arguments":{"search_mode":"exact","query":"Sarah Jenkins"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#straightforward.3","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#straightforward.3","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#straightforward.3","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#straightforward.4","chosen":"create_memory","arguments":{"properties":{"priority":"high","name":"Database Migration"},"label":"Task"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#straightforward.4","chosen":"create_memory","arguments":{"properties":{"priority":"high","name":"Database migration"},"label":"Task"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#straightforward.4","chosen":"create_memory","arguments":{"label":"Task","properties":{"name":"Database migration","priority":"high"}},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#paraphrased.1","chosen":"search_memories","arguments":{"search_mode":"exact","query":"dark mode"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#paraphrased.1","chosen":"search_memories","arguments":{"query":"dark mode preferences","search_mode":"exact"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#paraphrased.1","chosen":"search_memories","arguments":{"search_mode":"exact","query":"dark mode preferences"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#paraphrased.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#paraphrased.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#paraphrased.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#hard_negative.1","chosen":"search_memories","arguments":{"query":"database migration"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#hard_negative.1","chosen":"search_memories","arguments":{"query":"Project Phoenix"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#hard_negative.1","chosen":"search_memories","arguments":{"query":"database migration Project Phoenix"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"create_memory#hard_negative.2","chosen":"search_memories","arguments":{"query":"Sarah Jenkins"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"create_memory#hard_negative.2","chosen":"search_memories","arguments":{"query":"Sarah Jenkins"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_memory#hard_negative.2","chosen":"search_memories","arguments":{"query":"Sarah Jenkins"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#straightforward.1","chosen":"delete_connection","arguments":{"fromMemoryId":104,"type":"associated_with","toMemoryId":205},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#straightforward.1","chosen":"delete_connection","arguments":{"toMemoryId":205,"type":"associated_with","fromMemoryId":104},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"create_connection#straightforward.4","chosen":"create_connection","arguments":{"type":"CHILD_OF","fromMemoryId":7,"properties":{"priority":"high"},"toMemoryId":14},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#straightforward.1","chosen":"delete_connection","arguments":{"type":"associated_with","toMemoryId":205,"fromMemoryId":104},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#straightforward.2","chosen":"delete_connection","arguments":{"type":"parent_child","fromMemoryId":42,"toMemoryId":89},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#straightforward.2","chosen":"delete_connection","arguments":{"toMemoryId":89,"type":"parent_child","fromMemoryId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#straightforward.3","chosen":"delete_connection","arguments":{"toMemoryId":301,"type":"reference","fromMemoryId":512},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#straightforward.3","chosen":"delete_connection","arguments":{"fromMemoryId":512,"type":"reference","toMemoryId":301},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#straightforward.2","chosen":"delete_connection","arguments":{"toMemoryId":89,"type":"parent_child","fromMemoryId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#straightforward.4","chosen":"delete_connection","arguments":{"toMemoryId":77,"fromMemoryId":11,"type":"DEPENDS_ON"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#straightforward.3","chosen":"delete_connection","arguments":{"toMemoryId":301,"type":"reference","fromMemoryId":512},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#straightforward.4","chosen":"delete_connection","arguments":{"fromMemoryId":11,"type":"DEPENDS_ON","toMemoryId":77},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#straightforward.4","chosen":"delete_connection","arguments":{"fromMemoryId":11,"toMemoryId":77,"type":"DEPENDS_ON"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#paraphrased.1","chosen":"delete_connection","arguments":{"toMemoryId":45,"type":"TAGGED","fromMemoryId":88},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#paraphrased.1","chosen":"delete_connection","arguments":{"toMemoryId":45,"fromMemoryId":88,"type":"TAGGED_PATHWAY"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#paraphrased.1","chosen":"delete_connection","arguments":{"type":"TAGGED","toMemoryId":45,"fromMemoryId":88},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#paraphrased.2","chosen":"delete_connection","arguments":{"toMemoryId":500,"type":"FOLLOWS","fromMemoryId":300},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#paraphrased.2","chosen":"delete_connection","arguments":{"toMemoryId":500,"type":"follows","fromMemoryId":300},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#paraphrased.2","chosen":"delete_connection","arguments":{"toMemoryId":500,"fromMemoryId":300,"type":"follows"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#hard_negative.1","chosen":"delete_memory","arguments":{"nodeId":402},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#hard_negative.1","chosen":"delete_memory","arguments":{"nodeId":402},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#hard_negative.2","chosen":"delete_memory","arguments":{"nodeId":915},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_connection#hard_negative.1","chosen":"delete_memory","arguments":{"nodeId":402},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_connection#hard_negative.2","chosen":"delete_memory","arguments":{"nodeId":915},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_connection#hard_negative.2","chosen":"delete_memory","arguments":{"nodeId":915},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#straightforward.1","chosen":"delete_memory","arguments":{"nodeId":402},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#straightforward.1","chosen":"delete_memory","arguments":{"nodeId":402},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#straightforward.1","chosen":"delete_memory","arguments":{"nodeId":402},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#straightforward.2","chosen":"delete_memory","arguments":{"nodeId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#straightforward.2","chosen":"delete_memory","arguments":{"nodeId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#straightforward.2","chosen":"delete_memory","arguments":{"nodeId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#straightforward.3","chosen":"delete_memory","arguments":{"nodeId":89},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#straightforward.3","chosen":"delete_memory","arguments":{"nodeId":89},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#straightforward.3","chosen":"delete_memory","arguments":{"nodeId":89},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#straightforward.4","chosen":"delete_memory","arguments":{"nodeId":234},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#straightforward.4","chosen":"delete_memory","arguments":{"nodeId":234},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#paraphrased.1","chosen":"delete_memory","arguments":{"nodeId":77},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#paraphrased.1","chosen":"delete_memory","arguments":{"nodeId":77},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#straightforward.4","chosen":"delete_memory","arguments":{"nodeId":234},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#paraphrased.2","chosen":"delete_memory","arguments":{"nodeId":51},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#paraphrased.1","chosen":"delete_memory","arguments":{"nodeId":77},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#paraphrased.2","chosen":"delete_memory","arguments":{"nodeId":51},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"delete_memory#hard_negative.1","chosen":"delete_connection","arguments":{"toMemoryId":45,"type":"KNOWS","fromMemoryId":12},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#hard_negative.1","chosen":"delete_connection","arguments":{"fromMemoryId":12,"toMemoryId":45,"type":"LINK"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#paraphrased.2","chosen":"delete_memory","arguments":{"nodeId":51},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#hard_negative.2","chosen":"query_memories","arguments":{"cypher":"MATCH (m)-[r]-(n) WHERE id(m) = 303 RETURN id(m) AS fromId, id(n) AS toId, type(r) AS relType"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"delete_memory#hard_negative.2","chosen":"query_memories","arguments":{"cypher":"MATCH (n)-[r]-(m) WHERE id(n) = 303 RETURN id(n) AS fromId, type(r) AS type, id(m) AS toId"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#hard_negative.2","chosen":"delete_connection","arguments":{"toMemoryId":0,"type":"CONNECTED_TO","fromMemoryId":303},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#straightforward.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#straightforward.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"delete_memory#hard_negative.1","chosen":"delete_connection","arguments":{"toMemoryId":45,"type":"CONNECTED_TO","fromMemoryId":12},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#straightforward.2","chosen":"dream","arguments":{"dry_run":true},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#straightforward.2","chosen":"dream","arguments":{"dry_run":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#straightforward.2","chosen":"dream","arguments":{"dry_run":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#straightforward.3","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#straightforward.3","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#straightforward.3","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#straightforward.4","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#straightforward.4","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#straightforward.4","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#paraphrased.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#paraphrased.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#paraphrased.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#paraphrased.2","chosen":"dream","arguments":{"dry_run":true},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#straightforward.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#paraphrased.2","chosen":"dream","arguments":{"dry_run":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#hard_negative.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#hard_negative.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#hard_negative.1","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"dream#hard_negative.2","chosen":"dream","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#hard_negative.2","chosen":"dream","arguments":{"dry_run":false},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"dream#hard_negative.2","chosen":"dream","arguments":{"dry_run":false},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#straightforward.1","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#straightforward.1","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#straightforward.1","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#straightforward.2","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"dream#paraphrased.2","chosen":"dream","arguments":{"dry_run":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#straightforward.2","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#straightforward.3","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#straightforward.2","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#straightforward.3","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#straightforward.3","chosen":"get_guidance","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#straightforward.4","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#straightforward.4","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#straightforward.4","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#paraphrased.1","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#paraphrased.1","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#paraphrased.1","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#paraphrased.2","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#paraphrased.2","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#hard_negative.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#paraphrased.2","chosen":"get_guidance","arguments":{"topic":"best-practices"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_guidance#hard_negative.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#hard_negative.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_guidance#hard_negative.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#hard_negative.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#straightforward.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#straightforward.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_guidance#hard_negative.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#straightforward.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#straightforward.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#straightforward.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#straightforward.3","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#straightforward.3","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#straightforward.3","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#straightforward.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#straightforward.4","chosen":"list_memory_labels","arguments":{"include_archived":true},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#straightforward.4","chosen":"list_memory_labels","arguments":{"include_archived":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#straightforward.4","chosen":"list_memory_labels","arguments":{"include_archived":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#paraphrased.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#paraphrased.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#paraphrased.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#paraphrased.2","chosen":"search_memories","arguments":{"query":"buckets saved notes custom"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#paraphrased.2","chosen":"search_memories","arguments":{"query":"buckets saved notes"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#hard_negative.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#paraphrased.2","chosen":"search_memories","arguments":{"query":"buckets notes"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#hard_negative.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_memory_labels#hard_negative.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_memory_labels#hard_negative.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#hard_negative.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_memory_labels#hard_negative.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#straightforward.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#straightforward.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#straightforward.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#straightforward.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#straightforward.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#straightforward.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#straightforward.3","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#straightforward.3","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#straightforward.3","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#straightforward.4","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#straightforward.4","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#paraphrased.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#straightforward.4","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#paraphrased.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#paraphrased.1","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#paraphrased.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#paraphrased.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#hard_negative.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#paraphrased.2","chosen":"memory_stats","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#hard_negative.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"memory_stats#hard_negative.1","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#hard_negative.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"memory_stats#hard_negative.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#straightforward.1","chosen":"query_memories","arguments":{"cypher":"MATCH (n) RETURN n LIMIT 200"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#straightforward.1","chosen":"query_memories","arguments":{"cypher":"MATCH (n) WHERE n.label = 'User' OR n:User RETURN n"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"memory_stats#hard_negative.2","chosen":"list_memory_labels","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#straightforward.1","chosen":"query_memories","arguments":{"cypher":"MATCH (n) WHERE n.label = 'User' OR n.name CONTAINS 'User' OR labels(n)[0] = 'User' RETURN n LIMIT 200"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#straightforward.2","chosen":"query_memories","arguments":{"cypher":"MATCH (n)-[r]-(m) WHERE m.name =~ '(?i)project alpha' RETURN n, r, m LIMIT 50"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#straightforward.2","chosen":"query_memories","arguments":{"cypher":"MATCH (n)-[r]-(m) WHERE m.name =~ '(?i)project alpha' RETURN n, r, m"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#straightforward.3","chosen":"query_memories","arguments":{"cypher":"MATCH (n) RETURN n LIMIT 200"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#straightforward.3","chosen":"query_memories","arguments":{"cypher":"MATCH (n) RETURN n LIMIT 200"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#straightforward.3","chosen":"query_memories","arguments":{"cypher":"MATCH (n) RETURN n LIMIT 200"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#straightforward.2","chosen":"query_memories","arguments":{"cypher":"MATCH (n)-[r]-(m) WHERE toLower(m.name) CONTAINS 'alpha' OR toLower(n.name) CONTAINS 'alpha' RETURN n, r, m LIMIT 50"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#straightforward.4","chosen":"query_memories","arguments":{"cypher":"MATCH (n) WHERE n.status = 'active' RETURN n"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#straightforward.4","chosen":"query_memories","arguments":{"cypher":"MATCH (m) WHERE m.status = 'active' RETURN m"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#straightforward.4","chosen":"query_memories","arguments":{"cypher":"MATCH (m) WHERE m.status = 'active' RETURN m"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#paraphrased.1","chosen":"search_memories","arguments":{"query":"server migration graph"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#paraphrased.1","chosen":"search_memories","arguments":{"query":"server migration graph"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#paraphrased.2","chosen":"search_memories","arguments":{"query":"Sarah budgeting project"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#paraphrased.2","chosen":"search_memories","arguments":{"query":"Sarah budgeting project"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#paraphrased.1","chosen":"search_memories","arguments":{"query":"server migration graph"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#paraphrased.2","chosen":"search_memories","arguments":{"query":"Sarah budgeting project"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#hard_negative.1","chosen":"query_memories","arguments":{"cypher":"MATCH (a:Person {name: 'alice'}), (b:Server {name: 'database server'}) CREATE (a)-[:CONNECTS_TO]->(b) RETURN a, b"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#hard_negative.1","chosen":"query_memories","arguments":{"cypher":"MATCH (a:Person {name: 'alice'}), (b:Server {name: 'database server'}) CREATE (a)-[:CONNECTS_TO]->(b) RETURN a, b"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"query_memories#hard_negative.2","chosen":"get_guidance","arguments":{"topic":"connections"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#hard_negative.1","chosen":"query_memories","arguments":{"cypher":"MATCH (u:Person {name: 'alice'}), (d:Server {name: 'database server'}) CREATE (u)-[:CONNECTS_TO]->(d) RETURN u, d"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"query_memories#hard_negative.2","chosen":"get_guidance","arguments":{"topic":"connections"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"query_memories#hard_negative.2","chosen":"get_guidance","arguments":{"topic":"connections"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#straightforward.1","chosen":"search_memories","arguments":{"query":"Benjamin Weeks","search_mode":"hybrid"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#straightforward.1","chosen":"search_memories","arguments":{"search_mode":"hybrid","query":"Benjamin Weeks"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#straightforward.1","chosen":"search_memories","arguments":{"query":"Benjamin Weeks","search_mode":"hybrid"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#straightforward.2","chosen":"search_memories","arguments":{"limit":5,"search_mode":"semantic","query":"project roadmap"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#straightforward.2","chosen":"search_memories","arguments":{"limit":5,"query":"project roadmap","search_mode":"semantic"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#straightforward.2","chosen":"search_memories","arguments":{"query":"project roadmap","limit":5,"search_mode":"semantic"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#straightforward.3","chosen":"search_memories","arguments":{"query":"quarterly budget meeting","order_by":"_score DESC"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#straightforward.3","chosen":"search_memories","arguments":{"query":"quarterly budget meeting","order_by":"_score DESC"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#straightforward.4","chosen":"search_memories","arguments":{"query":"server migration","include_archived":true,"since_date":"2025-02-01"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#straightforward.3","chosen":"search_memories","arguments":{"order_by":"_score DESC","query":"quarterly budget meeting"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#straightforward.4","chosen":"search_memories","arguments":{"include_archived":true,"since_date":"2025-02-01","query":"server migration"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#straightforward.4","chosen":"search_memories","arguments":{"include_archived":true,"since_date":"2025-02-01","query":"server migration"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#paraphrased.1","chosen":"search_memories","arguments":{"query":"Sarah promotion"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#paraphrased.1","chosen":"search_memories","arguments":{"query":"Sarah promotion"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#paraphrased.2","chosen":"search_memories","arguments":{"query":"Austin restaurant recommendation"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#paraphrased.1","chosen":"search_memories","arguments":{"query":"Sarah promotion"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#paraphrased.2","chosen":"search_memories","arguments":{"query":"restaurant Austin"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#paraphrased.2","chosen":"search_memories","arguments":{"query":"restaurant Austin"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#hard_negative.1","chosen":"search_memories","arguments":{"query":"grocery list"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_memories#hard_negative.1","chosen":"search_memories","arguments":{"query":"grocery list"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_memories#hard_negative.2","chosen":"search_memories","arguments":{"query":"today's sync"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#hard_negative.1","chosen":"search_memories","arguments":{"query":"grocery list"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#hard_negative.2","chosen":"search_memories","arguments":{"query":"today sync notes action items"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#straightforward.1","chosen":"update_connection","arguments":{"type":"PARENT_CHILD","fromMemoryId":42,"properties":{"type":"parent-child"},"toMemoryId":88},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_memories#hard_negative.2","chosen":"search_memories","arguments":{"query":"today sync notes action items"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#straightforward.1","chosen":"update_connection","arguments":{"toMemoryId":88,"properties":{},"fromMemoryId":42,"type":"PARENT_CHILD"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#straightforward.1","chosen":"delete_connection","arguments":{"fromMemoryId":42,"toMemoryId":88,"type":"KNOWS"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#straightforward.2","chosen":"update_connection","arguments":{"properties":{"confirmed":true},"type":"WORKS_AT","toMemoryId":22,"fromMemoryId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#straightforward.2","chosen":"update_connection","arguments":{"type":"RELATED_TO","properties":{"confirmed":true},"toMemoryId":22,"fromMemoryId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#straightforward.2","chosen":"update_connection","arguments":{"toMemoryId":22,"fromMemoryId":15,"properties":{"confirmed":true},"type":"LINK"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#straightforward.3","chosen":"update_connection","arguments":{"fromMemoryId":7,"type":"LINKS","toMemoryId":19,"properties":{"strength":0.9}},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#straightforward.3","chosen":"update_connection","arguments":{"properties":{"strength":0.9},"type":"LINKED_TO","toMemoryId":19,"fromMemoryId":7},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#straightforward.3","chosen":"update_connection","arguments":{"toMemoryId":19,"type":"LINKED_TO","properties":{"strength":0.9},"fromMemoryId":7},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#straightforward.4","chosen":"update_connection","arguments":{"properties":{"type":"bidirectional"},"type":"bidirectional","fromMemoryId":101,"toMemoryId":205},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#straightforward.4","chosen":"update_connection","arguments":{"fromMemoryId":101,"type":"bidirectional","toMemoryId":205,"properties":{"type":"bidirectional"}},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#paraphrased.1","chosen":"update_connection","arguments":{"toMemoryId":34,"fromMemoryId":12,"properties":{"strength":"strong"},"type":"LINK"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#straightforward.4","chosen":"update_connection","arguments":{"toMemoryId":205,"properties":{"type":"bidirectional"},"fromMemoryId":101,"type":"bidirectional"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#paraphrased.1","chosen":"update_connection","arguments":{"fromMemoryId":12,"type":"LINK","toMemoryId":34,"properties":{"status":"active","strength":"strong"}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#paraphrased.1","chosen":"update_connection","arguments":{"toMemoryId":34,"properties":{"strength":"strong"},"type":"LINK","fromMemoryId":12},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#paraphrased.2","chosen":"update_connection","arguments":{"properties":{"status":"expired"},"type":"BOND","fromMemoryId":5,"toMemoryId":9},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#paraphrased.2","chosen":"update_connection","arguments":{"toMemoryId":9,"type":"BOND","fromMemoryId":5,"properties":{"status":"expired"}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#hard_negative.1","chosen":"update_connection","arguments":{"type":"RELATED_TO","properties":{"status":"updated"},"toMemoryId":0,"fromMemoryId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#paraphrased.2","chosen":"update_connection","arguments":{"fromMemoryId":5,"toMemoryId":9,"properties":{"status":"expired"},"type":"BOND"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#hard_negative.1","chosen":"update_connection","arguments":{"properties":{},"fromMemoryId":42,"type":"CONNECTION","toMemoryId":0},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_connection#hard_negative.1","chosen":"update_connection","arguments":{"type":"UPDATE","properties":{},"toMemoryId":0,"fromMemoryId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#hard_negative.2","chosen":"get_guidance","arguments":{"topic":"connections"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_connection#hard_negative.2","chosen":"get_guidance","arguments":{"topic":"connections"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#straightforward.1","chosen":"update_memory","arguments":{"properties":{"phone_number":"NEW_PHONE_NUMBER"},"nodeId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_connection#hard_negative.2","chosen":"get_guidance","arguments":{"topic":"connections"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#straightforward.1","chosen":"update_memory","arguments":{"properties":{"phone_number":"new"},"nodeId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#straightforward.2","chosen":"update_memory","arguments":{"properties":{"revised_project_deadlines":true},"nodeId":105},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#straightforward.1","chosen":"update_memory","arguments":{"properties":{"phone_number":"new phone number"},"nodeId":42},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#straightforward.2","chosen":"update_memory","arguments":{"properties":{"revised_project_deadlines":true},"nodeId":105},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#straightforward.2","chosen":"update_memory","arguments":{"nodeId":105,"properties":{"revised_deadlines":true}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#straightforward.3","chosen":"update_memory","arguments":{"properties":{"location":"downtown"},"nodeId":8},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#straightforward.3","chosen":"update_memory","arguments":{"nodeId":8,"properties":{"location":"downtown","office_location":"downtown"}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#straightforward.4","chosen":"update_memory","arguments":{"nodeId":15,"properties":{"dietary_restriction":"vegan"}},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#straightforward.3","chosen":"update_memory","arguments":{"properties":{"office_location":"downtown","location":"downtown"},"nodeId":8},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#straightforward.4","chosen":"update_memory","arguments":{"properties":{"dietary_restriction":"vegan"},"nodeId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#paraphrased.1","chosen":"update_memory","arguments":{"properties":{"title":"senior engineer"},"nodeId":99},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#straightforward.4","chosen":"update_memory","arguments":{"properties":{"dietary_restriction":"vegan"},"nodeId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#paraphrased.1","chosen":"update_memory","arguments":{"nodeId":99,"properties":{"title":"senior engineer"}},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#paraphrased.1","chosen":"update_memory","arguments":{"properties":{"title":"senior engineer"},"nodeId":99},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#paraphrased.2","chosen":"update_memory","arguments":{"nodeId":44,"properties":{"email":"placeholder@example.com"}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#paraphrased.2","chosen":"update_memory","arguments":{"properties":{"email":"placeholder@example.com"},"nodeId":44},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#hard_negative.1","chosen":"update_connection","arguments":{"properties":{},"type":"UNKNOWN","toMemoryId":15,"fromMemoryId":12},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#hard_negative.1","chosen":"update_connection","arguments":{"properties":{},"toMemoryId":15,"fromMemoryId":12,"type":"KNOWS"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"update_memory#paraphrased.2","chosen":"update_memory","arguments":{"nodeId":44,"properties":{"email":"new_email@example.com"}},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#hard_negative.2","chosen":"update_connection","arguments":{"type":"PARTNER","toMemoryId":8,"properties":{"status":"partners"},"fromMemoryId":7},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"update_memory#hard_negative.1","chosen":"update_connection","arguments":{"fromMemoryId":12,"properties":{},"type":"UNKNOWN","toMemoryId":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#hard_negative.2","chosen":"update_connection","arguments":{"toMemoryId":8,"fromMemoryId":7,"type":"PARTNER","properties":{"status":"partners"}},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"update_memory#hard_negative.2","chosen":"update_connection","arguments":{"type":"PARTNERS","fromMemoryId":7,"properties":{"status":"partners"},"toMemoryId":8},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":"search_memories","arguments":{"query":"diary entry last Tuesday mood"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":"search_memories","arguments":{"query":"diary"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":"search_memories","arguments":{"query":"diary entry Tuesday mood"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}

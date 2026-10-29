@@ -1,0 +1,1152 @@
+version: 1
+tools:
+  analyze_project:
+    fingerprint: 1d2e6ad695efdec6
+    queries:
+    - id: analyze_project#straightforward.1
+      text: Run a git history analysis on the backend service repository located at
+        /var/www/v2/api.
+      expected: analyze_project
+      kind: straightforward
+      neighbour: full_analysis
+    - id: analyze_project#straightforward.2
+      text: Execute the git history analyzer targeting our main application directory
+        at C:\Projects\ClientApp.
+      expected: analyze_project
+      kind: straightforward
+      neighbour: full_analysis
+    - id: analyze_project#straightforward.3
+      text: Analyze the git repository at /home/user/projects/legacy-monolith using
+        the history tool.
+      expected: analyze_project
+      kind: straightforward
+      neighbour: full_analysis
+    - id: analyze_project#straightforward.4
+      text: Please run the git history inspection on /opt/codebase/payment-gateway.
+      expected: analyze_project
+      kind: straightforward
+      neighbour: full_analysis
+    - id: analyze_project#paraphrased.1
+      text: Dig into the commit logs for /var/www/html/shop to find out which folders
+        nobody has touched in a year and how people format their messages.
+      expected: analyze_project
+      kind: paraphrased
+      neighbour: full_analysis
+    - id: analyze_project#paraphrased.2
+      text: Check out the repo at /Users/dev/mobile-app to see our overall commit
+        trends and spot the directories we've abandoned.
+      expected: analyze_project
+      kind: paraphrased
+      neighbour: full_analysis
+    - id: analyze_project#hard_negative.1
+      text: Run a full_analysis on the repository at /var/www/v2/api to check commit
+        conventions and stale folders.
+      expected: full_analysis
+      kind: hard_negative
+      neighbour: full_analysis
+    - id: analyze_project#hard_negative.2
+      text: Execute full_analysis targeting C:\Projects\ClientApp to pull our git
+        history stats and frequently modified files.
+      expected: full_analysis
+      kind: hard_negative
+      neighbour: full_analysis
+  export_to_confluence:
+    fingerprint: c9cbef0a9509b6a5
+    queries:
+    - id: export_to_confluence#straightforward.1
+      text: Please push our current concept map from the project directory at /workspace/project
+        to Confluence using the space key PROJ under parent page 123456.
+      expected: export_to_confluence
+      kind: straightforward
+      neighbour: save_snapshot
+    - id: export_to_confluence#straightforward.2
+      text: Export the concept map in /home/user/repo to our Confluence space ENG
+        with parent page ID 987654, naming the index Hub, the changelog Updates, and
+        prefixing features with Feature-.
+      expected: export_to_confluence
+      kind: straightforward
+      neighbour: save_snapshot
+    - id: export_to_confluence#straightforward.3
+      text: Run the Confluence sync for the project located at C:\Projects\MobileApp
+        using space key DEV and parent page 445566.
+      expected: export_to_confluence
+      kind: straightforward
+      neighbour: save_snapshot
+    - id: export_to_confluence#straightforward.4
+      text: Send the concept map data from /var/www/html/app to Confluence space QA
+        under parent node 778899, setting the index page to QA Index and changelog
+        to Release History.
+      expected: export_to_confluence
+      kind: straightforward
+      neighbour: save_snapshot
+    - id: export_to_confluence#paraphrased.1
+      text: dump the feature docs and wiki index into space CORP on confluence from
+        our repo at /opt/app using parent id 112233
+      expected: export_to_confluence
+      kind: paraphrased
+      neighbour: save_snapshot
+    - id: export_to_confluence#paraphrased.2
+      text: update the confluence wiki pages for space SEC with our architecture concept
+        map from /home/dev/src under parent 998877
+      expected: export_to_confluence
+      kind: paraphrased
+      neighbour: save_snapshot
+    - id: export_to_confluence#hard_negative.1
+      text: Save a snapshot of the current concept map from /workspace/project into
+        Confluence space PROJ under parent page 123456.
+      expected: save_snapshot
+      kind: hard_negative
+      neighbour: save_snapshot
+    - id: export_to_confluence#hard_negative.2
+      text: Take a snapshot and export it to the Confluence wiki for the repo at /home/user/repo
+        using space key ENG and parent ID 987654.
+      expected: save_snapshot
+      kind: hard_negative
+      neighbour: save_snapshot
+  full_analysis:
+    fingerprint: cb414ac506797221
+    queries:
+    - id: full_analysis#straightforward.1
+      text: Run a complete breakdown of the project located at /home/user/workspace/legacy-app
+        to see the file counts, test mappings, and code samples.
+      expected: full_analysis
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: full_analysis#straightforward.2
+      text: Give me the full one-shot orientation for the repository in /var/www/html/backend
+        since it has no existing structure docs.
+      expected: full_analysis
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: full_analysis#straightforward.3
+      text: I need a comprehensive summary of git history, file distributions, and
+        code previews for the codebase at C:\Projects\client-portal.
+      expected: full_analysis
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: full_analysis#straightforward.4
+      text: Generate a deep initial analysis of /opt/services/payment-api including
+        test-to-source connections and curated file previews.
+      expected: full_analysis
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: full_analysis#paraphrased.1
+      text: I just cloned this random repo at /home/dev/scratchpad and need to figure
+        out what's inside it right now.
+      expected: full_analysis
+      kind: paraphrased
+      neighbour: get_snapshot
+    - id: full_analysis#paraphrased.2
+      text: Give me the lay of the land for /usr/local/src/old-monolith so I can see
+        how the tests line up with the actual source files.
+      expected: full_analysis
+      kind: paraphrased
+      neighbour: get_snapshot
+    - id: full_analysis#hard_negative.1
+      text: I need a complete layout and code walkthrough of the repository at /home/user/projects/data-pipeline
+        to understand its current state.
+      expected: get_snapshot
+      kind: hard_negative
+      neighbour: get_snapshot
+    - id: full_analysis#hard_negative.2
+      text: Pull together a comprehensive project overview for /var/www/vhosts/shop-api
+        with file statistics and sample code previews.
+      expected: get_snapshot
+      kind: hard_negative
+      neighbour: get_snapshot
+  generate_snapshot_batch:
+    fingerprint: b19aee096751f3a2
+    queries:
+    - id: generate_snapshot_batch#straightforward.1
+      text: Call generate_snapshot_batch on the repository at /home/user/project using
+        an offset of zero and a batch size of ten files.
+      expected: generate_snapshot_batch
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#straightforward.2
+      text: Run generate_snapshot_batch for src/backend starting at offset 50, processing
+        batches of 15 files at a time.
+      expected: generate_snapshot_batch
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#straightforward.3
+      text: Execute generate_snapshot_batch targeting the codebase in C:/Projects/Web
+        with an initial offset of 0 and batchSize set to 20.
+      expected: generate_snapshot_batch
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#straightforward.4
+      text: Please invoke generate_snapshot_batch on the directory /var/www/html with
+        offset 10 and a batch size of 5.
+      expected: generate_snapshot_batch
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#paraphrased.1
+      text: grab the next chunk of file skeletons and grounded bodies from /app/src
+        starting at index thirty
+      expected: generate_snapshot_batch
+      kind: paraphrased
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#paraphrased.2
+      text: map out the codebase at /data/repo by fetching twenty files at a time
+        beginning from offset zero
+      expected: generate_snapshot_batch
+      kind: paraphrased
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#hard_negative.1
+      text: Run reduce_snapshot on the repository at /home/user/project using an offset
+        of zero and a batch size of ten files to combine the partials.
+      expected: reduce_snapshot
+      kind: hard_negative
+      neighbour: reduce_snapshot
+    - id: generate_snapshot_batch#hard_negative.2
+      text: Please invoke reduce_snapshot on the directory /var/www/html with offset
+        10 and a batch size of 5 to finalize the map.
+      expected: reduce_snapshot
+      kind: hard_negative
+      neighbour: reduce_snapshot
+  get_code_samples:
+    fingerprint: 5fc49f55bf53900d
+    queries:
+    - id: get_code_samples#straightforward.1
+      text: Fetch a preview of the main source files in the backend/src directory.
+      expected: get_code_samples
+      kind: straightforward
+      neighbour: full_analysis
+    - id: get_code_samples#straightforward.2
+      text: Can you pull the first few dozen lines from representative files in the
+        packages/core folder, limiting to five files?
+      expected: get_code_samples
+      kind: straightforward
+      neighbour: full_analysis
+    - id: get_code_samples#straightforward.3
+      text: Show me file previews across the entire app/services path using a count
+        of eight.
+      expected: get_code_samples
+      kind: straightforward
+      neighbour: full_analysis
+    - id: get_code_samples#straightforward.4
+      text: Get configuration and entry point file samples from the root directory
+        for me.
+      expected: get_code_samples
+      kind: straightforward
+      neighbour: full_analysis
+    - id: get_code_samples#paraphrased.1
+      text: Give me a quick peek at what the codebase looks like inside internal/auth.
+      expected: get_code_samples
+      kind: paraphrased
+      neighbour: full_analysis
+    - id: get_code_samples#paraphrased.2
+      text: Snag a handful of representative source snippets from cmd/server real
+        quick.
+      expected: get_code_samples
+      kind: paraphrased
+      neighbour: full_analysis
+    - id: get_code_samples#hard_negative.1
+      text: Run a full_analysis on the src/components folder to inspect the first
+        sixty lines of every file in there.
+      expected: full_analysis
+      kind: hard_negative
+      neighbour: full_analysis
+    - id: get_code_samples#hard_negative.2
+      text: I need a complete full_analysis of the config directory grabbing representative
+        previews of each file.
+      expected: full_analysis
+      kind: hard_negative
+      neighbour: full_analysis
+  get_context:
+    fingerprint: 9cb2f3eb723ea946
+    queries:
+    - id: get_context#straightforward.1
+      text: Assemble the background context for task refactor the payment gateway
+        API in the backend directory, including the modified auth.py file.
+      expected: get_context
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_context#straightforward.2
+      text: Gather decision rationale, owners, and freshness for the database migration
+        task located in src/db with paths schema.sql and models.py.
+      expected: get_context
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_context#straightforward.3
+      text: Pull together all prior decisions, test correlations, and file impacts
+        for working on the user profile redesign inside frontend/features.
+      expected: get_context
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_context#straightforward.4
+      text: Retrieve the full task context including map entries and source verifications
+        for implementing rate limiting in services/api.
+      expected: get_context
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_context#paraphrased.1
+      text: Get me up to speed on what we decided and who owns the auth stuff in the
+        core module.
+      expected: get_context
+      kind: paraphrased
+      neighbour: get_snapshot
+    - id: get_context#paraphrased.2
+      text: Check the status and history for the billing cleanup job in modules/finance
+        before I touch anything.
+      expected: get_context
+      kind: paraphrased
+      neighbour: get_snapshot
+    - id: get_context#hard_negative.1
+      text: Assemble the state snapshot for task refactor the payment gateway API
+        in the backend directory, including the modified auth.py file.
+      expected: get_snapshot
+      kind: hard_negative
+      neighbour: get_snapshot
+    - id: get_context#hard_negative.2
+      text: Pull together the current system snapshot, decisions, and file impacts
+        for working on the user profile redesign inside frontend/features.
+      expected: get_snapshot
+      kind: hard_negative
+      neighbour: get_snapshot
+  get_impact:
+    fingerprint: 0b3ecba5586c9a7e
+    queries:
+    - id: get_impact#straightforward.1
+      text: Run get_impact on src/auth and analyze [src/auth/login.py, src/auth/session.py].
+      expected: get_impact
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_impact#straightforward.2
+      text: Call get_impact with dir set to packages/core using the file list [packages/core/index.ts,
+        packages/core/utils.ts].
+      expected: get_impact
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_impact#straightforward.3
+      text: Execute get_impact for the directory internal/database with files [internal/database/pool.go,
+        internal/database/query.go].
+      expected: get_impact
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_impact#straightforward.4
+      text: Invoke get_impact pointing to services/payment taking [services/payment/charge.py,
+        services/payment/refund.py].
+      expected: get_impact
+      kind: straightforward
+      neighbour: get_snapshot
+    - id: get_impact#paraphrased.1
+      text: Check what usually breaks alongside app/controllers/user_controller.rb
+        and app/models/user.rb inside the app folder.
+      expected: get_impact
+      kind: paraphrased
+      neighbour: get_snapshot
+    - id: get_impact#paraphrased.2
+      text: Find past partners and related tests for handlers/order.go and handlers/checkout.go
+        located under the api directory.
+      expected: get_impact
+      kind: paraphrased
+      neighbour: get_snapshot
+    - id: get_impact#hard_negative.1
+      text: Run get_snapshot on src/auth and analyze [src/auth/login.py, src/auth/session.py].
+      expected: get_snapshot
+      kind: hard_negative
+      neighbour: get_snapshot
+    - id: get_impact#hard_negative.2
+      text: Find past partners and related tests for handlers/order.go and handlers/checkout.go
+        located under the api directory using get_snapshot.
+      expected: get_snapshot
+      kind: hard_negative
+      neighbour: get_snapshot
+  get_snapshot:
+    fingerprint: 5099a8ddcf590beb
+    queries:
+    - id: get_snapshot#straightforward.1
+      text: Run get_snapshot on /Users/dev/projects/auth-service.
+      expected: get_snapshot
+      kind: straightforward
+      neighbour: get_context
+    - id: get_snapshot#straightforward.2
+      text: Please execute get_snapshot for the repository located at C:\Users\Admin\Work\billing-api.
+      expected: get_snapshot
+      kind: straightforward
+      neighbour: get_context
+    - id: get_snapshot#straightforward.3
+      text: Call get_snapshot targeting the directory /home/user/app/frontend.
+      expected: get_snapshot
+      kind: straightforward
+      neighbour: get_context
+    - id: get_snapshot#straightforward.4
+      text: I need you to invoke get_snapshot on /var/www/html/ecommerce.
+      expected: get_snapshot
+      kind: straightforward
+      neighbour: get_context
+    - id: get_snapshot#paraphrased.1
+      text: Show me the lay of the land for /opt/services/notification-worker before
+        I touch anything.
+      expected: get_snapshot
+      kind: paraphrased
+      neighbour: get_context
+    - id: get_snapshot#paraphrased.2
+      text: Quickly inspect /home/developer/repos/legacy-monolith and tell me what's
+        going on with the layout.
+      expected: get_snapshot
+      kind: paraphrased
+      neighbour: get_context
+    - id: get_snapshot#hard_negative.1
+      text: Pull up the surrounding background and background details for /Users/dev/projects/auth-service.
+      expected: get_context
+      kind: hard_negative
+      neighbour: get_context
+    - id: get_snapshot#hard_negative.2
+      text: Fetch the ambient background info and reference material for C:\Users\Admin\Work\billing-api.
+      expected: get_context
+      kind: hard_negative
+      neighbour: get_context
+  mason_automation:
+    fingerprint: a36f5ad828718a8d
+    queries:
+    - id: mason_automation#straightforward.1
+      text: Check the installed automation setup in /var/lib/mason/configs using the
+        inspect action.
+      expected: mason_automation
+      kind: straightforward
+      neighbour: mason_repair
+    - id: mason_automation#straightforward.2
+      text: Run the status action on the directory /opt/mason/automation to inspect
+        current host events.
+      expected: mason_automation
+      kind: straightforward
+      neighbour: mason_repair
+    - id: mason_automation#straightforward.3
+      text: Execute the check action inside /etc/mason/runtime to save local baselines
+        and verification reports.
+      expected: mason_automation
+      kind: straightforward
+      neighbour: mason_repair
+    - id: mason_automation#straightforward.4
+      text: Use the mason_automation tool with dir=/var/log/mason and action=status
+        to view observed host events.
+      expected: mason_automation
+      kind: straightforward
+      neighbour: mason_repair
+    - id: mason_automation#paraphrased.1
+      text: Go through the retained docs in /home/user/docs and pull up that previous
+        repair evidence.
+      expected: mason_automation
+      kind: paraphrased
+      neighbour: mason_repair
+    - id: mason_automation#paraphrased.2
+      text: Quickly scan /srv/automation to see what background tasks and verification
+        logs are currently saved there.
+      expected: mason_automation
+      kind: paraphrased
+      neighbour: mason_repair
+    - id: mason_automation#hard_negative.1
+      text: Apply the fix action to the broken automation workflow located in /var/lib/mason/configs.
+      expected: mason_repair
+      kind: hard_negative
+      neighbour: mason_repair
+    - id: mason_automation#hard_negative.2
+      text: Run the repair routine on /opt/mason/automation to fix the failing host
+        events and approve the pending advisories.
+      expected: mason_repair
+      kind: hard_negative
+      neighbour: mason_repair
+  mason_check_drift:
+    fingerprint: 14c73bffa404b7d9
+    queries:
+    - id: mason_check_drift#straightforward.1
+      text: Run mason_check_drift on packages/core to see if our conceptual map is
+        out of sync with HEAD.
+      expected: mason_check_drift
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: mason_check_drift#straightforward.2
+      text: Execute mason_check_drift for /workspace/app to check which features have
+        gone stale.
+      expected: mason_check_drift
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: mason_check_drift#straightforward.3
+      text: Can you call mason_check_drift on the current directory so I know if we
+        need a full rebuild?
+      expected: mason_check_drift
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: mason_check_drift#straightforward.4
+      text: Run mason_check_drift on src/backend to locate any ghost files and unmapped
+        source changes.
+      expected: mason_check_drift
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: mason_check_drift#paraphrased.1
+      text: Check if our architecture diagram is lagging behind git head in the main
+        repo.
+      expected: mason_check_drift
+      kind: paraphrased
+      neighbour: verify_snapshot
+    - id: mason_check_drift#paraphrased.2
+      text: Figure out if the codebase has moved too far from our saved design snapshot
+        in packages/api.
+      expected: mason_check_drift
+      kind: paraphrased
+      neighbour: verify_snapshot
+    - id: mason_check_drift#hard_negative.1
+      text: Run verify_snapshot on packages/core to see if our conceptual map is out
+        of sync with HEAD.
+      expected: verify_snapshot
+      kind: hard_negative
+      neighbour: verify_snapshot
+    - id: mason_check_drift#hard_negative.2
+      text: Execute verify_snapshot for /workspace/app to check which features have
+        gone stale.
+      expected: verify_snapshot
+      kind: hard_negative
+      neighbour: verify_snapshot
+  mason_complete_init:
+    fingerprint: ba9c54bbb551138d
+    queries:
+    - id: mason_complete_init#straightforward.1
+      text: Initialize the project setup in the current workspace directory and record
+        that Confluence is configured.
+      expected: mason_complete_init
+      kind: straightforward
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#straightforward.2
+      text: Run the initial local setup inside /home/developer/projects/alpha-service
+        and set confluenceConfigured to false.
+      expected: mason_complete_init
+      kind: straightforward
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#straightforward.3
+      text: Call the initialization tool for /var/www/html/client-portal with confluenceConfigured
+        set to true.
+      expected: mason_complete_init
+      kind: straightforward
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#straightforward.4
+      text: Perform the mason complete init action for C:\Work\repos\payment-api,
+        indicating confluenceConfigured is true.
+      expected: mason_complete_init
+      kind: straightforward
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#paraphrased.1
+      text: bootstrap my local config in /app/src so everything knows we use the wiki
+      expected: mason_complete_init
+      kind: paraphrased
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#paraphrased.2
+      text: mark the /Users/dev/code/webapp folder as fully set up without wiki integration
+      expected: mason_complete_init
+      kind: paraphrased
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#hard_negative.1
+      text: Initialize the project configuration in /var/www/html/client-portal specifically
+        to update the Confluence integration status to true.
+      expected: mason_set_confluence
+      kind: hard_negative
+      neighbour: mason_set_confluence
+    - id: mason_complete_init#hard_negative.2
+      text: Run the setup command in /home/developer/projects/alpha-service to change
+        whether Confluence is configured.
+      expected: mason_set_confluence
+      kind: hard_negative
+      neighbour: mason_set_confluence
+  mason_init:
+    fingerprint: df35a73c441799d0
+    queries:
+    - id: mason_init#straightforward.1
+      text: Run mason_init on our backend repository located at /var/www/api using
+        the map mode to check the build workflow status.
+      expected: mason_init
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_init#straightforward.2
+      text: Please execute mason_init for the project at C:\Projects\client-portal
+        in quickstart mode with the host set to claude.
+      expected: mason_init
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_init#straightforward.3
+      text: Call mason_init on ~/workspace/mobile-app targeting the main branch as
+        the base with evidence gathered from the latest CI run.
+      expected: mason_init
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_init#straightforward.4
+      text: Initialize the project at /home/user/src/checkout-service using mason_init
+        in explicit setup mode to configure MCP and lifecycle hooks.
+      expected: mason_init
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_init#paraphrased.1
+      text: Can you scan our legacy monorepo sitting at /opt/app/legacy and give me
+        the quickstart guide along with the doc audit?
+      expected: mason_init
+      kind: paraphrased
+      neighbour: mason_automation
+    - id: mason_init#paraphrased.2
+      text: I need to configure this local repo at /Users/dev/sandbox for the CLI
+        assistant and inspect what changed since last Tuesday.
+      expected: mason_init
+      kind: paraphrased
+      neighbour: mason_automation
+    - id: mason_init#hard_negative.1
+      text: Trigger mason_automation on our backend repository located at /var/www/api
+        using the map mode to check the build workflow status.
+      expected: mason_automation
+      kind: hard_negative
+      neighbour: mason_automation
+    - id: mason_init#hard_negative.2
+      text: Please execute mason_automation for the project at C:\Projects\client-portal
+        in quickstart mode with the host set to claude.
+      expected: mason_automation
+      kind: hard_negative
+      neighbour: mason_automation
+  mason_repair:
+    fingerprint: b7568ce92973bc79
+    queries:
+    - id: mason_repair#straightforward.1
+      text: Run the preparation step for the documentation audit located in docs/api
+        to generate our starting baseline and work order.
+      expected: mason_repair
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_repair#straightforward.2
+      text: Check our current documentation status in the repository folder against
+        the saved audit baseline using the verify action.
+      expected: mason_repair
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_repair#straightforward.3
+      text: Execute the mason_repair tool on the customer-facing guides directory
+        with action set to prepare.
+      expected: mason_repair
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_repair#straightforward.4
+      text: Please run the verification check on the security compliance docs folder
+        using baselinePath at /tmp/audit_baseline.json.
+      expected: mason_repair
+      kind: straightforward
+      neighbour: mason_automation
+    - id: mason_repair#paraphrased.1
+      text: Grab a baseline snapshot of the internal wiki directory so we can track
+        what changed since the audit.
+      expected: mason_repair
+      kind: paraphrased
+      neighbour: mason_automation
+    - id: mason_repair#paraphrased.2
+      text: Go ahead and run the final check against our saved evidence file to see
+        what findings are still open in the user manual.
+      expected: mason_repair
+      kind: paraphrased
+      neighbour: mason_automation
+    - id: mason_repair#hard_negative.1
+      text: Trigger the automated pipeline for the docs folder to sync all our markdown
+        files with the latest upstream repository.
+      expected: mason_automation
+      kind: hard_negative
+      neighbour: mason_automation
+    - id: mason_repair#hard_negative.2
+      text: Run the automated script generation routine for the repository documentation
+        directory using the standard workflow profile.
+      expected: mason_automation
+      kind: hard_negative
+      neighbour: mason_automation
+  mason_set_confluence:
+    fingerprint: d253f139c2313e21
+    queries:
+    - id: mason_set_confluence#straightforward.1
+      text: Please configure my Confluence integration using https://company.atlassian.net
+        as the base URL, my email admin@company.com, and my token ATATT3xFfGF0...
+      expected: mason_set_confluence
+      kind: straightforward
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#straightforward.2
+      text: I need to set up the Confluence plugin with base URL https://wiki.internal.net,
+        email dev@internal.net, and API token secret_token_99.
+      expected: mason_set_confluence
+      kind: straightforward
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#straightforward.3
+      text: Can you hook up Confluence for me at https://myteam.atlassian.net with
+        user user@team.com and token token_abc123?
+      expected: mason_set_confluence
+      kind: straightforward
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#straightforward.4
+      text: 'Save my Confluence settings: base URL https://docs.corp.com, email writer@corp.com,
+        and API token pass12345.'
+      expected: mason_set_confluence
+      kind: straightforward
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#paraphrased.1
+      text: Hey connect my wiki at https://mycompany.atlassian.net, my login is bob@company.com
+        and my secret is token_xyz789.
+      expected: mason_set_confluence
+      kind: paraphrased
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#paraphrased.2
+      text: Time to tie in our documentation site https://confluence.startup.io with
+        ceo@startup.io and key tok_98765.
+      expected: mason_set_confluence
+      kind: paraphrased
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#hard_negative.1
+      text: Can you finish the setup initialization for https://company.atlassian.net
+        using admin@company.com and token token_abc123?
+      expected: mason_complete_init
+      kind: hard_negative
+      neighbour: mason_complete_init
+    - id: mason_set_confluence#hard_negative.2
+      text: Please complete the workspace initialization process with base URL https://wiki.internal.net,
+        email dev@internal.net, and token secret_token_99.
+      expected: mason_complete_init
+      kind: hard_negative
+      neighbour: mason_complete_init
+  reduce_snapshot:
+    fingerprint: e59a8ace8b53a117
+    queries:
+    - id: reduce_snapshot#straightforward.1
+      text: Run the reduction phase for the architecture workspace in projects/core-platform
+        so I can get the final merged map.
+      expected: reduce_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#straightforward.2
+      text: Execute the reduce_snapshot function on the directory data/staging/v2.
+      expected: reduce_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#straightforward.3
+      text: Please process the map fragments located at /var/app/snapshots/mapper
+        using the reduction utility.
+      expected: reduce_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#straightforward.4
+      text: Initiate the snapshot reduction workflow for the target folder /home/user/workspace/repo/output.
+      expected: reduce_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#paraphrased.1
+      text: Squash all those scattered concept pieces in docs/system-v1 down into
+        one master blueprint.
+      expected: reduce_snapshot
+      kind: paraphrased
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#paraphrased.2
+      text: Take the partial outlines sitting in /tmp/mapping-run-44 and combine them
+        into a single consolidated project chart.
+      expected: reduce_snapshot
+      kind: paraphrased
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#hard_negative.1
+      text: Kick off the batch process to create the initial snapshot files for the
+        codebase in projects/core-platform.
+      expected: generate_snapshot_batch
+      kind: hard_negative
+      neighbour: generate_snapshot_batch
+    - id: reduce_snapshot#hard_negative.2
+      text: Run the snapshot batch generator across the directory /var/app/snapshots/mapper
+        to start the mapping pipeline.
+      expected: generate_snapshot_batch
+      kind: hard_negative
+      neighbour: generate_snapshot_batch
+  review_advisory:
+    fingerprint: 6d16b7f169b45ca2
+    queries:
+    - id: review_advisory#straightforward.1
+      text: Please assess the original repair advisory located at docs/advisory.md
+        within the repository at /home/user/project, link it to baseline configs/baseline.json,
+        and record an addressed outcome for finding FND-104 with reviewer Jane Doe
+        and note verified fix.
+      expected: review_advisory
+      kind: straightforward
+      neighbour: review_decision
+    - id: review_advisory#straightforward.2
+      text: Run a review assessment for advisory scripts/patch_notice.txt in repository
+        /var/www/app against baseline refs/v1.0, targeting finding SEC-88, marking
+        the action as deferred with token tok_abc99, reviewer Bob Smith, and note
+        awaiting upstream patch.
+      expected: review_advisory
+      kind: straightforward
+      neighbour: review_decision
+    - id: review_advisory#straightforward.3
+      text: Prepare an evaluation of the repair advisory at security/bulletin.yml
+        in /opt/code using baseline.json, record an inapplicable status for finding
+        BUG-404, assign reviewer Alice Jones, attach review token 5541, and include
+        the note false positive in test environment.
+      expected: review_advisory
+      kind: straightforward
+      neighbour: review_decision
+    - id: review_advisory#straightforward.4
+      text: Document a review assessment for advisory notices/fix_guide.rst in repository
+        /home/dev/workspace with baseline baseline.yaml, record an addressed finding
+        for ID CVE-2023-1234 using reviewer Charlie Brown, note patch applied successfully,
+        and supply token tok_778.
+      expected: review_advisory
+      kind: straightforward
+      neighbour: review_decision
+    - id: review_advisory#paraphrased.1
+      text: Hey, log a status update for the advisory at patches/hotfix.md inside
+        /srv/repo against trunk/base.json for finding AUD-09, stating it is inapplicable
+        because the code path isn't used here, signed off by Dave.
+      expected: review_advisory
+      kind: paraphrased
+      neighbour: review_decision
+    - id: review_advisory#paraphrased.2
+      text: We need to process that security notice in /home/repo/project using the
+        baseline at master/ref.json for issue 909, setting the outcome to deferred
+        since we lack resources, credited to Eve with token 12345.
+      expected: review_advisory
+      kind: paraphrased
+      neighbour: review_decision
+    - id: review_advisory#hard_negative.1
+      text: Go ahead and formally approve the advisory assessment for finding FND-104
+        in repository /home/user/project using baseline configs/baseline.json with
+        reviewer Jane Doe and note final signoff.
+      expected: review_decision
+      kind: hard_negative
+      neighbour: review_decision
+    - id: review_advisory#hard_negative.2
+      text: Finalize the authorization decision for advisory scripts/patch_notice.txt
+        in /var/www/app against refs/v1.0 regarding finding SEC-88, assigning reviewer
+        Bob Smith and token tok_abc99.
+      expected: review_decision
+      kind: hard_negative
+      neighbour: review_decision
+  review_decision:
+    fingerprint: 56e974029bbbf5ac
+    queries:
+    - id: review_decision#straightforward.1
+      text: Please prepare the decision review for record ticket-409 in the core-service
+        repository using the workspace directory /app/src/core-service.
+      expected: review_decision
+      kind: straightforward
+      neighbour: review_advisory
+    - id: review_decision#straightforward.2
+      text: Execute the decision review for change request 992 located in /home/user/projects/api-gateway.
+      expected: review_decision
+      kind: straightforward
+      neighbour: review_advisory
+    - id: review_decision#straightforward.3
+      text: Submit an acceptance action for record feature-815 in /var/lib/git/auth-service,
+        signed off by alice@company.com with the note that all tests passed successfully
+        and using the token tok_abc123.
+      expected: review_decision
+      kind: straightforward
+      neighbour: review_advisory
+    - id: review_decision#straightforward.4
+      text: Retire the entire record bug-302 within the repository path /opt/repos/payment-processor,
+        authorized by bob@company.com because the feature has been superseded.
+      expected: review_decision
+      kind: straightforward
+      neighbour: review_advisory
+    - id: review_decision#paraphrased.1
+      text: I need to sign off on PR 44 in /projects/backend so we can push this through.
+      expected: review_decision
+      kind: paraphrased
+      neighbour: review_advisory
+    - id: review_decision#paraphrased.2
+      text: Just go ahead and merge that pending ticket 78 in the frontend folder
+        using token tkn-998 since security cleared it.
+      expected: review_decision
+      kind: paraphrased
+      neighbour: review_advisory
+    - id: review_decision#hard_negative.1
+      text: Prepare the advisory review for record ticket-409 in the core-service
+        repository using the workspace directory /app/src/core-service.
+      expected: review_advisory
+      kind: hard_negative
+      neighbour: review_advisory
+    - id: review_decision#hard_negative.2
+      text: Submit an acceptance advisory for record feature-815 in /var/lib/git/auth-service,
+        signed off by alice@company.com with the note that all checks passed.
+      expected: review_advisory
+      kind: hard_negative
+      neighbour: review_advisory
+  save_decision:
+    fingerprint: 48e40ae644129860
+    queries:
+    - id: save_decision#straightforward.1
+      text: Record our architecture choice in docs/decisions for migrating the user
+        service to gRPC, noting we need it done by QA lead Sarah and linking the RFC
+        source.
+      expected: save_decision
+      kind: straightforward
+      neighbour: review_decision
+    - id: save_decision#straightforward.2
+      text: Save a new decision in the backend folder titled database indexing strategy
+        with the rationale about query performance and mark Alex as the owner.
+      expected: save_decision
+      kind: straightforward
+      neighbour: review_decision
+    - id: save_decision#straightforward.3
+      text: Please log a decision in the security directory about enforcing MFA for
+        all service accounts, including the compliance justification and our internal
+        wiki link.
+      expected: save_decision
+      kind: straightforward
+      neighbour: review_decision
+    - id: save_decision#straightforward.4
+      text: Store this project decision in the core module path regarding our rate
+        limiting limits, adding the engineering team as owner and referencing the
+        load test results.
+      expected: save_decision
+      kind: straightforward
+      neighbour: review_decision
+    - id: save_decision#paraphrased.1
+      text: Update that caching policy record we talked about because Redis is out
+        and Memcached is in, making sure to keep the old rationale while swapping
+        out the obsolete steps.
+      expected: save_decision
+      kind: paraphrased
+      neighbour: review_decision
+    - id: save_decision#paraphrased.2
+      text: Jot down what we just agreed on for the deployment pipeline in the infra
+        workspace so everyone stops arguing about staging environments.
+      expected: save_decision
+      kind: paraphrased
+      neighbour: review_decision
+    - id: save_decision#hard_negative.1
+      text: Sign off on the pending decision proposal for the API versioning policy
+        in the integrations folder so it becomes the official rule.
+      expected: review_decision
+      kind: hard_negative
+      neighbour: review_decision
+    - id: save_decision#hard_negative.2
+      text: Approve the draft decision sitting in the frontend directory about state
+        management libraries so the team can finally start coding.
+      expected: review_decision
+      kind: hard_negative
+      neighbour: review_decision
+  save_partial_snapshot:
+    fingerprint: 1ef3ec80fbf73836
+    queries:
+    - id: save_partial_snapshot#straightforward.1
+      text: Store the current chunk results in .mason/partial-snapshots/ for batch
+        beta-902 with offset 45.
+      expected: save_partial_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#straightforward.2
+      text: Please write out the partial concept map for batch delta-33 using target
+        directory output/maps at offset zero.
+      expected: save_partial_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#straightforward.3
+      text: Record the derived features and flows for batch id theta-11 into the default
+        snapshot folder with an offset of 100.
+      expected: save_partial_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#straightforward.4
+      text: Save the extracted data block under work/snapshots/ for batch gamma-4
+        with offset 200.
+      expected: save_partial_snapshot
+      kind: straightforward
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#paraphrased.1
+      text: dump this batch's map into the mason folder already
+      expected: save_partial_snapshot
+      kind: paraphrased
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#paraphrased.2
+      text: persist the current batch output to disk so it gets merged later
+      expected: save_partial_snapshot
+      kind: paraphrased
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#hard_negative.1
+      text: Create the snapshot batch for batch omega-78 inside the workspace directory.
+      expected: generate_snapshot_batch
+      kind: hard_negative
+      neighbour: generate_snapshot_batch
+    - id: save_partial_snapshot#hard_negative.2
+      text: Initialize a new snapshot batch for chunk epsilon-12 using the local output
+        path.
+      expected: generate_snapshot_batch
+      kind: hard_negative
+      neighbour: generate_snapshot_batch
+  save_snapshot:
+    fingerprint: 0158d7a76b44ec5b
+    queries:
+    - id: save_snapshot#straightforward.1
+      text: Please record the current project structure for the workspace at /home/user/project
+        by mapping the authentication feature to src/auth.js and the data flow for
+        user login to the database module.
+      expected: save_snapshot
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: save_snapshot#straightforward.2
+      text: 'Call the snapshot saving tool for the directory /var/www/html with features
+        set to {"payment": "checkout.py"} and flows set to {"cart": "session.py"}.'
+      expected: save_snapshot
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: save_snapshot#straightforward.3
+      text: 'Store the persistent map for the project located at C:\Users\Dev\App
+        using features defined as {"dashboard": "main.tsx"} and data flows as {"refresh":
+        "api.ts"}.'
+      expected: save_snapshot
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: save_snapshot#straightforward.4
+      text: Execute the save snapshot function on /opt/services/backend with features
+        mapping the user profile to profile.go and data flows mapping requests to
+        router.go.
+      expected: save_snapshot
+      kind: straightforward
+      neighbour: reduce_snapshot
+    - id: save_snapshot#paraphrased.1
+      text: Keep track of where everything lives in this repo at /home/code/app so
+        I don't have to hunt for files later, specifically linking the billing feature
+        to billing.py and the webhook pipeline to listener.py.
+      expected: save_snapshot
+      kind: paraphrased
+      neighbour: reduce_snapshot
+    - id: save_snapshot#paraphrased.2
+      text: Write down a permanent index for /projects/store assigning the inventory
+        feature to inventory.js and the checkout sequence to order.js so future chats
+        know where to look.
+      expected: save_snapshot
+      kind: paraphrased
+      neighbour: reduce_snapshot
+    - id: save_snapshot#hard_negative.1
+      text: Trim down the existing project layout at /home/user/project by stripping
+        out the legacy payment feature and removing the obsolete checkout flow from
+        the persistent records.
+      expected: reduce_snapshot
+      kind: hard_negative
+      neighbour: reduce_snapshot
+    - id: save_snapshot#hard_negative.2
+      text: Clean up the saved state for the workspace at C:\Users\Dev\App by dropping
+        the old dashboard feature and clearing out the deprecated data flows.
+      expected: reduce_snapshot
+      kind: hard_negative
+      neighbour: reduce_snapshot
+  save_verification:
+    fingerprint: 195706f0c7868893
+    queries:
+    - id: save_verification#straightforward.1
+      text: Record the inspection outcomes for the release build inside configs/prod
+        using review token tok_99812.
+      expected: save_verification
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: save_verification#straightforward.2
+      text: Please update the verification status for all components in workspace/staging
+        with token rev_44321.
+      expected: save_verification
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: save_verification#straightforward.3
+      text: Log the audit results for the assets located in data/incoming utilizing
+        authorization token auth_77390.
+      expected: save_verification
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: save_verification#straightforward.4
+      text: Store the check verdicts for the files under modules/auth using review
+        token rtok_11209.
+      expected: save_verification
+      kind: straightforward
+      neighbour: verify_snapshot
+    - id: save_verification#paraphrased.1
+      text: Mark the artifacts in target/bin as failing inspection because the binary
+        checksums do not match the expected release manifest, using token tk_55432.
+      expected: save_verification
+      kind: paraphrased
+      neighbour: verify_snapshot
+    - id: save_verification#paraphrased.2
+      text: Lock in the sign-off decisions for everything inside sources/core with
+        token alpha_8819, and note that the database schema migration script threw
+        a fatal timeout exception.
+      expected: save_verification
+      kind: paraphrased
+      neighbour: verify_snapshot
+    - id: save_verification#hard_negative.1
+      text: Run a thorough check on the snapshot files stored in directory outputs/final
+        using review credential sec_9912.
+      expected: verify_snapshot
+      kind: hard_negative
+      neighbour: verify_snapshot
+    - id: save_verification#hard_negative.2
+      text: Perform a fresh integrity scan on the current snapshot bundle inside folder
+        telemetry/logs with token tk_8821.
+      expected: verify_snapshot
+      kind: hard_negative
+      neighbour: verify_snapshot
+  verify_snapshot:
+    fingerprint: 7c578c03435bff12
+    queries:
+    - id: verify_snapshot#straightforward.1
+      text: Please run a spot-check on the concept map in /var/data/knowledge_base
+        using a sample size of ten.
+      expected: verify_snapshot
+      kind: straightforward
+      neighbour: save_verification
+    - id: verify_snapshot#straightforward.2
+      text: Verify the snapshot correctness for the project located at /home/user/code/backend
+        by inspecting twelve entries.
+      expected: verify_snapshot
+      kind: straightforward
+      neighbour: save_verification
+    - id: verify_snapshot#straightforward.3
+      text: Execute a verification sweep on the directory /opt/app/docs requesting
+        twenty items to audit.
+      expected: verify_snapshot
+      kind: straightforward
+      neighbour: save_verification
+    - id: verify_snapshot#straightforward.4
+      text: Check the initial correctness of the concept map entries under /srv/www/project
+        with a sample of fifteen.
+      expected: verify_snapshot
+      kind: straightforward
+      neighbour: save_verification
+    - id: verify_snapshot#paraphrased.1
+      text: Audit the unverified map entries in /mnt/storage/repo by pulling a sample
+        of eight for manual review.
+      expected: verify_snapshot
+      kind: paraphrased
+      neighbour: save_verification
+    - id: verify_snapshot#paraphrased.2
+      text: Go through /home/dev/workspace and pull up a handful of the oldest untestified
+        concept map entries so I can make sure they match the actual code.
+      expected: verify_snapshot
+      kind: paraphrased
+      neighbour: save_verification
+    - id: verify_snapshot#hard_negative.1
+      text: Save the verification results and review tokens for the concept map in
+        /var/data/knowledge_base using a sample of ten.
+      expected: save_verification
+      kind: hard_negative
+      neighbour: save_verification
+    - id: verify_snapshot#hard_negative.2
+      text: Submit the verification verdicts and tokens back to the system for the
+        snapshot in /home/user/code/backend.
+      expected: save_verification
+      kind: hard_negative
+      neighbour: save_verification
+no_tool:
+- id: (none)#1
+  text: Can you draft a polite email to the engineering director explaining why our
+    Q3 infrastructure migration slipped by two weeks?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the exact syntax for configuring a multi-stage Docker build with a
+    private npm registry in the latest version of BuildKit?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: How do I set up a branching strategy in GitHub that automatically enforces
+    semantic versioning and requires two peer approvals for production hotfixes?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-27'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

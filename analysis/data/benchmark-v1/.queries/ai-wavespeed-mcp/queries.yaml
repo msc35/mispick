@@ -1,0 +1,347 @@
+version: 1
+tools:
+  get_balance:
+    fingerprint: f9eda68e5c0c1cb8
+    queries:
+    - id: get_balance#straightforward.1
+      text: How many credits do I have left in my WaveSpeed account?
+      expected: get_balance
+      kind: straightforward
+      neighbour: upload_file
+    - id: get_balance#straightforward.2
+      text: Check my current WaveSpeed balance.
+      expected: get_balance
+      kind: straightforward
+      neighbour: upload_file
+    - id: get_balance#straightforward.3
+      text: Can you show me my remaining WaveSpeed credit?
+      expected: get_balance
+      kind: straightforward
+      neighbour: upload_file
+    - id: get_balance#straightforward.4
+      text: What is my account balance on WaveSpeed right now?
+      expected: get_balance
+      kind: straightforward
+      neighbour: upload_file
+    - id: get_balance#paraphrased.1
+      text: Check my funds.
+      expected: get_balance
+      kind: paraphrased
+      neighbour: upload_file
+    - id: get_balance#paraphrased.2
+      text: balance check wave
+      expected: get_balance
+      kind: paraphrased
+      neighbour: upload_file
+    - id: get_balance#hard_negative.1
+      text: Upload my credit report to WaveSpeed.
+      expected: upload_file
+      kind: hard_negative
+      neighbour: upload_file
+    - id: get_balance#hard_negative.2
+      text: Send the balance sheet file to WaveSpeed.
+      expected: upload_file
+      kind: hard_negative
+      neighbour: upload_file
+  get_model_schema:
+    fingerprint: 0c3a0a79cfa0116b
+    queries:
+    - id: get_model_schema#straightforward.1
+      text: Can you fetch the required fields for the gpt-4o predictor?
+      expected: get_model_schema
+      kind: straightforward
+      neighbour: get_price
+    - id: get_model_schema#straightforward.2
+      text: Show me the property details and input parameters for stable-diffusion-v3.
+      expected: get_model_schema
+      kind: straightforward
+      neighbour: get_price
+    - id: get_model_schema#straightforward.3
+      text: What are the default values and expected format for claude-3-opus?
+      expected: get_model_schema
+      kind: straightforward
+      neighbour: get_price
+    - id: get_model_schema#straightforward.4
+      text: Pull up the schema definition for whisper-large-v3 so I can see what it
+        accepts.
+      expected: get_model_schema
+      kind: straightforward
+      neighbour: get_price
+    - id: get_model_schema#paraphrased.1
+      text: What do I need to send to llama-3-70b to make it work?
+      expected: get_model_schema
+      kind: paraphrased
+      neighbour: get_price
+    - id: get_model_schema#paraphrased.2
+      text: Check the exact payload structure for embedding-v2 before I submit.
+      expected: get_model_schema
+      kind: paraphrased
+      neighbour: get_price
+    - id: get_model_schema#hard_negative.1
+      text: What are the required parameters and properties for gpt-4o?
+      expected: get_price
+      kind: hard_negative
+      neighbour: get_price
+    - id: get_model_schema#hard_negative.2
+      text: Show me the input schema defaults for claude-3-opus.
+      expected: get_price
+      kind: hard_negative
+      neighbour: get_price
+  get_prediction:
+    fingerprint: 15c38d3ab27f98da
+    queries:
+    - id: get_prediction#straightforward.1
+      text: Can you check the progress of prediction abc-123-xyz?
+      expected: get_prediction
+      kind: straightforward
+      neighbour: run_model
+    - id: get_prediction#straightforward.2
+      text: Retrieve the final output for run ID pred_987654.
+      expected: get_prediction
+      kind: straightforward
+      neighbour: run_model
+    - id: get_prediction#straightforward.3
+      text: What is the current status of job 4521-uuid?
+      expected: get_prediction
+      kind: straightforward
+      neighbour: run_model
+    - id: get_prediction#straightforward.4
+      text: Fetch the results for the task with ID 7890-alpha.
+      expected: get_prediction
+      kind: straightforward
+      neighbour: run_model
+    - id: get_prediction#paraphrased.1
+      text: Did my text generation finish yet, my reference code is batch-555?
+      expected: get_prediction
+      kind: paraphrased
+      neighbour: run_model
+    - id: get_prediction#paraphrased.2
+      text: Pull up the timed-out execution 332211 so I can see if it finally completed.
+      expected: get_prediction
+      kind: paraphrased
+      neighbour: run_model
+    - id: get_prediction#hard_negative.1
+      text: Please start a new execution for the sentiment analysis pipeline using
+        model v2.
+      expected: run_model
+      kind: hard_negative
+      neighbour: run_model
+    - id: get_prediction#hard_negative.2
+      text: Execute the image upscaler on the photo located at s3://bucket/photo.jpg
+        with id set to 44.
+      expected: run_model
+      kind: hard_negative
+      neighbour: run_model
+  get_price:
+    fingerprint: 9fe73ad1a631ee1a
+    queries:
+    - id: get_price#straightforward.1
+      text: How much will it cost to run the video-enhancer model using the file at
+        s3://bucket/input.mp4?
+      expected: get_price
+      kind: straightforward
+      neighbour: get_model_schema
+    - id: get_price#straightforward.2
+      text: Calculate the fee for executing speech-to-text on the audio recording
+        located at /home/user/podcast.wav.
+      expected: get_price
+      kind: straightforward
+      neighbour: get_model_schema
+    - id: get_price#straightforward.3
+      text: What is the estimated charge for processing the image data with the stable-diffusion-xl
+        model?
+      expected: get_price
+      kind: straightforward
+      neighbour: get_model_schema
+    - id: get_price#straightforward.4
+      text: Run a price check for the translation pipeline using the text document
+        stored at /data/corpus.txt.
+      expected: get_price
+      kind: straightforward
+      neighbour: get_model_schema
+    - id: get_price#paraphrased.1
+      text: Check expenses for rendering a 1080p clip with the cinematic-renderer
+        engine.
+      expected: get_price
+      kind: paraphrased
+      neighbour: get_model_schema
+    - id: get_price#paraphrased.2
+      text: How much cash do I need in my account before hitting go on this text summarizer
+        job?
+      expected: get_price
+      kind: paraphrased
+      neighbour: get_model_schema
+    - id: get_price#hard_negative.1
+      text: What are the pricing inputs required for the whisper-large-v3 model so
+        I can figure out the budget?
+      expected: get_model_schema
+      kind: hard_negative
+      neighbour: get_model_schema
+    - id: get_price#hard_negative.2
+      text: How do I format the cost estimation payload for the gpt-4o endpoint?
+      expected: get_model_schema
+      kind: hard_negative
+      neighbour: get_model_schema
+  list_models:
+    fingerprint: 91c2e5047ebb2515
+    queries:
+    - id: list_models#straightforward.1
+      text: Can you search the WaveSpeed catalog for available image generation models?
+      expected: list_models
+      kind: straightforward
+      neighbour: run_model
+    - id: list_models#straightforward.2
+      text: What video models are currently listed in the WaveSpeed repository?
+      expected: list_models
+      kind: straightforward
+      neighbour: run_model
+    - id: list_models#straightforward.3
+      text: Find me the model ID for an audio synthesizer using the list_models tool.
+      expected: list_models
+      kind: straightforward
+      neighbour: run_model
+    - id: list_models#straightforward.4
+      text: List the top five 3D asset generation models from WaveSpeed with a fresh
+        cache.
+      expected: list_models
+      kind: straightforward
+      neighbour: run_model
+    - id: list_models#paraphrased.1
+      text: show me what audio stuff is on wavespeed right now
+      expected: list_models
+      kind: paraphrased
+      neighbour: run_model
+    - id: list_models#paraphrased.2
+      text: pull up the latest video generators real quick before i start
+      expected: list_models
+      kind: paraphrased
+      neighbour: run_model
+    - id: list_models#hard_negative.1
+      text: Execute the video generation model ID stable-video-v2 with my prompt about
+        a sunset.
+      expected: run_model
+      kind: hard_negative
+      neighbour: run_model
+    - id: list_models#hard_negative.2
+      text: Run the audio model voice-synth-pro using the text file located at inputs/speech.txt.
+      expected: run_model
+      kind: hard_negative
+      neighbour: run_model
+  run_model:
+    fingerprint: 1236280029c31392
+    queries:
+    - id: run_model#straightforward.1
+      text: Please execute the stable-diffusion-xl model using the prompt a cyberpunk
+        city in neon rain and set the wait time to sixty seconds.
+      expected: run_model
+      kind: straightforward
+      neighbour: get_prediction
+    - id: run_model#straightforward.2
+      text: Run the whisper-large-v3 model with the audio file located at @./audio/interview.mp3
+        as the input source.
+      expected: run_model
+      kind: straightforward
+      neighbour: get_prediction
+    - id: run_model#straightforward.3
+      text: Generate an image with flux-schnell passing prompt a golden retriever
+        wearing sunglasses and a wait limit of thirty.
+      expected: run_model
+      kind: straightforward
+      neighbour: get_prediction
+    - id: run_model#straightforward.4
+      text: Execute the llama-3-70b-instruct model with the input text set to explain
+        quantum physics to a five year old.
+      expected: run_model
+      kind: straightforward
+      neighbour: get_prediction
+    - id: run_model#paraphrased.1
+      text: Fire up that image generator for a futuristic sports car using @./sketches/car.png
+        and don't wait around too long for it.
+      expected: run_model
+      kind: paraphrased
+      neighbour: get_prediction
+    - id: run_model#paraphrased.2
+      text: Process my voice memo at @./notes/meeting.wav through the speech recognition
+        engine right now.
+      expected: run_model
+      kind: paraphrased
+      neighbour: get_prediction
+    - id: run_model#hard_negative.1
+      text: Can you check on that generation task we started earlier for the stable-diffusion-xl
+        prompt to see if it finally finished?
+      expected: get_prediction
+      kind: hard_negative
+      neighbour: get_prediction
+    - id: run_model#hard_negative.2
+      text: Go grab the results for the whisper-large-v3 audio transcription job I
+        kicked off a few minutes ago.
+      expected: get_prediction
+      kind: hard_negative
+      neighbour: get_prediction
+  upload_file:
+    fingerprint: c107c5c1c6644390
+    queries:
+    - id: upload_file#straightforward.1
+      text: Send the local archive located at ~/documents/archive.zip to the cloud
+        storage.
+      expected: upload_file
+      kind: straightforward
+      neighbour: get_price
+    - id: upload_file#straightforward.2
+      text: Put my dataset at /data/train_set.csv onto the server so I have a link
+        for it.
+      expected: upload_file
+      kind: straightforward
+      neighbour: get_price
+    - id: upload_file#straightforward.3
+      text: Transfer the local installation package at C:\Downloads\setup.exe to WaveSpeed.
+      expected: upload_file
+      kind: straightforward
+      neighbour: get_price
+    - id: upload_file#straightforward.4
+      text: I need a public web link for the local photo at /home/user/images/banner.png.
+      expected: upload_file
+      kind: straightforward
+      neighbour: get_price
+    - id: upload_file#paraphrased.1
+      text: Push my presentation over to the remote bucket quick.
+      expected: upload_file
+      kind: paraphrased
+      neighbour: get_price
+    - id: upload_file#paraphrased.2
+      text: Get this audio track onto the server so I can grab the URL.
+      expected: upload_file
+      kind: paraphrased
+      neighbour: get_price
+    - id: upload_file#hard_negative.1
+      text: Send the pricing sheet file at ~/docs/rates.pdf to the system.
+      expected: get_price
+      kind: hard_negative
+      neighbour: get_price
+    - id: upload_file#hard_negative.2
+      text: Upload the cost breakdown document located at /data/pricing.csv.
+      expected: get_price
+      kind: hard_negative
+      neighbour: get_price
+no_tool:
+- id: (none)#1
+  text: Could you analyze the customer churn data in my local spreadsheet to find
+    the main drivers of cancellation?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What are the exact pricing tiers and API rate limits for the enterprise subscription?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Can you write a Python script using the pandas library to clean up missing
+    values in my dataset?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-22'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

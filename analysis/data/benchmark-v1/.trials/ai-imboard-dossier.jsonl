@@ -1,0 +1,249 @@
+{"query_id":"cancel_journey#straightforward.1","chosen":"cancel_journey","arguments":{"journey_id":"J-88392","reason":"Meeting got rescheduled"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#straightforward.1","chosen":"cancel_journey","arguments":{"journey_id":"J-88392","reason":"Meeting got rescheduled"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#straightforward.1","chosen":"cancel_journey","arguments":{"reason":"meeting got rescheduled","journey_id":"J-88392"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#straightforward.2","chosen":"cancel_journey","arguments":{"journey_id":"4491-X","reason":"sudden vehicle breakdown"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#straightforward.2","chosen":"cancel_journey","arguments":{"journey_id":"4491-X","reason":"Sudden vehicle breakdown"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#straightforward.2","chosen":"cancel_journey","arguments":{"journey_id":"4491-X","reason":"Sudden vehicle breakdown"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#straightforward.3","chosen":"cancel_journey","arguments":{"journey_id":"7720-Alpha"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#straightforward.3","chosen":"cancel_journey","arguments":{"journey_id":"7720-Alpha","reason":"User requested to stop the ongoing trip tracker immediately."},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#straightforward.3","chosen":"cancel_journey","arguments":{"reason":"Stopped by user request","journey_id":"7720-Alpha"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#straightforward.4","chosen":"cancel_journey","arguments":{"journey_id":"10928","reason":"Staying home instead"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#straightforward.4","chosen":"cancel_journey","arguments":{"reason":"Staying home instead","journey_id":"10928"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#straightforward.4","chosen":"cancel_journey","arguments":{"journey_id":"10928","reason":"staying home instead"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#paraphrased.1","chosen":"cancel_journey","arguments":{"reason":"Plans changed completely","journey_id":"9934"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#paraphrased.1","chosen":"cancel_journey","arguments":{"journey_id":"9934","reason":"Plans changed completely"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#paraphrased.1","chosen":"cancel_journey","arguments":{"journey_id":"9934","reason":"Plans changed completely"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#paraphrased.2","chosen":"cancel_journey","arguments":{"reason":"Done traveling today","journey_id":"3321-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#paraphrased.2","chosen":"cancel_journey","arguments":{"reason":"User is done traveling today","journey_id":"3321-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#paraphrased.2","chosen":"cancel_journey","arguments":{"journey_id":"3321-beta","reason":"User is done traveling today"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#hard_negative.1","chosen":"get_journey_status","arguments":{"journey_id":"J-55412"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#hard_negative.1","chosen":"get_journey_status","arguments":{"journey_id":"J-55412"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#hard_negative.1","chosen":"get_journey_status","arguments":{"journey_id":"J-55412"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"cancel_journey#hard_negative.2","chosen":"get_journey_status","arguments":{"journey_id":"992-delta"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"cancel_journey#hard_negative.2","chosen":"get_journey_status","arguments":{"journey_id":"992-delta"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"cancel_journey#hard_negative.2","chosen":"get_journey_status","arguments":{"journey_id":"992-delta"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#straightforward.1","chosen":"get_journey_status","arguments":{"journey_id":"jrn_99812a"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#straightforward.1","chosen":"get_journey_status","arguments":{"journey_id":"jrn_99812a"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#straightforward.1","chosen":"get_journey_status","arguments":{"journey_id":"jrn_99812a"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#straightforward.2","chosen":"get_journey_status","arguments":{"journey_id":"jrn_4432b"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#straightforward.2","chosen":"get_journey_status","arguments":{"journey_id":"jrn_4432b"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#straightforward.2","chosen":"get_journey_status","arguments":{"journey_id":"jrn_4432b"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#straightforward.3","chosen":"get_journey_status","arguments":{"journey_id":"jrn_77190x"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#straightforward.3","chosen":"get_journey_status","arguments":{"journey_id":"jrn_77190x"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#straightforward.3","chosen":"get_journey_status","arguments":{"journey_id":"jrn_77190x"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#straightforward.4","chosen":"get_journey_status","arguments":{"journey_id":"jrn_1102c"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#straightforward.4","chosen":"get_journey_status","arguments":{"journey_id":"jrn_1102c"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#straightforward.4","chosen":"get_journey_status","arguments":{"journey_id":"jrn_1102c"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#paraphrased.1","chosen":"get_journey_status","arguments":{"journey_id":"jrn_55431f"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#paraphrased.1","chosen":"get_journey_status","arguments":{"journey_id":"jrn_55431f"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#paraphrased.1","chosen":"get_journey_status","arguments":{"journey_id":"jrn_55431f"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#paraphrased.2","chosen":"get_journey_status","arguments":{"journey_id":"jrn_8834k"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#paraphrased.2","chosen":"get_journey_status","arguments":{"journey_id":"jrn_8834k"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#paraphrased.2","chosen":"get_journey_status","arguments":{"journey_id":"jrn_8834k"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#hard_negative.1","chosen":"cancel_journey","arguments":{"journey_id":"jrn_33219d"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#hard_negative.1","chosen":"cancel_journey","arguments":{"journey_id":"jrn_33219d"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#hard_negative.1","chosen":"cancel_journey","arguments":{"reason":"Terminated by user request","journey_id":"jrn_33219d"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"get_journey_status#hard_negative.2","chosen":"cancel_journey","arguments":{"journey_id":"jrn_6654e"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"get_journey_status#hard_negative.2","chosen":"cancel_journey","arguments":{"journey_id":"jrn_6654e"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"get_journey_status#hard_negative.2","chosen":"cancel_journey","arguments":{"journey_id":"jrn_6654e"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#straightforward.1","chosen":"list_dossiers","arguments":{"path":"documents"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#straightforward.1","chosen":"list_dossiers","arguments":{"path":"documents"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#straightforward.1","chosen":"list_dossiers","arguments":{"path":"documents"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#straightforward.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#straightforward.2","chosen":"list_dossiers","arguments":{"recursive":true,"path":"."},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#straightforward.2","chosen":"list_dossiers","arguments":{"path":".","recursive":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#straightforward.3","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#straightforward.3","chosen":"list_dossiers","arguments":{"recursive":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#straightforward.3","chosen":"list_dossiers","arguments":{"recursive":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#straightforward.4","chosen":"list_dossiers","arguments":{"path":"archive"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#straightforward.4","chosen":"list_dossiers","arguments":{"path":"archive"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#straightforward.4","chosen":"list_dossiers","arguments":{"path":"archive"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#paraphrased.1","chosen":"list_dossiers","arguments":{"path":"notes","recursive":true},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#paraphrased.1","chosen":"list_dossiers","arguments":{"path":"notes","recursive":true},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#paraphrased.1","chosen":"list_dossiers","arguments":{"path":"notes","recursive":true},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#paraphrased.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#paraphrased.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#paraphrased.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#hard_negative.1","chosen":"search_dossiers","arguments":{"query":"budget","category":"finance"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#hard_negative.1","chosen":"search_dossiers","arguments":{"query":"budget","category":"finance"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#hard_negative.1","chosen":"search_dossiers","arguments":{"query":"budget","category":"finance"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"list_dossiers#hard_negative.2","chosen":"search_dossiers","arguments":{"query":"quarterly review"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"list_dossiers#hard_negative.2","chosen":"search_dossiers","arguments":{"query":"quarterly review"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"list_dossiers#hard_negative.2","chosen":"search_dossiers","arguments":{"query":"quarterly review"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#straightforward.1","chosen":"read_dossier","arguments":{"path":"/home/user/cases/case_441.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#straightforward.1","chosen":"read_dossier","arguments":{"path":"/home/user/cases/case_441.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#straightforward.1","chosen":"read_dossier","arguments":{"path":"/home/user/cases/case_441.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#straightforward.2","chosen":"verify_dossier","arguments":{"path":"/var/data/dossiers/client_alpha.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#straightforward.2","chosen":"verify_dossier","arguments":{"path":"/var/data/dossiers/client_alpha.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#straightforward.2","chosen":"verify_dossier","arguments":{"path":"/var/data/dossiers/client_alpha.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#straightforward.3","chosen":"read_dossier","arguments":{"path":"/storage/records/project_delta.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#straightforward.3","chosen":"read_dossier","arguments":{"path":"/storage/records/project_delta.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#straightforward.3","chosen":"read_dossier","arguments":{"path":"/storage/records/project_delta.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#straightforward.4","chosen":"read_dossier","arguments":{"path":"/docs/investigations/target_zero.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#straightforward.4","chosen":"read_dossier","arguments":{"path":"/docs/investigations/target_zero.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#straightforward.4","chosen":"read_dossier","arguments":{"path":"/docs/investigations/target_zero.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#paraphrased.1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#paraphrased.2","chosen":"verify_dossier","arguments":{"path":"/shared/files/audit_2024.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#paraphrased.2","chosen":"verify_dossier","arguments":{"path":"/shared/files/audit_2024.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#paraphrased.2","chosen":"verify_dossier","arguments":{"path":"/shared/files/audit_2024.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#hard_negative.1","chosen":"read_dossier","arguments":{"path":"/secure/vault/suspect_88.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#hard_negative.1","chosen":"read_dossier","arguments":{"path":"/secure/vault/suspect_88.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#hard_negative.1","chosen":"read_dossier","arguments":{"path":"/secure/vault/suspect_88.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"read_dossier#hard_negative.2","chosen":"read_dossier","arguments":{"path":"/audits/quarterly_review.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"read_dossier#hard_negative.2","chosen":"read_dossier","arguments":{"path":"/audits/quarterly_review.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"read_dossier#hard_negative.2","chosen":"read_dossier","arguments":{"path":"/audits/quarterly_review.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#straightforward.1","chosen":"resolve_graph","arguments":{"dossier":"dossiers/alpha_release.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#straightforward.1","chosen":"resolve_graph","arguments":{"dossier":"dossiers/alpha_release.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#straightforward.1","chosen":"resolve_graph","arguments":{"dossier":"dossiers/alpha_release.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#straightforward.2","chosen":"resolve_graph","arguments":{"dossier":"records/q3_financials.yaml"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#straightforward.2","chosen":"resolve_graph","arguments":{"dossier":"records/q3_financials.yaml"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#straightforward.2","chosen":"resolve_graph","arguments":{"dossier":"records/q3_financials.yaml"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#straightforward.3","chosen":"resolve_graph","arguments":{"dossier":"migration_plan_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#straightforward.3","chosen":"resolve_graph","arguments":{"dossier":"migration_plan_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#straightforward.3","chosen":"resolve_graph","arguments":{"dossier":"migration_plan_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#straightforward.4","chosen":"resolve_graph","arguments":{"dossier":"data/customer_onboarding.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#straightforward.4","chosen":"resolve_graph","arguments":{"dossier":"data/customer_onboarding.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#straightforward.4","chosen":"resolve_graph","arguments":{"dossier":"data/customer_onboarding.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#paraphrased.1","chosen":"resolve_graph","arguments":{"dossier":"project_omega"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#paraphrased.1","chosen":"resolve_graph","arguments":{"dossier":"project_omega"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#paraphrased.1","chosen":"resolve_graph","arguments":{"dossier":"project_omega"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#paraphrased.2","chosen":"resolve_graph","arguments":{"dossier":"supply_chain_2024"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#paraphrased.2","chosen":"resolve_graph","arguments":{"dossier":"supply_chain_2024"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#paraphrased.2","chosen":"resolve_graph","arguments":{"dossier":"supply_chain_2024"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"audits/v4_release.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"audits/v4_release.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"audits/v4_release.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_graph#hard_negative.2","chosen":"resolve_graph","arguments":{"dossier":"security_patch_audit.yaml"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_graph#hard_negative.2","chosen":"resolve_graph","arguments":{"dossier":"security_patch_audit.yaml"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_graph#hard_negative.2","chosen":"resolve_graph","arguments":{"dossier":"security_patch_audit.yaml"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#straightforward.1","chosen":"search_dossiers","arguments":{"query":"Project Vanguard"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#straightforward.1","chosen":"search_dossiers","arguments":{"query":"Project Vanguard"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#straightforward.1","chosen":"search_dossiers","arguments":{"query":"Project Vanguard"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#straightforward.2","chosen":"search_dossiers","arguments":{"category":"financial","query":"budget audit"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#straightforward.2","chosen":"search_dossiers","arguments":{"category":"financial","query":"budget audit"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#straightforward.2","chosen":"search_dossiers","arguments":{"category":"financial","query":"budget audit"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#straightforward.3","chosen":"search_dossiers","arguments":{"query":"security protocols"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#straightforward.3","chosen":"search_dossiers","arguments":{"query":"security protocols"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#straightforward.3","chosen":"search_dossiers","arguments":{"query":"security protocols"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#straightforward.4","chosen":"search_dossiers","arguments":{"category":"HR","query":"personnel records"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#straightforward.4","chosen":"search_dossiers","arguments":{"category":"HR","query":"personnel records"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#straightforward.4","chosen":"search_dossiers","arguments":{"query":"personnel records","category":"hr"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#paraphrased.1","chosen":"search_dossiers","arguments":{"query":"Henderson merger"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#paraphrased.1","chosen":"search_dossiers","arguments":{"query":"Henderson merger"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#paraphrased.2","chosen":"search_dossiers","arguments":{"query":"safety incident","category":"security"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#paraphrased.2","chosen":"search_dossiers","arguments":{"category":"security","query":"safety incident files last quarter"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#paraphrased.2","chosen":"search_dossiers","arguments":{"query":"safety incident last quarter","category":"security"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#hard_negative.1","chosen":"search_dossiers","arguments":{"query":"*"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#hard_negative.1","chosen":"search_dossiers","arguments":{"query":"*"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#paraphrased.1","chosen":"search_dossiers","arguments":{"query":"Henderson merger"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#hard_negative.1","chosen":"search_dossiers","arguments":{"query":"*"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"search_dossiers#hard_negative.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"search_dossiers#hard_negative.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"search_dossiers#hard_negative.2","chosen":"list_dossiers","arguments":{},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#straightforward.1","chosen":"start_journey","arguments":{"graph_id":"g_prod_9921"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#straightforward.1","chosen":"start_journey","arguments":{"graph_id":"g_prod_9921"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#straightforward.1","chosen":"start_journey","arguments":{"graph_id":"g_prod_9921"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#straightforward.2","chosen":"start_journey","arguments":{"graph_id":"net_topology_v4"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#straightforward.2","chosen":"start_journey","arguments":{"graph_id":"net_topology_v4"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#straightforward.2","chosen":"start_journey","arguments":{"graph_id":"net_topology_v4"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#straightforward.3","chosen":"start_journey","arguments":{"graph_id":"node_sequence_77"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#straightforward.3","chosen":"start_journey","arguments":{"graph_id":"node_sequence_77"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#straightforward.3","chosen":"start_journey","arguments":{"graph_id":"node_sequence_77"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#straightforward.4","chosen":"start_journey","arguments":{"graph_id":"financial_audit_graph_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#straightforward.4","chosen":"start_journey","arguments":{"graph_id":"financial_audit_graph_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#straightforward.4","chosen":"start_journey","arguments":{"graph_id":"financial_audit_graph_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#paraphrased.1","chosen":"search_dossiers","arguments":{"query":"Acme Corp onboarding"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#paraphrased.1","chosen":"search_dossiers","arguments":{"query":"Acme Corp onboarding"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#paraphrased.1","chosen":"search_dossiers","arguments":{"query":"Acme Corp onboarding"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#paraphrased.2","chosen":"start_journey","arguments":{"graph_id":"enterprise_migration_final"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#paraphrased.2","chosen":"start_journey","arguments":{"graph_id":"enterprise_migration_final"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#hard_negative.1","chosen":"start_journey","arguments":{"graph_id":"onboarding_flow_v3"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#paraphrased.2","chosen":"start_journey","arguments":{"graph_id":"enterprise_migration_final"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#hard_negative.1","chosen":"start_journey","arguments":{"graph_id":"onboarding_flow_v3"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#hard_negative.1","chosen":"start_journey","arguments":{"graph_id":"onboarding_flow_v3"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"start_journey#hard_negative.2","chosen":"start_journey","arguments":{"graph_id":"pipeline_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"start_journey#hard_negative.2","chosen":"start_journey","arguments":{"graph_id":"pipeline_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"start_journey#hard_negative.2","chosen":"start_journey","arguments":{"graph_id":"pipeline_v2"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#straightforward.1","chosen":"step_complete","arguments":{"journey_id":"journey_884","outputs":{"score":95},"status":"completed"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#straightforward.1","chosen":"step_complete","arguments":{"journey_id":"journey_884","outputs":{"score":95},"status":"completed"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#straightforward.1","chosen":"step_complete","arguments":{"journey_id":"journey_884","outputs":{"score":95},"status":"completed"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#straightforward.2","chosen":"step_complete","arguments":{"status":"completed","journey_id":"j-100","outputs":{"final_review":"complete"}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#straightforward.2","chosen":"step_complete","arguments":{"status":"completed","journey_id":"j-100","outputs":{"review":"final review text"}},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#straightforward.3","chosen":"step_complete","arguments":{"status":"failed","journey_id":"402","outputs":{"error":"schema mismatch"}},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#straightforward.2","chosen":"step_complete","arguments":{"status":"completed","outputs":{"review":"final review text"},"journey_id":"j-100"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#straightforward.3","chosen":"step_complete","arguments":{"status":"failed","outputs":{"error":"schema mismatch"},"journey_id":"402"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#straightforward.3","chosen":"step_complete","arguments":{"outputs":{"error":"schema mismatch"},"journey_id":"402","status":"failed"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#straightforward.4","chosen":"step_complete","arguments":{"status":"completed","journey_id":"journey_909"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#straightforward.4","chosen":"step_complete","arguments":{"status":"completed","journey_id":"journey_909"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#straightforward.4","chosen":"step_complete","arguments":{"journey_id":"journey_909","status":"completed"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#paraphrased.1","chosen":"step_complete","arguments":{"status":"completed","journey_id":"772"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#paraphrased.1","chosen":"step_complete","arguments":{"status":"completed","journey_id":"772"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#paraphrased.1","chosen":"step_complete","arguments":{"status":"completed","outputs":{"status":"passed"},"journey_id":"772"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#paraphrased.2","chosen":"step_complete","arguments":{"status":"completed","journey_id":"proc_331"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#paraphrased.2","chosen":"step_complete","arguments":{"status":"completed","journey_id":"proc_331","outputs":{"payload":"final payload logged"}},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#paraphrased.2","chosen":"step_complete","arguments":{"journey_id":"proc_331","status":"completed"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#hard_negative.1","chosen":"start_journey","arguments":{"graph_id":"journey_773"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#hard_negative.1","chosen":"start_journey","arguments":{"graph_id":"journey_773"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#hard_negative.1","chosen":"start_journey","arguments":{"graph_id":"journey_773"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"step_complete#hard_negative.2","chosen":"start_journey","arguments":{"graph_id":"journey_441"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"step_complete#hard_negative.2","chosen":"start_journey","arguments":{"graph_id":"journey_441"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"step_complete#hard_negative.2","chosen":"start_journey","arguments":{"graph_id":"journey_441"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#straightforward.1","chosen":"verify_dossier","arguments":{"path":"/secure/records/dossier_402.enc"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#straightforward.1","chosen":"verify_dossier","arguments":{"path":"/secure/records/dossier_402.enc"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#straightforward.1","chosen":"verify_dossier","arguments":{"path":"/secure/records/dossier_402.enc"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#straightforward.2","chosen":"verify_dossier","arguments":{"path":"/var/data/incoming/target_dossier.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#straightforward.2","chosen":"verify_dossier","arguments":{"path":"/var/data/incoming/target_dossier.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#straightforward.2","chosen":"verify_dossier","arguments":{"path":"/var/data/incoming/target_dossier.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#straightforward.3","chosen":"verify_dossier","arguments":{"path":"/home/analyst/evidence/dossier_99.bin"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#straightforward.3","chosen":"verify_dossier","arguments":{"path":"/home/analyst/evidence/dossier_99.bin"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#straightforward.3","chosen":"verify_dossier","arguments":{"path":"/home/analyst/evidence/dossier_99.bin"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#straightforward.4","chosen":"verify_dossier","arguments":{"path":"/opt/audit/files/subject_alpha.dossier"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#straightforward.4","chosen":"verify_dossier","arguments":{"path":"/opt/audit/files/subject_alpha.dossier"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#straightforward.4","chosen":"verify_dossier","arguments":{"path":"/opt/audit/files/subject_alpha.dossier"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#paraphrased.1","chosen":"verify_dossier","arguments":{"path":"/mnt/storage/top_secret.enc"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#paraphrased.1","chosen":"verify_dossier","arguments":{"path":"/mnt/storage/top_secret.enc"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#paraphrased.1","chosen":"verify_dossier","arguments":{"path":"/mnt/storage/top_secret.enc"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#paraphrased.2","chosen":"verify_dossier","arguments":{"path":"/var/log/dossiers/batch_seven.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#paraphrased.2","chosen":"verify_dossier","arguments":{"path":"/var/log/dossiers/batch_seven.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#paraphrased.2","chosen":"verify_dossier","arguments":{"path":"/var/log/dossiers/batch_seven.dat"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"/graphs/network_v2.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"/graphs/network_v2.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"/graphs/network_v2.json"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_dossier#hard_negative.2","chosen":"verify_graph","arguments":{"dossier":"/data/relations/node_map.dot"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_dossier#hard_negative.2","chosen":"verify_graph","arguments":{"dossier":"/data/relations/node_map.dot"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_dossier#hard_negative.2","chosen":"verify_graph","arguments":{"dossier":"/data/relations/node_map.dot"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#straightforward.1","chosen":"verify_graph","arguments":{"dossier":"payment-service","graph_id":"graph-9982"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#straightforward.1","chosen":"verify_graph","arguments":{"graph_id":"graph-9982","dossier":"payment-service"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#straightforward.1","chosen":"verify_graph","arguments":{"dossier":"payment-service","graph_id":"graph-9982"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#straightforward.2","chosen":"verify_graph","arguments":{"dossier":"auth-module","graph_id":"net-topo-441"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#straightforward.2","chosen":"verify_graph","arguments":{"dossier":"auth-module","graph_id":"net-topo-441"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#straightforward.2","chosen":"verify_graph","arguments":{"graph_id":"net-topo-441","dossier":"auth-module"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#straightforward.3","chosen":"verify_graph","arguments":{"graph_id":"773a-b2c9"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#straightforward.3","chosen":"verify_graph","arguments":{"dossier":"microservices","graph_id":"773a-b2c9"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#straightforward.3","chosen":"verify_graph","arguments":{"graph_id":"773a-b2c9","dossier":"microservices"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#straightforward.4","chosen":"verify_graph","arguments":{"dossier":"core-api"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#straightforward.4","chosen":"verify_graph","arguments":{"dossier":"core-api"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#straightforward.4","chosen":"verify_graph","arguments":{"dossier":"alpha-v1"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#paraphrased.1","chosen":"verify_graph","arguments":{"dossier":"billing","graph_id":"339-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#paraphrased.1","chosen":"verify_graph","arguments":{"dossier":"339-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#paraphrased.1","chosen":"verify_graph","arguments":{"graph_id":"339-beta"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#paraphrased.2","chosen":"verify_graph","arguments":{"dossier":"database-cluster"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#paraphrased.2","chosen":"verify_graph","arguments":{"dossier":"database-cluster"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#paraphrased.2","chosen":"verify_graph","arguments":{"dossier":"database-cluster"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#hard_negative.1","chosen":"verify_graph","arguments":{"graph_id":"graph-9982","dossier":"payment-service"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#hard_negative.1","chosen":"verify_graph","arguments":{"graph_id":"graph-9982","dossier":"payment-service"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#hard_negative.1","chosen":"verify_graph","arguments":{"dossier":"payment-service","graph_id":"graph-9982"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"verify_graph#hard_negative.2","chosen":"verify_graph","arguments":{"graph_id":"net-topo-441"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"verify_graph#hard_negative.2","chosen":"verify_graph","arguments":{"graph_id":"net-topo-441"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"verify_graph#hard_negative.2","chosen":"verify_graph","arguments":{"graph_id":"net-topo-441"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#2","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}

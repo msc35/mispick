@@ -1,0 +1,262 @@
+version: 1
+tools:
+  analyze_chord:
+    fingerprint: 4996383ee4ad4090
+    queries:
+    - id: analyze_chord#straightforward.1
+      text: Can you analyze the chord Cmaj7 in the key of C major?
+      expected: analyze_chord
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: analyze_chord#straightforward.2
+      text: What are the intervals and extensions for F#m7b5?
+      expected: analyze_chord
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: analyze_chord#straightforward.3
+      text: Break down the chord G7 and tell me its root and quality.
+      expected: analyze_chord
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: analyze_chord#straightforward.4
+      text: Check if Bdim is diatonic in the key of A minor and give me its Roman
+        numeral.
+      expected: analyze_chord
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: analyze_chord#paraphrased.1
+      text: What's going on structurally with Ebmaj9 in Bb major?
+      expected: analyze_chord
+      kind: paraphrased
+      neighbour: resolve_chord
+    - id: analyze_chord#paraphrased.2
+      text: parse Dm9 quickly
+      expected: analyze_chord
+      kind: paraphrased
+      neighbour: resolve_chord
+    - id: analyze_chord#hard_negative.1
+      text: Can you figure out how to resolve the chord G7 in C major?
+      expected: resolve_chord
+      kind: hard_negative
+      neighbour: resolve_chord
+    - id: analyze_chord#hard_negative.2
+      text: I need to analyze where the chord Bb7 goes next in the key of Eb major.
+      expected: resolve_chord
+      kind: hard_negative
+      neighbour: resolve_chord
+  conduct_band:
+    fingerprint: 0e245ae432c457fc
+    queries:
+    - id: conduct_band#straightforward.1
+      text: Generate a four-piece jazz arrangement with a walking bassline and a swinging
+        drum beat that lasts for thirty seconds.
+      expected: conduct_band
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: conduct_band#straightforward.2
+      text: Create a fifteen-second backing track featuring a synth, guitar, bass,
+        and drums playing an upbeat funk groove.
+      expected: conduct_band
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: conduct_band#straightforward.3
+      text: Build a MIDI file for a quartet playing a slow blues shuffle at ninety
+        BPM for twenty seconds.
+      expected: conduct_band
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: conduct_band#straightforward.4
+      text: Write a twenty-five second indie rock piece for four instruments with
+        a driving tempo and clear lead sheet notation.
+      expected: conduct_band
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: conduct_band#paraphrased.1
+      text: throw together a quick 20s rock jam for the full group with heavy drums
+        and a fast tempo
+      expected: conduct_band
+      kind: paraphrased
+      neighbour: resolve_chord
+    - id: conduct_band#paraphrased.2
+      text: need some fast multi-track audio data for a quartet backing loop lasting
+        about ten seconds
+      expected: conduct_band
+      kind: paraphrased
+      neighbour: resolve_chord
+    - id: conduct_band#hard_negative.1
+      text: Figure out the notes for a jazz quartet progression that would fit a fast
+        thirty-second band arrangement.
+      expected: resolve_chord
+      kind: hard_negative
+      neighbour: resolve_chord
+    - id: conduct_band#hard_negative.2
+      text: Find the proper chord voicings for a four-instrument band playing an upbeat
+        groove.
+      expected: resolve_chord
+      kind: hard_negative
+      neighbour: resolve_chord
+  generate_voicing:
+    fingerprint: 4b5734cbf4b9a04d
+    queries:
+    - id: generate_voicing#straightforward.1
+      text: Generate a Bill Evans style voicing for F minor 7 in octave four with
+        a density of four.
+      expected: generate_voicing
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: generate_voicing#straightforward.2
+      text: Create a drop-2 voicing for C major 7 using octave three and a density
+        of three in the key of C major.
+      expected: generate_voicing
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: generate_voicing#straightforward.3
+      text: Give me a rootless chord voicing for D dominant 7 in octave four with
+        density four.
+      expected: generate_voicing
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: generate_voicing#straightforward.4
+      text: Make a shell voicing for Bb minor 7 in octave three with density two.
+      expected: generate_voicing
+      kind: straightforward
+      neighbour: resolve_chord
+    - id: generate_voicing#paraphrased.1
+      text: Need a drop 2 for Eb7 in octave four, keep it slick and sparse.
+      expected: generate_voicing
+      kind: paraphrased
+      neighbour: resolve_chord
+    - id: generate_voicing#paraphrased.2
+      text: Throw together some pad chords for G minor 7 in octave five real quick.
+      expected: generate_voicing
+      kind: paraphrased
+      neighbour: resolve_chord
+    - id: generate_voicing#hard_negative.1
+      text: Resolve the chord progression for D minor 7 to G dominant 7 in octave
+        four.
+      expected: resolve_chord
+      kind: hard_negative
+      neighbour: resolve_chord
+    - id: generate_voicing#hard_negative.2
+      text: Resolve the suspended chord for C major 7 in octave three with standard
+        density.
+      expected: resolve_chord
+      kind: hard_negative
+      neighbour: resolve_chord
+  reharmonize:
+    fingerprint: 9146d5a8faaa36f8
+    queries:
+    - id: reharmonize#straightforward.1
+      text: 'Can you apply a tritone substitution to this jazz progression: Cmaj7,
+        A7, Dm7, G7?'
+      expected: reharmonize
+      kind: straightforward
+      neighbour: analyze_chord
+    - id: reharmonize#straightforward.2
+      text: Run a backdoor reharmonization on Fmaj7, Bb7, Cmaj7 in the key of C major.
+      expected: reharmonize
+      kind: straightforward
+      neighbour: analyze_chord
+    - id: reharmonize#straightforward.3
+      text: Check which modal interchange options work for the progression Gmaj7,
+        Em7, Am7, D7 in G.
+      expected: reharmonize
+      kind: straightforward
+      neighbour: analyze_chord
+    - id: reharmonize#straightforward.4
+      text: Automatically generate all applicable jazz reharmonizations for Dm7, G7,
+        Cmaj7.
+      expected: reharmonize
+      kind: straightforward
+      neighbour: analyze_chord
+    - id: reharmonize#paraphrased.1
+      text: spice up my basic chord loop (Bbmaj7, Dm7, Ebmaj7, F7) with some advanced
+        jazz tricks
+      expected: reharmonize
+      kind: paraphrased
+      neighbour: analyze_chord
+    - id: reharmonize#paraphrased.2
+      text: give me a few cooler ways to play C, Am, Dm, G in the key of C using substitutions
+      expected: reharmonize
+      kind: paraphrased
+      neighbour: analyze_chord
+    - id: reharmonize#hard_negative.1
+      text: 'Can you break down the harmonic structure of this jazz progression: Cmaj7,
+        A7, Dm7, G7?'
+      expected: analyze_chord
+      kind: hard_negative
+      neighbour: analyze_chord
+    - id: reharmonize#hard_negative.2
+      text: Evaluate the functional harmony and voice leading of the chord sequence
+        Fmaj7, Bb7, Cmaj7 in C major.
+      expected: analyze_chord
+      kind: hard_negative
+      neighbour: analyze_chord
+  resolve_chord:
+    fingerprint: c80923bab1b8b72a
+    queries:
+    - id: resolve_chord#straightforward.1
+      text: What are the exact notes and frequencies for a Cmaj7sharp11 chord?
+      expected: resolve_chord
+      kind: straightforward
+      neighbour: conduct_band
+    - id: resolve_chord#straightforward.2
+      text: Can you give me the MIDI numbers and spelling for F minor ninth?
+      expected: resolve_chord
+      kind: straightforward
+      neighbour: conduct_band
+    - id: resolve_chord#straightforward.3
+      text: Show me the notes that make up a G dominant seven flat nine chord.
+      expected: resolve_chord
+      kind: straightforward
+      neighbour: conduct_band
+    - id: resolve_chord#straightforward.4
+      text: What scale should I use to solo over an E flat minor dominant chord?
+      expected: resolve_chord
+      kind: straightforward
+      neighbour: conduct_band
+    - id: resolve_chord#paraphrased.1
+      text: Break down F#m7b5 so I can see its pitches and Hz values.
+      expected: resolve_chord
+      kind: paraphrased
+      neighbour: conduct_band
+    - id: resolve_chord#paraphrased.2
+      text: Need note spellings and solo scales for Bb augmented major seven.
+      expected: resolve_chord
+      kind: paraphrased
+      neighbour: conduct_band
+    - id: resolve_chord#hard_negative.1
+      text: Give me the chord progression and rhythm for the big band arrangement
+        in D minor.
+      expected: conduct_band
+      kind: hard_negative
+      neighbour: conduct_band
+    - id: resolve_chord#hard_negative.2
+      text: Arrange the horns to play a syncopated backup line over B flat dominant
+        seven.
+      expected: conduct_band
+      kind: hard_negative
+      neighbour: conduct_band
+no_tool:
+- id: (none)#1
+  text: Can you explain the theoretical difference between modal interchange and secondary
+    dominants in jazz composition?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the proper fingering for a G-sharp minor major seventh chord on a
+    standard piano keyboard?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Could you write a short biography of Duke Ellington highlighting his influence
+    on big band swing music?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-20'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

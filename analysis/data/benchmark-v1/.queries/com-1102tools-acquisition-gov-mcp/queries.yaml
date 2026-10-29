@@ -1,0 +1,259 @@
+version: 1
+tools:
+  get_rfo_agency_deviation:
+    fingerprint: ec1eecc59e96476f
+    queries:
+    - id: get_rfo_agency_deviation#straightforward.1
+      text: Pull the official PDF text for source ID RFO-9942-X starting on page five
+        through the end.
+      expected: get_rfo_agency_deviation
+      kind: straightforward
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#straightforward.2
+      text: Fetch the page-numbered official PDF text for index ID SRC-8821 on page
+        10.
+      expected: get_rfo_agency_deviation
+      kind: straightforward
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#straightforward.3
+      text: Get the official PDF content for source reference alpha-773-beta from
+        page two to page fifteen.
+      expected: get_rfo_agency_deviation
+      kind: straightforward
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#straightforward.4
+      text: Retrieve the official PDF text indexed under source delta-339 covering
+        pages one through twelve.
+      expected: get_rfo_agency_deviation
+      kind: straightforward
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#paraphrased.1
+      text: Pull the text for RFO-551 from page four onward.
+      expected: get_rfo_agency_deviation
+      kind: paraphrased
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#paraphrased.2
+      text: Grab the official PDF pages 3 through 20 for source ID gamma-901.
+      expected: get_rfo_agency_deviation
+      kind: paraphrased
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#hard_negative.1
+      text: Get the official PDF text for part RFO-442 on page six.
+      expected: get_rfo_part
+      kind: hard_negative
+      neighbour: get_rfo_part
+    - id: get_rfo_agency_deviation#hard_negative.2
+      text: Pull the official PDF text for part ID SRC-771 covering pages two through
+        five.
+      expected: get_rfo_part
+      kind: hard_negative
+      neighbour: get_rfo_part
+  get_rfo_guidance:
+    fingerprint: 6c3b9ea46675b3f0
+    queries:
+    - id: get_rfo_guidance#straightforward.1
+      text: Fetch the Acquisition.gov RFO FAQ resource for small business subcontracting
+        plans.
+      expected: get_rfo_guidance
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#straightforward.2
+      text: Get the official RFO guidance document regarding emergency acquisitions
+        and disaster relief.
+      expected: get_rfo_guidance
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#straightforward.3
+      text: Pull up the Acquisition.gov RFO FAQ on commercial item determinations.
+      expected: get_rfo_guidance
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#straightforward.4
+      text: Display the allowlisted RFO guidance resource for simplified acquisition
+        procedures.
+      expected: get_rfo_guidance
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#paraphrased.1
+      text: Need the Acquisition.gov help page on RFO rules before my noon deadline.
+      expected: get_rfo_guidance
+      kind: paraphrased
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#paraphrased.2
+      text: Where is the standard Q and A file for RFO compliance stuff?
+      expected: get_rfo_guidance
+      kind: paraphrased
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#hard_negative.1
+      text: Fetch the Acquisition.gov RFO agency deviation document for the Department
+        of Defense.
+      expected: get_rfo_agency_deviation
+      kind: hard_negative
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_guidance#hard_negative.2
+      text: Get the official RFO agency deviation resource regarding civilian headcount
+        caps.
+      expected: get_rfo_agency_deviation
+      kind: hard_negative
+      neighbour: get_rfo_agency_deviation
+  get_rfo_part:
+    fingerprint: de4d045648829418
+    queries:
+    - id: get_rfo_part#straightforward.1
+      text: Pull up the deviation text for FAR part 52.
+      expected: get_rfo_part
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#straightforward.2
+      text: Show me part 15 deviations, starting at the beginning with pagination
+        disabled.
+      expected: get_rfo_part
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#straightforward.3
+      text: Get the model deviation details for FAR part 25, limited to 5000 characters.
+      expected: get_rfo_part
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#straightforward.4
+      text: Retrieve parsed deviation records for FAR part 12 under section 3.
+      expected: get_rfo_part
+      kind: straightforward
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#paraphrased.1
+      text: Need the text on rule changes for part 31, just grab whatever comes up
+        first.
+      expected: get_rfo_part
+      kind: paraphrased
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#paraphrased.2
+      text: Pull up the exceptions file for part 8 since page three won't load.
+      expected: get_rfo_part
+      kind: paraphrased
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#hard_negative.1
+      text: Pull up the deviation text for agency rule 52.
+      expected: get_rfo_agency_deviation
+      kind: hard_negative
+      neighbour: get_rfo_agency_deviation
+    - id: get_rfo_part#hard_negative.2
+      text: Show me agency deviations under part 15 starting from the current cursor.
+      expected: get_rfo_agency_deviation
+      kind: hard_negative
+      neighbour: get_rfo_agency_deviation
+  list_rfo_agency_deviations:
+    fingerprint: 32f79464a3c09538
+    queries:
+    - id: list_rfo_agency_deviations#straightforward.1
+      text: Can you list the official agency deviation links from the RFO index for
+        the Department of Transportation?
+      expected: list_rfo_agency_deviations
+      kind: straightforward
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#straightforward.2
+      text: Show me RFO index agency deviations restricted to part 52 with a maximum
+        limit of ten items.
+      expected: list_rfo_agency_deviations
+      kind: straightforward
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#straightforward.3
+      text: Fetch the agency deviation links discovered through the RFO index for
+        NASA.
+      expected: list_rfo_agency_deviations
+      kind: straightforward
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#straightforward.4
+      text: Please run list_rfo_agency_deviations for the Department of Defense looking
+        at part 15.
+      expected: list_rfo_agency_deviations
+      kind: straightforward
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#paraphrased.1
+      text: pull up the deviations agencies filed per the rfo index for part 30
+      expected: list_rfo_agency_deviations
+      kind: paraphrased
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#paraphrased.2
+      text: need all agency-level deviation urls from rfo for EPA capped at 25 results
+      expected: list_rfo_agency_deviations
+      kind: paraphrased
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#hard_negative.1
+      text: List the RFO index agency deviation sections contained in part 52.
+      expected: list_rfo_parts
+      kind: hard_negative
+      neighbour: list_rfo_parts
+    - id: list_rfo_agency_deviations#hard_negative.2
+      text: Show me the RFO agency deviation subsections for part 12.
+      expected: list_rfo_parts
+      kind: hard_negative
+      neighbour: list_rfo_parts
+  list_rfo_parts:
+    fingerprint: bf776b9b89584518
+    queries:
+    - id: list_rfo_parts#straightforward.1
+      text: Show me all the official model parts along with their agency deviation
+        counts.
+      expected: list_rfo_parts
+      kind: straightforward
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#straightforward.2
+      text: Can you list the RFO parts and how many agency deviations are posted for
+        each?
+      expected: list_rfo_parts
+      kind: straightforward
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#straightforward.3
+      text: Retrieve the RFO components and their associated deviation counts.
+      expected: list_rfo_parts
+      kind: straightforward
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#straightforward.4
+      text: I need a list of all model parts under RFO and the tally of agency deviations.
+      expected: list_rfo_parts
+      kind: straightforward
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#paraphrased.1
+      text: Pull up the component inventory for RFO with deviation tallies updated
+        since last Tuesday.
+      expected: list_rfo_parts
+      kind: paraphrased
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#paraphrased.2
+      text: Get the current parts and deviation stats for the aviation agency.
+      expected: list_rfo_parts
+      kind: paraphrased
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#hard_negative.1
+      text: List the agency deviations registered for the standard RFO catalog.
+      expected: list_rfo_agency_deviations
+      kind: hard_negative
+      neighbour: list_rfo_agency_deviations
+    - id: list_rfo_parts#hard_negative.2
+      text: Show me the breakdown of posted RFO deviations by agency.
+      expected: list_rfo_agency_deviations
+      kind: hard_negative
+      neighbour: list_rfo_agency_deviations
+no_tool:
+- id: (none)#1
+  text: Could you draft the formal justification memo for sole source procurement
+    under FAR 13.501 for our upcoming IT modernization contract?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What are the specific small business subcontracting goals mandated for Department
+    of Defense prime contractors in fiscal year 2025?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Can you summarize the key changes between the previous version of the Defense
+    Federal Acquisition Regulation Supplement and the current update?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-26'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

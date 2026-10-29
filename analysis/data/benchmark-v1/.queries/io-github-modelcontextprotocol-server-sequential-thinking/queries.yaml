@@ -1,0 +1,70 @@
+version: 1
+tools:
+  sequentialthinking:
+    fingerprint: 34fdb82392656ae8
+    queries:
+    - id: sequentialthinking#straightforward.1
+      text: Deconstruct the architectural migration plan for our legacy payment gateway
+        from monolith to microservices, ensuring we map out database splitting and
+        rollback contingencies step by step.
+      expected: sequentialthinking
+      kind: straightforward
+      neighbour: null
+    - id: sequentialthinking#straightforward.2
+      text: Design a comprehensive multi-region disaster recovery protocol for our
+        AWS infrastructure, breaking down the failover sequence, data replication
+        strategies, and verification checkpoints.
+      expected: sequentialthinking
+      kind: straightforward
+      neighbour: null
+    - id: sequentialthinking#straightforward.3
+      text: Analyze the systemic performance bottlenecks in our React Native application's
+        rendering pipeline, planning out diagnostic tests, potential refactoring phases,
+        and hypothesis validation.
+      expected: sequentialthinking
+      kind: straightforward
+      neighbour: null
+    - id: sequentialthinking#straightforward.4
+      text: Formulate a step-by-step rollout strategy for our zero-trust security
+        policy across three global branch offices, factoring in legacy device compatibility
+        and phased user group onboarding.
+      expected: sequentialthinking
+      kind: straightforward
+      neighbour: null
+    - id: sequentialthinking#paraphrased.1
+      text: Figure out why user drop-offs spiked by fourteen percent after last Tuesday's
+        checkout redesign, mapping out all user journey touchpoints to find where
+        people are getting stuck.
+      expected: sequentialthinking
+      kind: paraphrased
+      neighbour: null
+    - id: sequentialthinking#paraphrased.2
+      text: Figure out the best way to untangle our messy codebase so we can safely
+        extract the billing module without breaking user sessions or corrupting transaction
+        logs.
+      expected: sequentialthinking
+      kind: paraphrased
+      neighbour: null
+no_tool:
+- id: (none)#1
+  text: Can you summarize the main arguments from my local research notes file located
+    at /Users/alex/Documents/thesis_draft.txt?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What are the current weather conditions and hourly precipitation forecasts
+    for downtown Seattle today?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: 'Please translate the following customer support email from Spanish to English:
+    Estimado equipo, necesito ayuda con mi factura.'
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-29'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

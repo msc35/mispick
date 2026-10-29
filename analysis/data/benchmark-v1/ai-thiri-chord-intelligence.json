@@ -1,0 +1,2718 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-20",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "ai-thiri-chord-intelligence",
+      "name": "thiri",
+      "version": "0.3.0",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "analyze_chord",
+      "server": null,
+      "title": null,
+      "description": "Parse a chord symbol into its root, quality, intervals, extensions, and harmonic function. When a key is provided, returns the Roman numeral, scale degree, and whether the chord is diatonic.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "chord": {
+            "type": "string",
+            "description": "Chord symbol (e.g. 'Dm7', 'Cmaj7/E', 'G7#11')"
+          },
+          "key": {
+            "description": "Key center for functional analysis (e.g. 'C', 'Bb')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "chord"
+        ]
+      },
+      "annotations": {
+        "title": "Analyze Chord",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "conduct_band",
+      "server": null,
+      "title": null,
+      "description": "Arrange a 4-piece band from a natural-language prompt. Returns conductor tempo/groove, 4 lanes of note events, lead sheet, and base64 MIDI. Browser/client synthesizes audio via Csound; use thiri-conductor-mcp locally to render WAV.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Musical direction (e.g. '12-second neo-soul band in Eb, Rhodes + analog bass')"
+          },
+          "durationSec": {
+            "description": "Optional target duration override",
+            "type": "number"
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "annotations": {
+        "title": "Conduct Band",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "generate_voicing",
+      "server": null,
+      "title": null,
+      "description": "Generate instrument-ready voicings for a chord in a specified style. Pass previousNotes (or a previousVoicing object) from an earlier result to get a voiceLeadingScore for the transition. Styles: rootless, bill_evans, shell, triad, pad, guide-tones, guide-tone-1, guide-tone-2, both-guide-tones, drop-2, drop-3.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "chord": {
+            "type": "string",
+            "description": "Chord symbol (e.g. 'Dm7')"
+          },
+          "style": {
+            "description": "Voicing style (default: 'pad'). bill_evans is an alias of rootless.",
+            "type": "string",
+            "enum": [
+              "rootless",
+              "bill_evans",
+              "shell",
+              "triad",
+              "pad",
+              "guide-tones",
+              "guide-tone-1",
+              "guide-tone-2",
+              "both-guide-tones",
+              "drop-2",
+              "drop-3"
+            ]
+          },
+          "octave": {
+            "description": "Base octave (default: 3)",
+            "type": "number"
+          },
+          "density": {
+            "description": "Target voicing density / note count hint",
+            "type": "number"
+          },
+          "keyContext": {
+            "description": "Key context for diatonic color hooks (e.g. 'C major')",
+            "type": "string"
+          },
+          "colorPreferences": {
+            "description": "Explicit color-tone overrides",
+            "type": "object",
+            "properties": {
+              "fifth": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "b5",
+                  "#5",
+                  "#11",
+                  "b13",
+                  "omit"
+                ]
+              },
+              "ninth": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "b9",
+                  "#9",
+                  "omit"
+                ]
+              },
+              "eleventh": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "#11",
+                  "omit"
+                ]
+              },
+              "thirteenth": {
+                "type": "string",
+                "enum": [
+                  "natural",
+                  "b13",
+                  "omit"
+                ]
+              }
+            }
+          },
+          "previousVoicing": {
+            "description": "Prior generate_voicing JSON result for strict guide-tone line tracking"
+          },
+          "previousNotes": {
+            "description": "Previous voicing notes for voice leading (e.g. ['E3', 'G3', 'Bb3', 'D4'])",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "chord"
+        ]
+      },
+      "annotations": {
+        "title": "Generate Voicing",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "reharmonize",
+      "server": null,
+      "title": null,
+      "description": "Reharmonize a chord progression using jazz techniques. Returns one alternative per applicable technique, each with the new progression, the changes, and a plain-English explanation. With technique 'auto' (default) it returns every technique that applies. Techniques: tritone_sub, ii_v_insertion, modal_interchange, diminished_passing, secondary_dominant, chain_of_dominants, coltrane_changes, backdoor. (modal_interchange and backdoor require a key.)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "progression": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Chord symbols, one per bar (e.g. ['Cmaj7', 'Dm7', 'G7', 'Cmaj7'])"
+          },
+          "key": {
+            "description": "Key center (e.g. 'C') \u2014 enables modal_interchange and backdoor",
+            "type": "string"
+          },
+          "technique": {
+            "description": "Reharmonization technique (default: 'auto' = all applicable)",
+            "type": "string",
+            "enum": [
+              "auto",
+              "tritone_sub",
+              "ii_v_insertion",
+              "modal_interchange",
+              "diminished_passing",
+              "secondary_dominant",
+              "chain_of_dominants",
+              "coltrane_changes",
+              "backdoor"
+            ]
+          }
+        },
+        "required": [
+          "progression"
+        ]
+      },
+      "annotations": {
+        "title": "Reharmonize Progression",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "resolve_chord",
+      "server": null,
+      "title": null,
+      "description": "Resolve a chord symbol to spelled note names, frequencies in Hz, MIDI numbers, and recommended improvisation scales.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "chord": {
+            "type": "string",
+            "description": "Chord symbol (e.g. 'Cm7', 'F#dim7')"
+          }
+        },
+        "required": [
+          "chord"
+        ]
+      },
+      "annotations": {
+        "title": "Resolve Chord",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "score": 92,
+  "summary": {
+    "accuracy": {
+      "hits": 114,
+      "total": 129,
+      "value": 0.8837,
+      "ci95": [
+        0.817,
+        0.9283
+      ]
+    },
+    "stability": {
+      "hits": 43,
+      "total": 43,
+      "value": 1.0,
+      "ci95": [
+        0.918,
+        1.0
+      ]
+    },
+    "argumentValidity": {
+      "hits": 123,
+      "total": 123,
+      "value": 1.0,
+      "ci95": [
+        0.9697,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 3,
+      "total": 9,
+      "value": 0.3333,
+      "ci95": [
+        0.1206,
+        0.6458
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 129,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0289
+      ]
+    },
+    "trials": 129,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 1054
+  },
+  "confusionMatrix": {
+    "rows": [
+      "analyze_chord",
+      "conduct_band",
+      "generate_voicing",
+      "reharmonize",
+      "resolve_chord",
+      "(none)"
+    ],
+    "columns": [
+      "analyze_chord",
+      "conduct_band",
+      "generate_voicing",
+      "reharmonize",
+      "resolve_chord",
+      "(none)"
+    ],
+    "counts": {
+      "analyze_chord": {
+        "analyze_chord": 24
+      },
+      "conduct_band": {
+        "conduct_band": 24
+      },
+      "generate_voicing": {
+        "generate_voicing": 18
+      },
+      "reharmonize": {
+        "reharmonize": 18
+      },
+      "resolve_chord": {
+        "resolve_chord": 24,
+        "analyze_chord": 3,
+        "conduct_band": 6,
+        "generate_voicing": 3
+      },
+      "(none)": {
+        "(none)": 6,
+        "resolve_chord": 3
+      }
+    }
+  },
+  "perTool": {
+    "analyze_chord": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 27,
+        "value": 0.8889,
+        "ci95": [
+          0.7194,
+          0.9615
+        ]
+      },
+      "f1": 0.9412
+    },
+    "conduct_band": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "f1": 0.8889
+    },
+    "generate_voicing": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.9231
+    },
+    "reharmonize": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "resolve_chord": {
+      "recall": {
+        "hits": 24,
+        "total": 36,
+        "value": 0.6667,
+        "ci95": [
+          0.5033,
+          0.7979
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 27,
+        "value": 0.8889,
+        "ci95": [
+          0.7194,
+          0.9615
+        ]
+      },
+      "f1": 0.7619
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "resolve_chord",
+      "chosen": "conduct_band",
+      "count": 6,
+      "share": 0.1667
+    },
+    {
+      "expected": "(none)",
+      "chosen": "resolve_chord",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "resolve_chord",
+      "chosen": "analyze_chord",
+      "count": 3,
+      "share": 0.0833
+    },
+    {
+      "expected": "resolve_chord",
+      "chosen": "generate_voicing",
+      "count": 3,
+      "share": 0.0833
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "resolve_chord",
+      "chosen": "conduct_band",
+      "count": 6
+    },
+    {
+      "expected": "resolve_chord",
+      "chosen": "analyze_chord",
+      "count": 3
+    },
+    {
+      "expected": "resolve_chord",
+      "chosen": "generate_voicing",
+      "count": 3
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 5,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [],
+  "queries": [
+    {
+      "id": "analyze_chord#straightforward.1",
+      "text": "Can you analyze the chord Cmaj7 in the key of C major?",
+      "expected": "analyze_chord",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#straightforward.2",
+      "text": "What are the intervals and extensions for F#m7b5?",
+      "expected": "analyze_chord",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#straightforward.3",
+      "text": "Break down the chord G7 and tell me its root and quality.",
+      "expected": "analyze_chord",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#straightforward.4",
+      "text": "Check if Bdim is diatonic in the key of A minor and give me its Roman numeral.",
+      "expected": "analyze_chord",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#paraphrased.1",
+      "text": "What's going on structurally with Ebmaj9 in Bb major?",
+      "expected": "analyze_chord",
+      "kind": "paraphrased",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#paraphrased.2",
+      "text": "parse Dm9 quickly",
+      "expected": "analyze_chord",
+      "kind": "paraphrased",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#hard_negative.1",
+      "text": "Can you figure out how to resolve the chord G7 in C major?",
+      "expected": "resolve_chord",
+      "kind": "hard_negative",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "analyze_chord#hard_negative.2",
+      "text": "I need to analyze where the chord Bb7 goes next in the key of Eb major.",
+      "expected": "resolve_chord",
+      "kind": "hard_negative",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#straightforward.1",
+      "text": "Generate a four-piece jazz arrangement with a walking bassline and a swinging drum beat that lasts for thirty seconds.",
+      "expected": "conduct_band",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#straightforward.2",
+      "text": "Create a fifteen-second backing track featuring a synth, guitar, bass, and drums playing an upbeat funk groove.",
+      "expected": "conduct_band",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#straightforward.3",
+      "text": "Build a MIDI file for a quartet playing a slow blues shuffle at ninety BPM for twenty seconds.",
+      "expected": "conduct_band",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#straightforward.4",
+      "text": "Write a twenty-five second indie rock piece for four instruments with a driving tempo and clear lead sheet notation.",
+      "expected": "conduct_band",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#paraphrased.1",
+      "text": "throw together a quick 20s rock jam for the full group with heavy drums and a fast tempo",
+      "expected": "conduct_band",
+      "kind": "paraphrased",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#paraphrased.2",
+      "text": "need some fast multi-track audio data for a quartet backing loop lasting about ten seconds",
+      "expected": "conduct_band",
+      "kind": "paraphrased",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#hard_negative.1",
+      "text": "Figure out the notes for a jazz quartet progression that would fit a fast thirty-second band arrangement.",
+      "expected": "resolve_chord",
+      "kind": "hard_negative",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "conduct_band#hard_negative.2",
+      "text": "Find the proper chord voicings for a four-instrument band playing an upbeat groove.",
+      "expected": "resolve_chord",
+      "kind": "hard_negative",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#straightforward.1",
+      "text": "Generate a Bill Evans style voicing for F minor 7 in octave four with a density of four.",
+      "expected": "generate_voicing",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#straightforward.2",
+      "text": "Create a drop-2 voicing for C major 7 using octave three and a density of three in the key of C major.",
+      "expected": "generate_voicing",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#straightforward.3",
+      "text": "Give me a rootless chord voicing for D dominant 7 in octave four with density four.",
+      "expected": "generate_voicing",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#straightforward.4",
+      "text": "Make a shell voicing for Bb minor 7 in octave three with density two.",
+      "expected": "generate_voicing",
+      "kind": "straightforward",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#paraphrased.1",
+      "text": "Need a drop 2 for Eb7 in octave four, keep it slick and sparse.",
+      "expected": "generate_voicing",
+      "kind": "paraphrased",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#paraphrased.2",
+      "text": "Throw together some pad chords for G minor 7 in octave five real quick.",
+      "expected": "generate_voicing",
+      "kind": "paraphrased",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#hard_negative.1",
+      "text": "Resolve the chord progression for D minor 7 to G dominant 7 in octave four.",
+      "expected": "resolve_chord",
+      "kind": "hard_negative",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "generate_voicing#hard_negative.2",
+      "text": "Resolve the suspended chord for C major 7 in octave three with standard density.",
+      "expected": "resolve_chord",
+      "kind": "hard_negative",
+      "neighbour": "resolve_chord"
+    },
+    {
+      "id": "reharmonize#straightforward.1",
+      "text": "Can you apply a tritone substitution to this jazz progression: Cmaj7, A7, Dm7, G7?",
+      "expected": "reharmonize",
+      "kind": "straightforward",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#straightforward.2",
+      "text": "Run a backdoor reharmonization on Fmaj7, Bb7, Cmaj7 in the key of C major.",
+      "expected": "reharmonize",
+      "kind": "straightforward",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#straightforward.3",
+      "text": "Check which modal interchange options work for the progression Gmaj7, Em7, Am7, D7 in G.",
+      "expected": "reharmonize",
+      "kind": "straightforward",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#straightforward.4",
+      "text": "Automatically generate all applicable jazz reharmonizations for Dm7, G7, Cmaj7.",
+      "expected": "reharmonize",
+      "kind": "straightforward",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#paraphrased.1",
+      "text": "spice up my basic chord loop (Bbmaj7, Dm7, Ebmaj7, F7) with some advanced jazz tricks",
+      "expected": "reharmonize",
+      "kind": "paraphrased",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#paraphrased.2",
+      "text": "give me a few cooler ways to play C, Am, Dm, G in the key of C using substitutions",
+      "expected": "reharmonize",
+      "kind": "paraphrased",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#hard_negative.1",
+      "text": "Can you break down the harmonic structure of this jazz progression: Cmaj7, A7, Dm7, G7?",
+      "expected": "analyze_chord",
+      "kind": "hard_negative",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "reharmonize#hard_negative.2",
+      "text": "Evaluate the functional harmony and voice leading of the chord sequence Fmaj7, Bb7, Cmaj7 in C major.",
+      "expected": "analyze_chord",
+      "kind": "hard_negative",
+      "neighbour": "analyze_chord"
+    },
+    {
+      "id": "resolve_chord#straightforward.1",
+      "text": "What are the exact notes and frequencies for a Cmaj7sharp11 chord?",
+      "expected": "resolve_chord",
+      "kind": "straightforward",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#straightforward.2",
+      "text": "Can you give me the MIDI numbers and spelling for F minor ninth?",
+      "expected": "resolve_chord",
+      "kind": "straightforward",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#straightforward.3",
+      "text": "Show me the notes that make up a G dominant seven flat nine chord.",
+      "expected": "resolve_chord",
+      "kind": "straightforward",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#straightforward.4",
+      "text": "What scale should I use to solo over an E flat minor dominant chord?",
+      "expected": "resolve_chord",
+      "kind": "straightforward",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#paraphrased.1",
+      "text": "Break down F#m7b5 so I can see its pitches and Hz values.",
+      "expected": "resolve_chord",
+      "kind": "paraphrased",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#paraphrased.2",
+      "text": "Need note spellings and solo scales for Bb augmented major seven.",
+      "expected": "resolve_chord",
+      "kind": "paraphrased",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#hard_negative.1",
+      "text": "Give me the chord progression and rhythm for the big band arrangement in D minor.",
+      "expected": "conduct_band",
+      "kind": "hard_negative",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "resolve_chord#hard_negative.2",
+      "text": "Arrange the horns to play a syncopated backup line over B flat dominant seven.",
+      "expected": "conduct_band",
+      "kind": "hard_negative",
+      "neighbour": "conduct_band"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you explain the theoretical difference between modal interchange and secondary dominants in jazz composition?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What is the proper fingering for a G-sharp minor major seventh chord on a standard piano keyboard?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Could you write a short biography of Duke Ellington highlighting his influence on big band swing music?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "analyze_chord#straightforward.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Cmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Cmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Cmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "F#m7b5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "F#m7b5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "F#m7b5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.3",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "G7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.3",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "G7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.3",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "G7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.4",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "Am",
+        "chord": "Bdim"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.4",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Bdim",
+        "key": "Am"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#straightforward.4",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Bdim",
+        "key": "Am"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#paraphrased.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Ebmaj9",
+        "key": "Bb"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#paraphrased.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Ebmaj9",
+        "key": "Bb"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#paraphrased.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Dm9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#paraphrased.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "Bb",
+        "chord": "Ebmaj9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#paraphrased.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Dm9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#hard_negative.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "analyze_chord#paraphrased.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Dm9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "analyze_chord#hard_negative.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "analyze_chord#hard_negative.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "analyze_chord#hard_negative.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "Eb",
+        "chord": "Bb7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "analyze_chord#hard_negative.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Bb7",
+        "key": "Eb"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "analyze_chord#hard_negative.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "Eb",
+        "chord": "Bb7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "conduct_band#straightforward.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 30,
+        "prompt": "A four-piece jazz arrangement with a walking bassline and a swinging drum beat that lasts for thirty seconds"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "four-piece jazz arrangement with a walking bassline and a swinging drum beat",
+        "durationSec": 30
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 30,
+        "prompt": "Four-piece jazz arrangement with a walking bassline and a swinging drum beat"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "upbeat funk groove featuring synth, guitar, bass, and drums",
+        "durationSec": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 15,
+        "prompt": "15-second upbeat funk groove featuring a synth, guitar, bass, and drums"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "15-second upbeat funk groove featuring a synth, guitar, bass, and drums",
+        "durationSec": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.3",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "slow blues shuffle at 90 BPM for 20 seconds, 4-piece band",
+        "durationSec": 20
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.3",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 20,
+        "prompt": "slow blues shuffle at 90 BPM for 20 seconds, quartet arrangement"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.3",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "Slow blues shuffle at 90 BPM with a quartet of piano, bass, drums, and guitar",
+        "durationSec": 20
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.4",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 25,
+        "prompt": "25-second indie rock piece for 4 instruments with a driving tempo and clear lead sheet notation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.4",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 25,
+        "prompt": "25-second indie rock piece for four instruments with a driving tempo"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#straightforward.4",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "25-second indie rock piece for four instruments with a driving tempo",
+        "durationSec": 25
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#paraphrased.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 20,
+        "prompt": "fast tempo rock jam with heavy drums and full band"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#paraphrased.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "20-second fast-tempo heavy rock jam for full band with driving drums and distorted guitar",
+        "durationSec": 20
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#paraphrased.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 10,
+        "prompt": "fast jazz quartet backing loop"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#paraphrased.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 10,
+        "prompt": "fast quartet backing loop"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#paraphrased.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 20,
+        "prompt": "fast tempo rock jam with heavy drums and full band"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#paraphrased.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 10,
+        "prompt": "fast quartet backing loop with drums, bass, keys and guitar"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "conduct_band#hard_negative.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "fast thirty-second jazz quartet band arrangement"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "conduct_band#hard_negative.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "durationSec": 30,
+        "prompt": "fast jazz quartet band arrangement"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "conduct_band#hard_negative.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "fast jazz quartet band arrangement",
+        "durationSec": 30
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "conduct_band#hard_negative.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "An upbeat groove band playing chord voicings and rhythm"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "conduct_band#hard_negative.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "upbeat groove four-instrument band"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "conduct_band#hard_negative.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "upbeat groove four-instrument band"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.1",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "style": "bill_evans",
+        "octave": 4,
+        "density": 4,
+        "chord": "Fm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.1",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "density": 4,
+        "chord": "Fm7",
+        "octave": 4,
+        "style": "bill_evans"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.1",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "chord": "Fm7",
+        "density": 4,
+        "octave": 4,
+        "style": "bill_evans"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "style": "drop-2",
+        "octave": 3,
+        "keyContext": "C major",
+        "chord": "Cmaj7",
+        "density": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "density": 3,
+        "chord": "Cmaj7",
+        "keyContext": "C major",
+        "octave": 3,
+        "style": "drop-2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "chord": "Cmaj7",
+        "style": "drop-2",
+        "keyContext": "C major",
+        "octave": 3,
+        "density": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.3",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "density": 4,
+        "octave": 4,
+        "style": "rootless",
+        "chord": "D7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.3",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "style": "rootless",
+        "chord": "D7",
+        "octave": 4,
+        "density": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.4",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "chord": "Bbm7",
+        "density": 2,
+        "octave": 3,
+        "style": "shell"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.3",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "octave": 4,
+        "style": "rootless",
+        "density": 4,
+        "chord": "D7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.4",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "octave": 3,
+        "density": 2,
+        "style": "shell",
+        "chord": "Bbm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#straightforward.4",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "style": "shell",
+        "density": 2,
+        "chord": "Bbm7",
+        "octave": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#paraphrased.1",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "octave": 4,
+        "style": "drop-2",
+        "chord": "Eb7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#paraphrased.1",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "octave": 4,
+        "chord": "Eb7",
+        "style": "drop-2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#paraphrased.1",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "octave": 4,
+        "style": "drop-2",
+        "chord": "Eb7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#paraphrased.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "style": "pad",
+        "octave": 5,
+        "chord": "Gm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#paraphrased.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "chord": "Gm7",
+        "octave": 5,
+        "style": "pad"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#paraphrased.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "chord": "Gm7",
+        "octave": 5,
+        "style": "pad"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "generate_voicing"
+    },
+    {
+      "query_id": "generate_voicing#hard_negative.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Dm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "generate_voicing#hard_negative.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Dm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "generate_voicing#hard_negative.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Dm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "generate_voicing#hard_negative.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "style": "pad",
+        "octave": 3,
+        "chord": "Cmaj7sus4"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "generate_voicing#hard_negative.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "keyContext": "C major",
+        "style": "pad",
+        "density": 3,
+        "chord": "Cmaj7sus4",
+        "octave": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "generate_voicing#hard_negative.2",
+      "chosen": "generate_voicing",
+      "arguments": {
+        "octave": 3,
+        "style": "pad",
+        "chord": "Cmaj7sus4"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "reharmonize#straightforward.1",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Cmaj7",
+          "A7",
+          "Dm7",
+          "G7"
+        ],
+        "technique": "tritone_sub"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.1",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "tritone_sub",
+        "progression": [
+          "Cmaj7",
+          "A7",
+          "Dm7",
+          "G7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.1",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "tritone_sub",
+        "progression": [
+          "Cmaj7",
+          "A7",
+          "Dm7",
+          "G7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.2",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Fmaj7",
+          "Bb7",
+          "Cmaj7"
+        ],
+        "technique": "backdoor",
+        "key": "C"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.2",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Fmaj7",
+          "Bb7",
+          "Cmaj7"
+        ],
+        "technique": "backdoor",
+        "key": "C"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.3",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "modal_interchange",
+        "progression": [
+          "Gmaj7",
+          "Em7",
+          "Am7",
+          "D7"
+        ],
+        "key": "G"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.2",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Fmaj7",
+          "Bb7",
+          "Cmaj7"
+        ],
+        "key": "C",
+        "technique": "backdoor"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.3",
+      "chosen": "reharmonize",
+      "arguments": {
+        "key": "G",
+        "progression": [
+          "Gmaj7",
+          "Em7",
+          "Am7",
+          "D7"
+        ],
+        "technique": "modal_interchange"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.3",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "modal_interchange",
+        "key": "G",
+        "progression": [
+          "Gmaj7",
+          "Em7",
+          "Am7",
+          "D7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.4",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Dm7",
+          "G7",
+          "Cmaj7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.4",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Dm7",
+          "G7",
+          "Cmaj7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#paraphrased.1",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "auto",
+        "progression": [
+          "Bbmaj7",
+          "Dm7",
+          "Ebmaj7",
+          "F7"
+        ],
+        "key": "Bb"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#straightforward.4",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Dm7",
+          "G7",
+          "Cmaj7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#paraphrased.1",
+      "chosen": "reharmonize",
+      "arguments": {
+        "key": "Bb",
+        "progression": [
+          "Bbmaj7",
+          "Dm7",
+          "Ebmaj7",
+          "F7"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#paraphrased.1",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "Bbmaj7",
+          "Dm7",
+          "Ebmaj7",
+          "F7"
+        ],
+        "key": "Bb"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#paraphrased.2",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "auto",
+        "key": "C",
+        "progression": [
+          "C",
+          "Am",
+          "Dm",
+          "G"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#paraphrased.2",
+      "chosen": "reharmonize",
+      "arguments": {
+        "technique": "auto",
+        "progression": [
+          "C",
+          "Am",
+          "Dm",
+          "G"
+        ],
+        "key": "C"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#paraphrased.2",
+      "chosen": "reharmonize",
+      "arguments": {
+        "progression": [
+          "C",
+          "Am",
+          "Dm",
+          "G"
+        ],
+        "key": "C"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "reharmonize"
+    },
+    {
+      "query_id": "reharmonize#hard_negative.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Cmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "reharmonize#hard_negative.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Cmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "reharmonize#hard_negative.1",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Cmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "reharmonize#hard_negative.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Fmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "reharmonize#hard_negative.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "key": "C",
+        "chord": "Fmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "reharmonize#hard_negative.2",
+      "chosen": "analyze_chord",
+      "arguments": {
+        "chord": "Fmaj7",
+        "key": "C"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Cmaj7#11"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Cmaj7#11"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Cmaj7#11"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Fm9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Fm9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Fm9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.3",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G7b9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.3",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G7b9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.4",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Ebm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.4",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Ebm7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.3",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G7b9"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#paraphrased.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "F#m7b5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#straightforward.4",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Ebm77"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#paraphrased.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "F#m7b5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#paraphrased.1",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "F#m7b5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#paraphrased.2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Bbaug(maj7)"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#paraphrased.2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Bbaugmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#paraphrased.2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "Bbaugmaj7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "resolve_chord"
+    },
+    {
+      "query_id": "resolve_chord#hard_negative.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "Big band arrangement in D minor with horns, piano, bass, and drums"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "resolve_chord#hard_negative.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "big band arrangement in D minor"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "resolve_chord#hard_negative.1",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "Big band arrangement in D minor with horns and rhythm section"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "resolve_chord#hard_negative.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "syncopated horn backup line over Bb7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "resolve_chord#hard_negative.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "12-second horn section playing a syncopated backup line over Bb7 in Bb"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "resolve_chord#hard_negative.2",
+      "chosen": "conduct_band",
+      "arguments": {
+        "prompt": "syncopated horn backup line over Bb7"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "conduct_band"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G#m(maj7)"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G#m(maj7)"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "resolve_chord",
+      "arguments": {
+        "chord": "G#m(maj7)"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "ai-thiri-chord-intelligence.json",
+    "slug": "ai-thiri-chord-intelligence",
+    "registry_name": "ai.thiri/chord-intelligence",
+    "title": "THIRI Chord Intelligence",
+    "repository": "https://github.com/BluesPrince/thiri-mcp"
+  }
+}

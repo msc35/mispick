@@ -1,0 +1,472 @@
+version: 1
+tools:
+  accept_all_changes:
+    fingerprint: b17295139b52f11e
+    queries:
+    - id: accept_all_changes#straightforward.1
+      text: Please process contract.docx by accepting every tracked change and wiping
+        out all comments, then save the final result to final_contract.docx.
+      expected: accept_all_changes
+      kind: straightforward
+      neighbour: finalize_document
+    - id: accept_all_changes#straightforward.2
+      text: Take proposal.docx, accept all of the revisions inside it, strip out all
+        marginal comments, and write the clean output back to the same file.
+      expected: accept_all_changes
+      kind: straightforward
+      neighbour: finalize_document
+    - id: accept_all_changes#straightforward.3
+      text: I need you to clear out all redlines and comment balloons from report.docx
+        so we can export a clean version called clean_report.docx.
+      expected: accept_all_changes
+      kind: straightforward
+      neighbour: finalize_document
+    - id: accept_all_changes#straightforward.4
+      text: Run the tool on budget.docx to accept every single tracked edit and delete
+        all reviewer notes, saving it as approved_budget.docx.
+      expected: accept_all_changes
+      kind: straightforward
+      neighbour: finalize_document
+    - id: accept_all_changes#paraphrased.1
+      text: We are totally done editing draft.docx, so just nuke all the markup and
+        comments in one go.
+      expected: accept_all_changes
+      kind: paraphrased
+      neighbour: finalize_document
+    - id: accept_all_changes#paraphrased.2
+      text: Strip out all the revision clutter and side notes from my manuscript.docx
+        before I send it to the publisher.
+      expected: accept_all_changes
+      kind: paraphrased
+      neighbour: finalize_document
+    - id: accept_all_changes#hard_negative.1
+      text: Please run finalize_document on syllabus.docx to clear out all tracked
+        changes and comments in a single sweep.
+      expected: finalize_document
+      kind: hard_negative
+      neighbour: finalize_document
+    - id: accept_all_changes#hard_negative.2
+      text: I want to use finalize_document to strip every redline and margin note
+        from manuscript_v2.docx right now.
+      expected: finalize_document
+      kind: hard_negative
+      neighbour: finalize_document
+  create_email_draft:
+    fingerprint: b974565cf503bb9b
+    queries:
+    - id: create_email_draft#straightforward.1
+      text: Draft a new email to sarah@example.com with the subject Project Update
+        and tell her the reports are ready.
+      expected: create_email_draft
+      kind: straightforward
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#straightforward.2
+      text: Create an email draft replying to message 4589 saying I will review the
+        documents tomorrow morning.
+      expected: create_email_draft
+      kind: straightforward
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#straightforward.3
+      text: Start a new message for david.smith@company.com about the budget review
+        with markdown formatting for the bullet points.
+      expected: create_email_draft
+      kind: straightforward
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#straightforward.4
+      text: Draft a reply to message id 9921 attaching the quarterly pdf from /docs/q3.pdf.
+      expected: create_email_draft
+      kind: straightforward
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#paraphrased.1
+      text: Send a quick note over to Marcus letting him know dinner is postponed
+        until eight.
+      expected: create_email_draft
+      kind: paraphrased
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#paraphrased.2
+      text: Write something back to that last HR message explaining I am out sick
+        today.
+      expected: create_email_draft
+      kind: paraphrased
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#hard_negative.1
+      text: Draft an email to find out where my flight confirmation message went.
+      expected: search_and_fetch_emails
+      kind: hard_negative
+      neighbour: search_and_fetch_emails
+    - id: create_email_draft#hard_negative.2
+      text: Create a draft responding to the missing invoice email thread by looking
+        up its identifier.
+      expected: search_and_fetch_emails
+      kind: hard_negative
+      neighbour: search_and_fetch_emails
+  diff_docx_files:
+    fingerprint: d498e68c18995fdc
+    queries:
+    - id: diff_docx_files#straightforward.1
+      text: Can you compare the original draft at documents/contract_v1.docx with
+        the updated version at documents/contract_v2.docx and show me what changed?
+      expected: diff_docx_files
+      kind: straightforward
+      neighbour: read_docx
+    - id: diff_docx_files#straightforward.2
+      text: Please run a comparison between reports/quarterly_q3.docx and reports/quarterly_q4.docx
+        to highlight the text differences.
+      expected: diff_docx_files
+      kind: straightforward
+      neighbour: read_docx
+    - id: diff_docx_files#straightforward.3
+      text: I need a unified diff of the text between my old proposal at C:/Users/Admin/Desktop/proposal_old.docx
+        and my revised proposal at C:/Users/Admin/Desktop/proposal_new.docx.
+      expected: diff_docx_files
+      kind: straightforward
+      neighbour: read_docx
+    - id: diff_docx_files#straightforward.4
+      text: Check the differences in text content by comparing base_policy.docx and
+        edited_policy.docx.
+      expected: diff_docx_files
+      kind: straightforward
+      neighbour: read_docx
+    - id: diff_docx_files#paraphrased.1
+      text: Take a look at what I altered between yesterday's file draft_final.docx
+        and today's version latest_edit.docx.
+      expected: diff_docx_files
+      kind: paraphrased
+      neighbour: read_docx
+    - id: diff_docx_files#paraphrased.2
+      text: Quickly scan the changes I made going from backup_v1.docx to current_work.docx.
+      expected: diff_docx_files
+      kind: paraphrased
+      neighbour: read_docx
+    - id: diff_docx_files#hard_negative.1
+      text: Please compare the text inside my document at projects/specs_draft.docx
+        to see what needs editing.
+      expected: read_docx
+      kind: hard_negative
+      neighbour: read_docx
+    - id: diff_docx_files#hard_negative.2
+      text: Check the differences by reading through the contents of my two files,
+        resume_old.docx and resume_new.docx.
+      expected: read_docx
+      kind: hard_negative
+      neighbour: read_docx
+  finalize_document:
+    fingerprint: 74ee881ba23af006
+    queries:
+    - id: finalize_document#straightforward.1
+      text: Please prepare the contract at /docs/agreement.docx for e-signature and
+        save it to /final/agreement_final.docx.
+      expected: finalize_document
+      kind: straightforward
+      neighbour: accept_all_changes
+    - id: finalize_document#straightforward.2
+      text: Run the finalize_document tool on /reports/q3_review.docx using strict
+        metadata sanitization and lock the file.
+      expected: finalize_document
+      kind: straightforward
+      neighbour: accept_all_changes
+    - id: finalize_document#straightforward.3
+      text: I need to lock and clean the metadata for my resume located at /users/john/resume.docx.
+      expected: finalize_document
+      kind: straightforward
+      neighbour: accept_all_changes
+    - id: finalize_document#straightforward.4
+      text: Apply password protection and strip all hidden metadata from /finances/budget.docx
+        before I send it out.
+      expected: finalize_document
+      kind: straightforward
+      neighbour: accept_all_changes
+    - id: finalize_document#paraphrased.1
+      text: Get my paper ready to ship out by scrubbing all the hidden revision history
+        and locking down the editing permissions.
+      expected: finalize_document
+      kind: paraphrased
+      neighbour: accept_all_changes
+    - id: finalize_document#paraphrased.2
+      text: Wrap up the final version of the project proposal so nobody can mess with
+        the text after I send it to the client.
+      expected: finalize_document
+      kind: paraphrased
+      neighbour: accept_all_changes
+    - id: finalize_document#hard_negative.1
+      text: Make sure all tracked edits and review comments are resolved in /docs/draft.docx
+        right now.
+      expected: accept_all_changes
+      kind: hard_negative
+      neighbour: accept_all_changes
+    - id: finalize_document#hard_negative.2
+      text: Go through my manuscript and clear out every single tracked change currently
+        visible in the margins.
+      expected: accept_all_changes
+      kind: hard_negative
+      neighbour: accept_all_changes
+  login_to_adeu_cloud:
+    fingerprint: 76ebc8502478b5d8
+    queries:
+    - id: login_to_adeu_cloud#straightforward.1
+      text: Please log me into the Adeu Cloud backend now.
+      expected: login_to_adeu_cloud
+      kind: straightforward
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#straightforward.2
+      text: I need to sign in to my Adeu Cloud account.
+      expected: login_to_adeu_cloud
+      kind: straightforward
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#straightforward.3
+      text: Open the authentication window for Adeu Cloud so I can access the system.
+      expected: login_to_adeu_cloud
+      kind: straightforward
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#straightforward.4
+      text: Run the login process for Adeu Cloud.
+      expected: login_to_adeu_cloud
+      kind: straightforward
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#paraphrased.1
+      text: get me connected to adeu cloud
+      expected: login_to_adeu_cloud
+      kind: paraphrased
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#paraphrased.2
+      text: auth into adeu backend real quick
+      expected: login_to_adeu_cloud
+      kind: paraphrased
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#hard_negative.1
+      text: Log me out of the Adeu Cloud backend.
+      expected: logout_of_adeu_cloud
+      kind: hard_negative
+      neighbour: logout_of_adeu_cloud
+    - id: login_to_adeu_cloud#hard_negative.2
+      text: Sign me out of my Adeu Cloud session.
+      expected: logout_of_adeu_cloud
+      kind: hard_negative
+      neighbour: logout_of_adeu_cloud
+  logout_of_adeu_cloud:
+    fingerprint: ae2b319b2c14bad7
+    queries:
+    - id: logout_of_adeu_cloud#straightforward.1
+      text: Please log out of Adeu Cloud right now.
+      expected: logout_of_adeu_cloud
+      kind: straightforward
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#straightforward.2
+      text: Run the command to sign out of Adeu Cloud.
+      expected: logout_of_adeu_cloud
+      kind: straightforward
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#straightforward.3
+      text: I need to terminate my Adeu Cloud session.
+      expected: logout_of_adeu_cloud
+      kind: straightforward
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#straightforward.4
+      text: Execute the Adeu Cloud logout procedure.
+      expected: logout_of_adeu_cloud
+      kind: straightforward
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#paraphrased.1
+      text: wipe my credentials for the cloud backend so I am completely disconnected
+      expected: logout_of_adeu_cloud
+      kind: paraphrased
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#paraphrased.2
+      text: drop the current auth token for adeu so nobody else uses it
+      expected: logout_of_adeu_cloud
+      kind: paraphrased
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#hard_negative.1
+      text: Please log in to Adeu Cloud right now.
+      expected: login_to_adeu_cloud
+      kind: hard_negative
+      neighbour: login_to_adeu_cloud
+    - id: logout_of_adeu_cloud#hard_negative.2
+      text: Execute the Adeu Cloud login procedure.
+      expected: login_to_adeu_cloud
+      kind: hard_negative
+      neighbour: login_to_adeu_cloud
+  process_document_batch:
+    fingerprint: 58ddba912fca0bd6
+    queries:
+    - id: process_document_batch#straightforward.1
+      text: Please run batch edits on contracts/agreement.docx using author Jane Doe,
+        swapping every instance of 'Acme Corp' for 'Globex Inc' while deleting the
+        outdated indemnity clause in section four.
+      expected: process_document_batch
+      kind: straightforward
+      neighbour: read_docx
+    - id: process_document_batch#straightforward.2
+      text: Take project_spec.docx and apply a batch update under the name Bob Smith
+        to insert a new row into the budget table and leave a review reply on comment
+        Com:2 agreeing to the timeline shift.
+      expected: process_document_batch
+      kind: straightforward
+      neighbour: read_docx
+    - id: process_document_batch#straightforward.3
+      text: Update final_draft.docx with a batch of changes attributed to Alice Wong
+        that accepts tracked change Chg:14 and replaces the phrase 'beta release'
+        with '**version one**'.
+      expected: process_document_batch
+      kind: straightforward
+      neighbour: read_docx
+    - id: process_document_batch#straightforward.4
+      text: Apply a modification batch to reports/annual.docx as Charlie Brown to
+        turn the heading 'Q3 Results' into '# Q4 Performance' and delete the trailing
+        placeholder paragraph.
+      expected: process_document_batch
+      kind: straightforward
+      neighbour: read_docx
+    - id: process_document_batch#paraphrased.1
+      text: Go ahead and push through a quick batch of edits for notes.docx under
+        my name, Dave, just deleting that awkward paragraph about travel expenses
+        and fixing the typo in the executive summary.
+      expected: process_document_batch
+      kind: paraphrased
+      neighbour: read_docx
+    - id: process_document_batch#paraphrased.2
+      text: I need you to process a round of document tweaks for proposal.docx as
+        Sarah, which means clearing out the redundant pricing table rows and accepting
+        all those pending edits hanging out in the margins.
+      expected: process_document_batch
+      kind: paraphrased
+      neighbour: read_docx
+    - id: process_document_batch#hard_negative.1
+      text: Can you run a batch process to pull the text out of contracts/agreement.docx
+        so I can check what tracked changes and comments are currently sitting inside
+        it?
+      expected: read_docx
+      kind: hard_negative
+      neighbour: read_docx
+    - id: process_document_batch#hard_negative.2
+      text: Process a quick batch read of proposal.docx under my name to see all the
+        existing revision IDs and paragraph text before I decide what edits to send
+        over.
+      expected: read_docx
+      kind: hard_negative
+      neighbour: read_docx
+  read_docx:
+    fingerprint: 741521fe4b799474
+    queries:
+    - id: read_docx#straightforward.1
+      text: Please open the agreement stored at contracts/vendor_agreement_v2.docx
+        and show me the text on page four.
+      expected: read_docx
+      kind: straightforward
+      neighbour: process_document_batch
+    - id: read_docx#straightforward.2
+      text: Can you read the Word document located at reports/Q3_financial_review.docx
+        using the clean view mode to strip out all the track changes?
+      expected: read_docx
+      kind: straightforward
+      neighbour: process_document_batch
+    - id: read_docx#straightforward.3
+      text: I need to inspect the document structure of policy/employee_handbook.docx,
+        so please fetch its outline down to level four.
+      expected: read_docx
+      kind: straightforward
+      neighbour: process_document_batch
+    - id: read_docx#straightforward.4
+      text: Check the appendix of manual/hardware_spec.docx and list all the defined
+        terms and cross-reference targets for me.
+      expected: read_docx
+      kind: straightforward
+      neighbour: process_document_batch
+    - id: read_docx#paraphrased.1
+      text: Take a look at the contract draft in my downloads folder and pull up the
+        section where legal redlines were made yesterday.
+      expected: read_docx
+      kind: paraphrased
+      neighbour: process_document_batch
+    - id: read_docx#paraphrased.2
+      text: Can you scan through that big manuscript file I uploaded this morning
+        and give me a table of contents showing just the main chapters?
+      expected: read_docx
+      kind: paraphrased
+      neighbour: process_document_batch
+    - id: read_docx#hard_negative.1
+      text: Please read all the Word files in the client_submissions folder and compile
+        them into a single archive.
+      expected: process_document_batch
+      kind: hard_negative
+      neighbour: process_document_batch
+    - id: read_docx#hard_negative.2
+      text: Can you open every DOCX document stored in the quarterly_reports directory
+        and extract their text simultaneously?
+      expected: process_document_batch
+      kind: hard_negative
+      neighbour: process_document_batch
+  search_and_fetch_emails:
+    fingerprint: 2f14cefce0d5d4cc
+    queries:
+    - id: search_and_fetch_emails#straightforward.1
+      text: Find unread emails from Sarah Miller about the project proposal received
+        in the last seven days.
+      expected: search_and_fetch_emails
+      kind: straightforward
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#straightforward.2
+      text: Search my inbox for messages from billing@utilities.com that have PDF
+        attachments.
+      expected: search_and_fetch_emails
+      kind: straightforward
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#straightforward.3
+      text: Can you look up the email with ID msg_98234 and download its attachments
+        to my desktop folder?
+      expected: search_and_fetch_emails
+      kind: straightforward
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#straightforward.4
+      text: Filter messages in the Archive folder sent by David concerning the budget
+        review.
+      expected: search_and_fetch_emails
+      kind: straightforward
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#paraphrased.1
+      text: Pull up whatever Alex sent over regarding the conference tickets so I
+        can check the details.
+      expected: search_and_fetch_emails
+      kind: paraphrased
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#paraphrased.2
+      text: Dig through my inbox to see if HR dropped any notes about my benefits
+        enrollment recently.
+      expected: search_and_fetch_emails
+      kind: paraphrased
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#hard_negative.1
+      text: Find the message from my accountant about tax documents and send a reply
+        back to her.
+      expected: create_email_draft
+      kind: hard_negative
+      neighbour: create_email_draft
+    - id: search_and_fetch_emails#hard_negative.2
+      text: Search for the thread with my manager about vacation time and forward
+        it to my personal address.
+      expected: create_email_draft
+      kind: hard_negative
+      neighbour: create_email_draft
+no_tool:
+- id: (none)#1
+  text: Can you summarize the attached employment contract in three bullet points
+    and explain the termination clause?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the standard password policy and session timeout duration required
+    for our corporate Adeu Cloud account?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Draft a professional response to Sarah Jenkins declining her job offer for
+    the senior project manager role.
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-17'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

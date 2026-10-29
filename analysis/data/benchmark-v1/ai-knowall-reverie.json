@@ -1,0 +1,5568 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-19",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "ai-knowall-reverie",
+      "name": "reverie",
+      "version": "0.5.0",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "create_connection",
+      "server": null,
+      "title": null,
+      "description": "Create a connection between two memories (its good to have connected memories)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fromMemoryId": {
+            "type": "number",
+            "description": "ID of the source memory"
+          },
+          "toMemoryId": {
+            "type": "number",
+            "description": "ID of the target memory"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship type such as KNOWS, WORKS_ON, LIVES_IN, HAS_SKILL, PARTICIPATES_IN"
+          },
+          "properties": {
+            "type": "object",
+            "description": "Optional relationship metadata (e.g. {since: \"2023-01\", role: \"Manager\", status: \"active\"})",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "fromMemoryId",
+          "toMemoryId",
+          "type"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "create_memory",
+      "server": null,
+      "title": null,
+      "description": "Create a new memory in the knowledge graph. Consider that the memory might already exist, so Search \u2192 Create \u2192 Connect (its important to try and connect memories)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Memory label: a plain identifier, Capitalised singular by convention (Person, Place, Organization, Project, Event, Topic, Object, Animal, Concept, Meeting, Decision\u2026). Use list_memory_labels first for consistency; dream canonicalises lowercase labels."
+          },
+          "properties": {
+            "type": "object",
+            "description": "Information to store about this memory (use \"name\" as primary identifier, e.g. {name: \"John Smith\", age: 30, occupation: \"Engineer\"})",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "label",
+          "properties"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "delete_connection",
+      "server": null,
+      "title": null,
+      "description": "Delete a specific connection between two memories (use with caution - this permanently removes the relationship)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fromMemoryId": {
+            "type": "number",
+            "description": "ID of the source memory"
+          },
+          "toMemoryId": {
+            "type": "number",
+            "description": "ID of the target memory"
+          },
+          "type": {
+            "type": "string",
+            "description": "Exact relationship type to delete (e.g. WORKS_AT, KNOWS, MANAGES)"
+          }
+        },
+        "required": [
+          "fromMemoryId",
+          "toMemoryId",
+          "type"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "delete_memory",
+      "server": null,
+      "title": null,
+      "description": "Delete a memory and all its connections (use with caution - this permanently removes the memory and all its connections)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "number",
+            "description": "ID of the memory to delete"
+          }
+        },
+        "required": [
+          "nodeId"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "dream",
+      "server": null,
+      "title": null,
+      "description": "Deterministically relabel, merge duplicates, and refresh embeddings, with an optional dry run report.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "description": "If true, report planned changes without writing them."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "annotations": {}
+    },
+    {
+      "name": "get_guidance",
+      "server": null,
+      "title": null,
+      "description": "Get help on using the memory tools effectively",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "description": "Topic: connections, labels, relationships, best-practices, examples, or leave empty for all"
+          }
+        },
+        "required": []
+      },
+      "annotations": {}
+    },
+    {
+      "name": "list_memory_labels",
+      "server": null,
+      "title": null,
+      "description": "List all unique memory labels currently in use with their counts (useful for getting an overview of the knowledge graph)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "include_archived": {
+            "type": "boolean",
+            "description": "Include labels of archived memories (excluded by default)."
+          }
+        },
+        "required": []
+      },
+      "annotations": {}
+    },
+    {
+      "name": "memory_stats",
+      "server": null,
+      "title": null,
+      "description": "Summarize node, relationship, label, embedding, and orphan counts for the graph.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "annotations": {}
+    },
+    {
+      "name": "query_memories",
+      "server": null,
+      "title": null,
+      "description": "Run a read-only Cypher query and return up to 200 scrubbed rows.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "cypher": {
+            "type": "string",
+            "description": "Read-only Cypher to execute."
+          },
+          "params": {
+            "type": "object",
+            "description": "Optional parameter map for the Cypher query.",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "cypher"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {}
+    },
+    {
+      "name": "search_memories",
+      "server": null,
+      "title": null,
+      "description": "Hybrid keyword + semantic search across the knowledge graph. \"Ben Weeks\" can also find \"Benjamin Weeks\" and each result includes _score and _match.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search text to find in any property. Keyword mode matches any word, while semantic mode can surface close meanings and name variants."
+          },
+          "label": {
+            "type": "string",
+            "description": "Filter by memory label"
+          },
+          "depth": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Relationship depth to include, 0 to 5, defaults to 1"
+          },
+          "order_by": {
+            "type": "string",
+            "description": "Sort order such as created_at DESC, name ASC"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum results to return, 1 to 200, defaults to 10"
+          },
+          "since_date": {
+            "type": "string",
+            "description": "ISO date string to filter memories created after this date (e.g., \"2024-01-01\" or \"2024-01-01T00:00:00Z\")"
+          },
+          "search_mode": {
+            "type": "string",
+            "enum": [
+              "hybrid",
+              "keyword",
+              "semantic",
+              "exact"
+            ],
+            "description": "Search mode: hybrid (default), keyword-only, semantic-only, or exact (case-insensitive equality on name/aliases/email: use before creating a memory)."
+          },
+          "similarity_threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Semantic similarity threshold, 0 to 1 inclusive, defaults to 0.4."
+          },
+          "include_archived": {
+            "type": "boolean",
+            "description": "Include memories with status \"archived\" (excluded by default)."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "annotations": {}
+    },
+    {
+      "name": "update_connection",
+      "server": null,
+      "title": null,
+      "description": "Update properties of an existing connection between memories",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fromMemoryId": {
+            "type": "number",
+            "description": "ID of the source memory"
+          },
+          "toMemoryId": {
+            "type": "number",
+            "description": "ID of the target memory"
+          },
+          "type": {
+            "type": "string",
+            "description": "Relationship type to identify which connection to update (e.g. WORKS_AT, KNOWS, MANAGES)"
+          },
+          "properties": {
+            "type": "object",
+            "description": "Properties to update/add (e.g. {status: \"completed\", end_date: \"2024-01\"})",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "fromMemoryId",
+          "toMemoryId",
+          "type",
+          "properties"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "update_memory",
+      "server": null,
+      "title": null,
+      "description": "Update properties of an existing memory such as adding more detail or make a change when you find out something new",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "number",
+            "description": "ID of the memory to update"
+          },
+          "properties": {
+            "type": "object",
+            "description": "Properties to update/add",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "nodeId",
+          "properties"
+        ]
+      },
+      "annotations": {}
+    }
+  ],
+  "score": 85,
+  "summary": {
+    "accuracy": {
+      "hits": 234,
+      "total": 297,
+      "value": 0.7879,
+      "ci95": [
+        0.7379,
+        0.8305
+      ]
+    },
+    "stability": {
+      "hits": 97,
+      "total": 99,
+      "value": 0.9798,
+      "ci95": [
+        0.9293,
+        0.9944
+      ]
+    },
+    "argumentValidity": {
+      "hits": 291,
+      "total": 291,
+      "value": 1.0,
+      "ci95": [
+        0.987,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 3,
+      "total": 9,
+      "value": 0.3333,
+      "ci95": [
+        0.1206,
+        0.6458
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 297,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0128
+      ]
+    },
+    "trials": 297,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 1518
+  },
+  "confusionMatrix": {
+    "rows": [
+      "create_connection",
+      "create_memory",
+      "delete_connection",
+      "delete_memory",
+      "dream",
+      "get_guidance",
+      "list_memory_labels",
+      "memory_stats",
+      "query_memories",
+      "search_memories",
+      "update_connection",
+      "update_memory",
+      "(none)"
+    ],
+    "columns": [
+      "create_connection",
+      "create_memory",
+      "delete_connection",
+      "delete_memory",
+      "dream",
+      "get_guidance",
+      "list_memory_labels",
+      "memory_stats",
+      "query_memories",
+      "search_memories",
+      "update_connection",
+      "update_memory",
+      "(none)"
+    ],
+    "counts": {
+      "create_connection": {
+        "create_connection": 15,
+        "query_memories": 6,
+        "search_memories": 6,
+        "get_guidance": 3
+      },
+      "create_memory": {
+        "search_memories": 15,
+        "list_memory_labels": 6,
+        "create_memory": 3
+      },
+      "delete_connection": {
+        "delete_connection": 28,
+        "query_memories": 2
+      },
+      "delete_memory": {
+        "delete_memory": 24,
+        "dream": 6
+      },
+      "dream": {
+        "dream": 18
+      },
+      "get_guidance": {
+        "get_guidance": 18
+      },
+      "list_memory_labels": {
+        "list_memory_labels": 21,
+        "search_memories": 3
+      },
+      "memory_stats": {
+        "memory_stats": 30
+      },
+      "query_memories": {
+        "query_memories": 12,
+        "search_memories": 6
+      },
+      "search_memories": {
+        "search_memories": 18
+      },
+      "update_connection": {
+        "update_connection": 23,
+        "delete_connection": 1
+      },
+      "update_memory": {
+        "update_connection": 3,
+        "get_guidance": 3,
+        "update_memory": 18
+      },
+      "(none)": {
+        "search_memories": 3,
+        "(none)": 6
+      }
+    }
+  },
+  "perTool": {
+    "create_connection": {
+      "recall": {
+        "hits": 15,
+        "total": 30,
+        "value": 0.5,
+        "ci95": [
+          0.3315,
+          0.6685
+        ]
+      },
+      "precision": {
+        "hits": 15,
+        "total": 15,
+        "value": 1.0,
+        "ci95": [
+          0.7961,
+          1.0
+        ]
+      },
+      "f1": 0.6667
+    },
+    "create_memory": {
+      "recall": {
+        "hits": 3,
+        "total": 24,
+        "value": 0.125,
+        "ci95": [
+          0.0434,
+          0.31
+        ]
+      },
+      "precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "f1": 0.2222
+    },
+    "delete_connection": {
+      "recall": {
+        "hits": 28,
+        "total": 30,
+        "value": 0.9333,
+        "ci95": [
+          0.7868,
+          0.9815
+        ]
+      },
+      "precision": {
+        "hits": 28,
+        "total": 29,
+        "value": 0.9655,
+        "ci95": [
+          0.8282,
+          0.9939
+        ]
+      },
+      "f1": 0.9492
+    },
+    "delete_memory": {
+      "recall": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "f1": 0.8889
+    },
+    "dream": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "f1": 0.8571
+    },
+    "get_guidance": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "f1": 0.8571
+    },
+    "list_memory_labels": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 27,
+        "value": 0.7778,
+        "ci95": [
+          0.5924,
+          0.8939
+        ]
+      },
+      "f1": 0.8235
+    },
+    "memory_stats": {
+      "recall": {
+        "hits": 30,
+        "total": 30,
+        "value": 1.0,
+        "ci95": [
+          0.8865,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 30,
+        "total": 30,
+        "value": 1.0,
+        "ci95": [
+          0.8865,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "query_memories": {
+      "recall": {
+        "hits": 12,
+        "total": 18,
+        "value": 0.6667,
+        "ci95": [
+          0.4375,
+          0.8372
+        ]
+      },
+      "precision": {
+        "hits": 12,
+        "total": 20,
+        "value": 0.6,
+        "ci95": [
+          0.3866,
+          0.7812
+        ]
+      },
+      "f1": 0.6316
+    },
+    "search_memories": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 51,
+        "value": 0.3529,
+        "ci95": [
+          0.2363,
+          0.4901
+        ]
+      },
+      "f1": 0.5217
+    },
+    "update_connection": {
+      "recall": {
+        "hits": 23,
+        "total": 24,
+        "value": 0.9583,
+        "ci95": [
+          0.7976,
+          0.9926
+        ]
+      },
+      "precision": {
+        "hits": 23,
+        "total": 26,
+        "value": 0.8846,
+        "ci95": [
+          0.7102,
+          0.96
+        ]
+      },
+      "f1": 0.92
+    },
+    "update_memory": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 0.8571
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "create_memory",
+      "chosen": "search_memories",
+      "count": 15,
+      "share": 0.625
+    },
+    {
+      "expected": "query_memories",
+      "chosen": "search_memories",
+      "count": 6,
+      "share": 0.3333
+    },
+    {
+      "expected": "create_memory",
+      "chosen": "list_memory_labels",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "create_connection",
+      "chosen": "query_memories",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "create_connection",
+      "chosen": "search_memories",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "delete_memory",
+      "chosen": "dream",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "(none)",
+      "chosen": "search_memories",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "list_memory_labels",
+      "chosen": "search_memories",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "update_memory",
+      "chosen": "get_guidance",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "update_memory",
+      "chosen": "update_connection",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "create_connection",
+      "chosen": "get_guidance",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "delete_connection",
+      "chosen": "query_memories",
+      "count": 2,
+      "share": 0.0667
+    },
+    {
+      "expected": "update_connection",
+      "chosen": "delete_connection",
+      "count": 1,
+      "share": 0.0417
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "create_memory",
+      "chosen": "search_memories",
+      "count": 15
+    },
+    {
+      "expected": "query_memories",
+      "chosen": "search_memories",
+      "count": 6
+    },
+    {
+      "expected": "create_memory",
+      "chosen": "list_memory_labels",
+      "count": 6
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 12,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [
+    "delete_memory#hard_negative.2",
+    "update_connection#straightforward.1"
+  ],
+  "queries": [
+    {
+      "id": "create_connection#straightforward.1",
+      "text": "Link memory 105 to memory 208 as a reference type.",
+      "expected": "create_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#straightforward.2",
+      "text": "Make a connection from memory 42 to memory 99 using the parent relationship.",
+      "expected": "create_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#straightforward.3",
+      "text": "Establish a new relationship between memory 310 and memory 115 labeled dependency.",
+      "expected": "create_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#straightforward.4",
+      "text": "Connect memory 7 to memory 14 with a child link and set priority to high.",
+      "expected": "create_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#paraphrased.1",
+      "text": "Tie memory 88 into memory 45 as related.",
+      "expected": "create_connection",
+      "kind": "paraphrased",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#paraphrased.2",
+      "text": "Map a path from memory 500 over to memory 600.",
+      "expected": "create_connection",
+      "kind": "paraphrased",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#hard_negative.1",
+      "text": "Connect memory 12 and memory 34 by removing their existing link.",
+      "expected": "delete_connection",
+      "kind": "hard_negative",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_connection#hard_negative.2",
+      "text": "Link memory 90 to memory 80 but cut the connection between them.",
+      "expected": "delete_connection",
+      "kind": "hard_negative",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "create_memory#straightforward.1",
+      "text": "Add a new fact to the knowledge base stating that Python 3.11 is installed on the primary server with the status active.",
+      "expected": "create_memory",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#straightforward.2",
+      "text": "Store a record for Sarah Jenkins who works as the lead designer in the product department.",
+      "expected": "create_memory",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#straightforward.3",
+      "text": "Create an entry in the graph for Project Phoenix with a budget of fifty thousand dollars and a deadline of next quarter.",
+      "expected": "create_memory",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#straightforward.4",
+      "text": "Make a new node for the database migration task assigning it a high priority tag.",
+      "expected": "create_memory",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#paraphrased.1",
+      "text": "Log that I prefer dark mode across all my applications.",
+      "expected": "create_memory",
+      "kind": "paraphrased",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#paraphrased.2",
+      "text": "Remember that my flight leaves from terminal two on Tuesday morning.",
+      "expected": "create_memory",
+      "kind": "paraphrased",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#hard_negative.1",
+      "text": "Link the database migration task to the existing Project Phoenix node in the graph.",
+      "expected": "create_connection",
+      "kind": "hard_negative",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "create_memory#hard_negative.2",
+      "text": "Establish a relationship between Sarah Jenkins and the product department entry.",
+      "expected": "create_connection",
+      "kind": "hard_negative",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "delete_connection#straightforward.1",
+      "text": "Please delete the connection between memory 104 and memory 205 that has the type associated_with.",
+      "expected": "delete_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#straightforward.2",
+      "text": "Remove the link of type parent_child connecting node 42 to node 89.",
+      "expected": "delete_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#straightforward.3",
+      "text": "I need to delete the reference relation going from memory 512 to memory 301.",
+      "expected": "delete_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#straightforward.4",
+      "text": "Drop the dependency edge between memory ID 11 and memory ID 77.",
+      "expected": "delete_connection",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#paraphrased.1",
+      "text": "Unlink 88 from 45, cut that exact tagged pathway right now.",
+      "expected": "delete_connection",
+      "kind": "paraphrased",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#paraphrased.2",
+      "text": "Sever the bridge labeled follows that jumps from record 300 to record 500.",
+      "expected": "delete_connection",
+      "kind": "paraphrased",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#hard_negative.1",
+      "text": "Delete the connection memory numbered 402.",
+      "expected": "delete_memory",
+      "kind": "hard_negative",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_connection#hard_negative.2",
+      "text": "Remove the relationship memory identified as 915.",
+      "expected": "delete_memory",
+      "kind": "hard_negative",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "delete_memory#straightforward.1",
+      "text": "Please remove node 402 along with all of its associated links from the database.",
+      "expected": "delete_memory",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#straightforward.2",
+      "text": "Permanently erase node 15 from my memory graph.",
+      "expected": "delete_memory",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#straightforward.3",
+      "text": "I need to completely delete the memory unit numbered 89.",
+      "expected": "delete_memory",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#straightforward.4",
+      "text": "Wipe node 234 and every connection tied to it right now.",
+      "expected": "delete_memory",
+      "kind": "straightforward",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#paraphrased.1",
+      "text": "Get rid of node 77 and whatever it's hooked into.",
+      "expected": "delete_memory",
+      "kind": "paraphrased",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#paraphrased.2",
+      "text": "Clean out entry 51 and all its related baggage.",
+      "expected": "delete_memory",
+      "kind": "paraphrased",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#hard_negative.1",
+      "text": "Sever the link between node 12 and node 45.",
+      "expected": "delete_connection",
+      "kind": "hard_negative",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "delete_memory#hard_negative.2",
+      "text": "Just cut the connection attached to node 303.",
+      "expected": "delete_connection",
+      "kind": "hard_negative",
+      "neighbour": "delete_connection"
+    },
+    {
+      "id": "dream#straightforward.1",
+      "text": "Please relabel the nodes in the knowledge graph, merge any duplicate entities, and refresh the search embeddings right now.",
+      "expected": "dream",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#straightforward.2",
+      "text": "Run the dream tool with dry_run set to true to preview the database cleanup.",
+      "expected": "dream",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#straightforward.3",
+      "text": "Execute a full entity consolidation and embedding refresh on the workspace database.",
+      "expected": "dream",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#straightforward.4",
+      "text": "Perform a deterministic relabeling and merge identical records, and make sure to refresh all vector embeddings.",
+      "expected": "dream",
+      "kind": "straightforward",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#paraphrased.1",
+      "text": "Hey, tidy up the vector store by squashing identical records and updating the index vectors real quick.",
+      "expected": "dream",
+      "kind": "paraphrased",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#paraphrased.2",
+      "text": "Can you do a test run of cleaning up the duplicate tags and fixing up our semantic search cache?",
+      "expected": "dream",
+      "kind": "paraphrased",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#hard_negative.1",
+      "text": "Go ahead and permanently wipe out the obsolete user memories and duplicate entries from the database.",
+      "expected": "delete_memory",
+      "kind": "hard_negative",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "dream#hard_negative.2",
+      "text": "Purge all the outdated contextual memories that match these duplicate records.",
+      "expected": "delete_memory",
+      "kind": "hard_negative",
+      "neighbour": "delete_memory"
+    },
+    {
+      "id": "get_guidance#straightforward.1",
+      "text": "Can you show me how to use the memory tools properly?",
+      "expected": "get_guidance",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#straightforward.2",
+      "text": "I need help understanding the memory features.",
+      "expected": "get_guidance",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#straightforward.3",
+      "text": "Where can I find instructions for the memory utilities?",
+      "expected": "get_guidance",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#straightforward.4",
+      "text": "Teach me the best practices for storing things in memory.",
+      "expected": "get_guidance",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#paraphrased.1",
+      "text": "How do I make the most of my saved notes without messing up the system?",
+      "expected": "get_guidance",
+      "kind": "paraphrased",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#paraphrased.2",
+      "text": "Give me a quick rundown on working with saved data efficiently.",
+      "expected": "get_guidance",
+      "kind": "paraphrased",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#hard_negative.1",
+      "text": "How do I check the current status and metrics of my memory usage?",
+      "expected": "memory_stats",
+      "kind": "hard_negative",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "get_guidance#hard_negative.2",
+      "text": "I need a report on my memory capacity and statistics right now.",
+      "expected": "memory_stats",
+      "kind": "hard_negative",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#straightforward.1",
+      "text": "Show me a complete list of every memory label along with how many times each is used.",
+      "expected": "list_memory_labels",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#straightforward.2",
+      "text": "Can you fetch all existing memory tags and their corresponding counts?",
+      "expected": "list_memory_labels",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#straightforward.3",
+      "text": "I need to see every unique memory label currently in use and their totals.",
+      "expected": "list_memory_labels",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#straightforward.4",
+      "text": "List all active memory labels along with their usage counts, including any archived ones.",
+      "expected": "list_memory_labels",
+      "kind": "straightforward",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#paraphrased.1",
+      "text": "Give me a rundown of the tags on my stored facts so I can see what categories exist.",
+      "expected": "list_memory_labels",
+      "kind": "paraphrased",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#paraphrased.2",
+      "text": "What are all the custom buckets I've used for my saved notes?",
+      "expected": "list_memory_labels",
+      "kind": "paraphrased",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#hard_negative.1",
+      "text": "Show me the overall metrics and totals for my memory database.",
+      "expected": "memory_stats",
+      "kind": "hard_negative",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "list_memory_labels#hard_negative.2",
+      "text": "Give me a summary report of the memory system usage statistics.",
+      "expected": "memory_stats",
+      "kind": "hard_negative",
+      "neighbour": "memory_stats"
+    },
+    {
+      "id": "memory_stats#straightforward.1",
+      "text": "Can you give me a breakdown of how many nodes and relationships are currently in the graph?",
+      "expected": "memory_stats",
+      "kind": "straightforward",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#straightforward.2",
+      "text": "Run a quick check to count the total labels, embeddings, and orphans in the database.",
+      "expected": "memory_stats",
+      "kind": "straightforward",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#straightforward.3",
+      "text": "I need a full statistical summary of all entities and connections stored in the system.",
+      "expected": "memory_stats",
+      "kind": "straightforward",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#straightforward.4",
+      "text": "Show me the current counts for every node type and relationship type in our knowledge base.",
+      "expected": "memory_stats",
+      "kind": "straightforward",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#paraphrased.1",
+      "text": "how big is the graph right now",
+      "expected": "memory_stats",
+      "kind": "paraphrased",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#paraphrased.2",
+      "text": "need quick counts on database contents",
+      "expected": "memory_stats",
+      "kind": "paraphrased",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#hard_negative.1",
+      "text": "Give me a complete list of all memory labels currently defined in the system.",
+      "expected": "list_memory_labels",
+      "kind": "hard_negative",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "memory_stats#hard_negative.2",
+      "text": "Can you output the full catalogue of label names stored in the database memory?",
+      "expected": "list_memory_labels",
+      "kind": "hard_negative",
+      "neighbour": "list_memory_labels"
+    },
+    {
+      "id": "query_memories#straightforward.1",
+      "text": "Run a Cypher query to retrieve all user profiles stored in the graph database.",
+      "expected": "query_memories",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#straightforward.2",
+      "text": "Execute a read-only graph search using Cypher to find nodes connected to project alpha.",
+      "expected": "query_memories",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#straightforward.3",
+      "text": "Fetch up to two hundred scrubbed rows by running a Cypher match statement on the knowledge base.",
+      "expected": "query_memories",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#straightforward.4",
+      "text": "Query the memory graph using Cypher to list all active sessions.",
+      "expected": "query_memories",
+      "kind": "straightforward",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#paraphrased.1",
+      "text": "pull up what we talked about regarding the server migration graph last Tuesday.",
+      "expected": "query_memories",
+      "kind": "paraphrased",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#paraphrased.2",
+      "text": "grab the nodes linking Sarah to the budgeting project from the underlying store real quick.",
+      "expected": "query_memories",
+      "kind": "paraphrased",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#hard_negative.1",
+      "text": "Run a Cypher query to establish a new link between user alice and the database server.",
+      "expected": "create_connection",
+      "kind": "hard_negative",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "query_memories#hard_negative.2",
+      "text": "Execute a read-only Cypher statement to build a connection between node one and node two.",
+      "expected": "create_connection",
+      "kind": "hard_negative",
+      "neighbour": "create_connection"
+    },
+    {
+      "id": "search_memories#straightforward.1",
+      "text": "Run a hybrid search for Benjamin Weeks in the knowledge graph.",
+      "expected": "search_memories",
+      "kind": "straightforward",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#straightforward.2",
+      "text": "Search memories for project roadmap using semantic matching with a limit of five results.",
+      "expected": "search_memories",
+      "kind": "straightforward",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#straightforward.3",
+      "text": "Look up notes about the quarterly budget meeting ordered by score.",
+      "expected": "search_memories",
+      "kind": "straightforward",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#straightforward.4",
+      "text": "Find archived entries related to the server migration since last month.",
+      "expected": "search_memories",
+      "kind": "straightforward",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#paraphrased.1",
+      "text": "pull up whatever we talked about regarding Sarah's promotion last week",
+      "expected": "search_memories",
+      "kind": "paraphrased",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#paraphrased.2",
+      "text": "dig through the graph for that restaurant recommendation in Austin",
+      "expected": "search_memories",
+      "kind": "paraphrased",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#hard_negative.1",
+      "text": "Search for the grocery list to add milk and eggs to it.",
+      "expected": "create_memory",
+      "kind": "hard_negative",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "search_memories#hard_negative.2",
+      "text": "Find the notes from today's sync and store a new entry for the action items.",
+      "expected": "create_memory",
+      "kind": "hard_negative",
+      "neighbour": "create_memory"
+    },
+    {
+      "id": "update_connection#straightforward.1",
+      "text": "Change the relationship type between memory 42 and memory 88 to parent-child.",
+      "expected": "update_connection",
+      "kind": "straightforward",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#straightforward.2",
+      "text": "Modify the properties of the link from memory 15 to memory 22 to include confirmed: true.",
+      "expected": "update_connection",
+      "kind": "straightforward",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#straightforward.3",
+      "text": "Update the connection linking memory 7 and memory 19 with a new strength rating of 0.9.",
+      "expected": "update_connection",
+      "kind": "straightforward",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#straightforward.4",
+      "text": "Revise the association between memory 101 and memory 205 to use the bidirectional type.",
+      "expected": "update_connection",
+      "kind": "straightforward",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#paraphrased.1",
+      "text": "fix the link between 12 and 34, make it a strong tie now",
+      "expected": "update_connection",
+      "kind": "paraphrased",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#paraphrased.2",
+      "text": "switch properties on the bond connecting node 5 and node 9 to expired status",
+      "expected": "update_connection",
+      "kind": "paraphrased",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#hard_negative.1",
+      "text": "Update the connection properties for memory 42.",
+      "expected": "update_memory",
+      "kind": "hard_negative",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_connection#hard_negative.2",
+      "text": "Change the link type for memory 88.",
+      "expected": "update_memory",
+      "kind": "hard_negative",
+      "neighbour": "update_memory"
+    },
+    {
+      "id": "update_memory#straightforward.1",
+      "text": "Change node 42 to include my new phone number.",
+      "expected": "update_memory",
+      "kind": "straightforward",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#straightforward.2",
+      "text": "Update the properties on node 105 with the revised project deadlines.",
+      "expected": "update_memory",
+      "kind": "straightforward",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#straightforward.3",
+      "text": "Modify the stored entry for node 8 to reflect that the office moved downtown.",
+      "expected": "update_memory",
+      "kind": "straightforward",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#straightforward.4",
+      "text": "Run an update on node 15 to add my dietary restriction as vegan.",
+      "expected": "update_memory",
+      "kind": "straightforward",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#paraphrased.1",
+      "text": "fix node 99, my title is actually senior engineer now",
+      "expected": "update_memory",
+      "kind": "paraphrased",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#paraphrased.2",
+      "text": "add this new email to node 44 please",
+      "expected": "update_memory",
+      "kind": "paraphrased",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#hard_negative.1",
+      "text": "Update the connection linking node 12 to node 15 with a new relation type.",
+      "expected": "update_connection",
+      "kind": "hard_negative",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "update_memory#hard_negative.2",
+      "text": "Modify the link properties between node 7 and node 8 to show they are now partners.",
+      "expected": "update_connection",
+      "kind": "hard_negative",
+      "neighbour": "update_connection"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you summarize all the diary entries I wrote last Tuesday into three bullet points about my mood?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What is the capital of Australia and how many people live there?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Please write a Python script that reads a CSV file of my expenses and plots a monthly bar chart.",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "create_connection#straightforward.1",
+      "chosen": "create_connection",
+      "arguments": {
+        "fromMemoryId": 105,
+        "type": "REFERENCE",
+        "toMemoryId": 208
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.1",
+      "chosen": "create_connection",
+      "arguments": {
+        "toMemoryId": 208,
+        "type": "REFERENCE",
+        "fromMemoryId": 105
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.1",
+      "chosen": "create_connection",
+      "arguments": {
+        "type": "REFERENCE",
+        "toMemoryId": 208,
+        "fromMemoryId": 105
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.2",
+      "chosen": "create_connection",
+      "arguments": {
+        "toMemoryId": 99,
+        "fromMemoryId": 42,
+        "type": "PARENT"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.2",
+      "chosen": "create_connection",
+      "arguments": {
+        "toMemoryId": 99,
+        "type": "PARENT",
+        "fromMemoryId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.3",
+      "chosen": "create_connection",
+      "arguments": {
+        "type": "DEPENDENCY",
+        "toMemoryId": 115,
+        "fromMemoryId": 310
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.3",
+      "chosen": "create_connection",
+      "arguments": {
+        "toMemoryId": 115,
+        "type": "DEPENDENCY",
+        "fromMemoryId": 310
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.2",
+      "chosen": "create_connection",
+      "arguments": {
+        "fromMemoryId": 42,
+        "toMemoryId": 99,
+        "type": "PARENT"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.3",
+      "chosen": "create_connection",
+      "arguments": {
+        "toMemoryId": 115,
+        "type": "DEPENDENCY",
+        "fromMemoryId": 310
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.4",
+      "chosen": "create_connection",
+      "arguments": {
+        "properties": {
+          "priority": "high"
+        },
+        "toMemoryId": 14,
+        "fromMemoryId": 7,
+        "type": "CHILD"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.4",
+      "chosen": "create_connection",
+      "arguments": {
+        "properties": {
+          "priority": "high"
+        },
+        "fromMemoryId": 7,
+        "type": "CHILD",
+        "toMemoryId": 14
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#paraphrased.1",
+      "chosen": "create_connection",
+      "arguments": {
+        "fromMemoryId": 88,
+        "type": "RELATED_TO",
+        "toMemoryId": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#paraphrased.1",
+      "chosen": "create_connection",
+      "arguments": {
+        "toMemoryId": 45,
+        "fromMemoryId": 88,
+        "type": "RELATED_TO"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#paraphrased.1",
+      "chosen": "create_connection",
+      "arguments": {
+        "type": "RELATED_TO",
+        "fromMemoryId": 88,
+        "toMemoryId": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#paraphrased.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH path = shortestPath((a)-[*]-(b)) WHERE id(a) = 500 AND id(b) = 600 RETURN path"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#paraphrased.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH path = shortestPath((a)-[*]-(b)) WHERE id(a) = 500 AND id(b) = 600 RETURN path"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#paraphrased.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH p = shortestPath((a)-[*..5]-(b)) WHERE ID(a) = 500 AND ID(b) = 600 RETURN p"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_connection#hard_negative.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "type": "LINK",
+        "fromMemoryId": 12,
+        "toMemoryId": 34
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_connection#hard_negative.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 34,
+        "type": "LINK",
+        "fromMemoryId": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_connection#hard_negative.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 12,
+        "toMemoryId": 34,
+        "type": "LINK"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_connection#hard_negative.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "type": "LINK",
+        "toMemoryId": 80,
+        "fromMemoryId": 90
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_connection#hard_negative.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "type": "LINK",
+        "fromMemoryId": 90,
+        "toMemoryId": 80
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_connection#hard_negative.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 80,
+        "type": "LINK",
+        "fromMemoryId": 90
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_memory#straightforward.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "exact",
+        "query": "primary server Python 3.11"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Python 3.11 primary server",
+        "search_mode": "exact"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Python 3.11 primary server",
+        "search_mode": "exact"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "exact",
+        "query": "Sarah Jenkins"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "exact",
+        "query": "Sarah Jenkins"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "exact",
+        "query": "Sarah Jenkins"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.3",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.3",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.3",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.4",
+      "chosen": "create_memory",
+      "arguments": {
+        "properties": {
+          "priority": "high",
+          "name": "Database Migration"
+        },
+        "label": "Task"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.4",
+      "chosen": "create_memory",
+      "arguments": {
+        "properties": {
+          "priority": "high",
+          "name": "Database migration"
+        },
+        "label": "Task"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#straightforward.4",
+      "chosen": "create_memory",
+      "arguments": {
+        "label": "Task",
+        "properties": {
+          "name": "Database migration",
+          "priority": "high"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "exact",
+        "query": "dark mode"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "dark mode preferences",
+        "search_mode": "exact"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "exact",
+        "query": "dark mode preferences"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#paraphrased.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#paraphrased.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#paraphrased.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "create_memory#hard_negative.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "database migration"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_memory#hard_negative.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Project Phoenix"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_memory#hard_negative.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "database migration Project Phoenix"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_memory#hard_negative.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah Jenkins"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_memory#hard_negative.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah Jenkins"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "create_memory#hard_negative.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah Jenkins"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 104,
+        "type": "associated_with",
+        "toMemoryId": 205
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 205,
+        "type": "associated_with",
+        "fromMemoryId": 104
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "create_connection#straightforward.4",
+      "chosen": "create_connection",
+      "arguments": {
+        "type": "CHILD_OF",
+        "fromMemoryId": 7,
+        "properties": {
+          "priority": "high"
+        },
+        "toMemoryId": 14
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "type": "associated_with",
+        "toMemoryId": 205,
+        "fromMemoryId": 104
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "type": "parent_child",
+        "fromMemoryId": 42,
+        "toMemoryId": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 89,
+        "type": "parent_child",
+        "fromMemoryId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.3",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 301,
+        "type": "reference",
+        "fromMemoryId": 512
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.3",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 512,
+        "type": "reference",
+        "toMemoryId": 301
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 89,
+        "type": "parent_child",
+        "fromMemoryId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.4",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 77,
+        "fromMemoryId": 11,
+        "type": "DEPENDS_ON"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.3",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 301,
+        "type": "reference",
+        "fromMemoryId": 512
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.4",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 11,
+        "type": "DEPENDS_ON",
+        "toMemoryId": 77
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#straightforward.4",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 11,
+        "toMemoryId": 77,
+        "type": "DEPENDS_ON"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#paraphrased.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 45,
+        "type": "TAGGED",
+        "fromMemoryId": 88
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#paraphrased.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 45,
+        "fromMemoryId": 88,
+        "type": "TAGGED_PATHWAY"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#paraphrased.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "type": "TAGGED",
+        "toMemoryId": 45,
+        "fromMemoryId": 88
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#paraphrased.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 500,
+        "type": "FOLLOWS",
+        "fromMemoryId": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#paraphrased.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 500,
+        "type": "follows",
+        "fromMemoryId": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#paraphrased.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 500,
+        "fromMemoryId": 300,
+        "type": "follows"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_connection#hard_negative.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 402
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_connection#hard_negative.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 402
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_connection#hard_negative.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 915
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_connection#hard_negative.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 402
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_connection#hard_negative.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 915
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_connection#hard_negative.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 915
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 402
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 402
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 402
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.3",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.3",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.3",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.4",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 234
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.4",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 234
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#paraphrased.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 77
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#paraphrased.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 77
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#straightforward.4",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 234
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#paraphrased.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 51
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#paraphrased.1",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 77
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#paraphrased.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 51
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#hard_negative.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 45,
+        "type": "KNOWS",
+        "fromMemoryId": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_memory#hard_negative.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 12,
+        "toMemoryId": 45,
+        "type": "LINK"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_memory#paraphrased.2",
+      "chosen": "delete_memory",
+      "arguments": {
+        "nodeId": 51
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "delete_memory#hard_negative.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (m)-[r]-(n) WHERE id(m) = 303 RETURN id(m) AS fromId, id(n) AS toId, type(r) AS relType"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_memory#hard_negative.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n)-[r]-(m) WHERE id(n) = 303 RETURN id(n) AS fromId, type(r) AS type, id(m) AS toId"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "delete_memory#hard_negative.2",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 0,
+        "type": "CONNECTED_TO",
+        "fromMemoryId": 303
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "dream#straightforward.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "delete_memory#hard_negative.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "toMemoryId": 45,
+        "type": "CONNECTED_TO",
+        "fromMemoryId": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_connection"
+    },
+    {
+      "query_id": "dream#straightforward.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.3",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.3",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.3",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.4",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.4",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.4",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#paraphrased.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#paraphrased.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#paraphrased.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#paraphrased.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#straightforward.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#paraphrased.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "dream#hard_negative.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "dream#hard_negative.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "dream#hard_negative.1",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "dream#hard_negative.2",
+      "chosen": "dream",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "dream#hard_negative.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "dream#hard_negative.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_memory"
+    },
+    {
+      "query_id": "get_guidance#straightforward.1",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.1",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.1",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.2",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "dream#paraphrased.2",
+      "chosen": "dream",
+      "arguments": {
+        "dry_run": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "dream"
+    },
+    {
+      "query_id": "get_guidance#straightforward.2",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.3",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.2",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.3",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.3",
+      "chosen": "get_guidance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.4",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.4",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#straightforward.4",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#paraphrased.1",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#paraphrased.1",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#paraphrased.1",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#paraphrased.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#paraphrased.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#hard_negative.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "get_guidance#paraphrased.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "best-practices"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_guidance"
+    },
+    {
+      "query_id": "get_guidance#hard_negative.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "get_guidance#hard_negative.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "get_guidance#hard_negative.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "get_guidance#hard_negative.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "get_guidance#hard_negative.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.3",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.3",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.3",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.4",
+      "chosen": "list_memory_labels",
+      "arguments": {
+        "include_archived": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.4",
+      "chosen": "list_memory_labels",
+      "arguments": {
+        "include_archived": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#straightforward.4",
+      "chosen": "list_memory_labels",
+      "arguments": {
+        "include_archived": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#paraphrased.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#paraphrased.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#paraphrased.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "buckets saved notes custom"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "buckets saved notes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#hard_negative.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "buckets notes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "list_memory_labels#hard_negative.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#hard_negative.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#hard_negative.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#hard_negative.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "list_memory_labels#hard_negative.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.3",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.3",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.3",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.4",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.4",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#paraphrased.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#straightforward.4",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#paraphrased.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#paraphrased.1",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#paraphrased.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#paraphrased.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#hard_negative.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "memory_stats#paraphrased.2",
+      "chosen": "memory_stats",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "memory_stats"
+    },
+    {
+      "query_id": "memory_stats#hard_negative.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "memory_stats#hard_negative.1",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "memory_stats#hard_negative.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "memory_stats#hard_negative.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "query_memories#straightforward.1",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) RETURN n LIMIT 200"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.1",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) WHERE n.label = 'User' OR n:User RETURN n"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "memory_stats#hard_negative.2",
+      "chosen": "list_memory_labels",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_memory_labels"
+    },
+    {
+      "query_id": "query_memories#straightforward.1",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) WHERE n.label = 'User' OR n.name CONTAINS 'User' OR labels(n)[0] = 'User' RETURN n LIMIT 200"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n)-[r]-(m) WHERE m.name =~ '(?i)project alpha' RETURN n, r, m LIMIT 50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n)-[r]-(m) WHERE m.name =~ '(?i)project alpha' RETURN n, r, m"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.3",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) RETURN n LIMIT 200"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.3",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) RETURN n LIMIT 200"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.3",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) RETURN n LIMIT 200"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.2",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n)-[r]-(m) WHERE toLower(m.name) CONTAINS 'alpha' OR toLower(n.name) CONTAINS 'alpha' RETURN n, r, m LIMIT 50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.4",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (n) WHERE n.status = 'active' RETURN n"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.4",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (m) WHERE m.status = 'active' RETURN m"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#straightforward.4",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (m) WHERE m.status = 'active' RETURN m"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "server migration graph"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "server migration graph"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah budgeting project"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah budgeting project"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "server migration graph"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah budgeting project"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "query_memories"
+    },
+    {
+      "query_id": "query_memories#hard_negative.1",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (a:Person {name: 'alice'}), (b:Server {name: 'database server'}) CREATE (a)-[:CONNECTS_TO]->(b) RETURN a, b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "query_memories#hard_negative.1",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (a:Person {name: 'alice'}), (b:Server {name: 'database server'}) CREATE (a)-[:CONNECTS_TO]->(b) RETURN a, b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "query_memories#hard_negative.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "connections"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "query_memories#hard_negative.1",
+      "chosen": "query_memories",
+      "arguments": {
+        "cypher": "MATCH (u:Person {name: 'alice'}), (d:Server {name: 'database server'}) CREATE (u)-[:CONNECTS_TO]->(d) RETURN u, d"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "query_memories#hard_negative.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "connections"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "query_memories#hard_negative.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "connections"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_connection"
+    },
+    {
+      "query_id": "search_memories#straightforward.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Benjamin Weeks",
+        "search_mode": "hybrid"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "search_mode": "hybrid",
+        "query": "Benjamin Weeks"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Benjamin Weeks",
+        "search_mode": "hybrid"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "limit": 5,
+        "search_mode": "semantic",
+        "query": "project roadmap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "limit": 5,
+        "query": "project roadmap",
+        "search_mode": "semantic"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "project roadmap",
+        "limit": 5,
+        "search_mode": "semantic"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.3",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "quarterly budget meeting",
+        "order_by": "_score DESC"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.3",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "quarterly budget meeting",
+        "order_by": "_score DESC"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.4",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "server migration",
+        "include_archived": true,
+        "since_date": "2025-02-01"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.3",
+      "chosen": "search_memories",
+      "arguments": {
+        "order_by": "_score DESC",
+        "query": "quarterly budget meeting"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.4",
+      "chosen": "search_memories",
+      "arguments": {
+        "include_archived": true,
+        "since_date": "2025-02-01",
+        "query": "server migration"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#straightforward.4",
+      "chosen": "search_memories",
+      "arguments": {
+        "include_archived": true,
+        "since_date": "2025-02-01",
+        "query": "server migration"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah promotion"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah promotion"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Austin restaurant recommendation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#paraphrased.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "Sarah promotion"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "restaurant Austin"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#paraphrased.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "restaurant Austin"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_memories"
+    },
+    {
+      "query_id": "search_memories#hard_negative.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "grocery list"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "search_memories#hard_negative.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "grocery list"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "search_memories#hard_negative.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "today's sync"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "search_memories#hard_negative.1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "grocery list"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "search_memories#hard_negative.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "today sync notes action items"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "update_connection#straightforward.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "type": "PARENT_CHILD",
+        "fromMemoryId": 42,
+        "properties": {
+          "type": "parent-child"
+        },
+        "toMemoryId": 88
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "search_memories#hard_negative.2",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "today sync notes action items"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_memory"
+    },
+    {
+      "query_id": "update_connection#straightforward.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 88,
+        "properties": {},
+        "fromMemoryId": 42,
+        "type": "PARENT_CHILD"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.1",
+      "chosen": "delete_connection",
+      "arguments": {
+        "fromMemoryId": 42,
+        "toMemoryId": 88,
+        "type": "KNOWS"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {
+          "confirmed": true
+        },
+        "type": "WORKS_AT",
+        "toMemoryId": 22,
+        "fromMemoryId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "type": "RELATED_TO",
+        "properties": {
+          "confirmed": true
+        },
+        "toMemoryId": 22,
+        "fromMemoryId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 22,
+        "fromMemoryId": 15,
+        "properties": {
+          "confirmed": true
+        },
+        "type": "LINK"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.3",
+      "chosen": "update_connection",
+      "arguments": {
+        "fromMemoryId": 7,
+        "type": "LINKS",
+        "toMemoryId": 19,
+        "properties": {
+          "strength": 0.9
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.3",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {
+          "strength": 0.9
+        },
+        "type": "LINKED_TO",
+        "toMemoryId": 19,
+        "fromMemoryId": 7
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.3",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 19,
+        "type": "LINKED_TO",
+        "properties": {
+          "strength": 0.9
+        },
+        "fromMemoryId": 7
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.4",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {
+          "type": "bidirectional"
+        },
+        "type": "bidirectional",
+        "fromMemoryId": 101,
+        "toMemoryId": 205
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.4",
+      "chosen": "update_connection",
+      "arguments": {
+        "fromMemoryId": 101,
+        "type": "bidirectional",
+        "toMemoryId": 205,
+        "properties": {
+          "type": "bidirectional"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#paraphrased.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 34,
+        "fromMemoryId": 12,
+        "properties": {
+          "strength": "strong"
+        },
+        "type": "LINK"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#straightforward.4",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 205,
+        "properties": {
+          "type": "bidirectional"
+        },
+        "fromMemoryId": 101,
+        "type": "bidirectional"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#paraphrased.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "fromMemoryId": 12,
+        "type": "LINK",
+        "toMemoryId": 34,
+        "properties": {
+          "status": "active",
+          "strength": "strong"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#paraphrased.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 34,
+        "properties": {
+          "strength": "strong"
+        },
+        "type": "LINK",
+        "fromMemoryId": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#paraphrased.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {
+          "status": "expired"
+        },
+        "type": "BOND",
+        "fromMemoryId": 5,
+        "toMemoryId": 9
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#paraphrased.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 9,
+        "type": "BOND",
+        "fromMemoryId": 5,
+        "properties": {
+          "status": "expired"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#hard_negative.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "type": "RELATED_TO",
+        "properties": {
+          "status": "updated"
+        },
+        "toMemoryId": 0,
+        "fromMemoryId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_connection#paraphrased.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "fromMemoryId": 5,
+        "toMemoryId": 9,
+        "properties": {
+          "status": "expired"
+        },
+        "type": "BOND"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_connection#hard_negative.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {},
+        "fromMemoryId": 42,
+        "type": "CONNECTION",
+        "toMemoryId": 0
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_connection#hard_negative.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "type": "UPDATE",
+        "properties": {},
+        "toMemoryId": 0,
+        "fromMemoryId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_connection#hard_negative.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "connections"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_connection#hard_negative.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "connections"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.1",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "phone_number": "NEW_PHONE_NUMBER"
+        },
+        "nodeId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_connection#hard_negative.2",
+      "chosen": "get_guidance",
+      "arguments": {
+        "topic": "connections"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.1",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "phone_number": "new"
+        },
+        "nodeId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.2",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "revised_project_deadlines": true
+        },
+        "nodeId": 105
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.1",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "phone_number": "new phone number"
+        },
+        "nodeId": 42
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.2",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "revised_project_deadlines": true
+        },
+        "nodeId": 105
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.2",
+      "chosen": "update_memory",
+      "arguments": {
+        "nodeId": 105,
+        "properties": {
+          "revised_deadlines": true
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.3",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "location": "downtown"
+        },
+        "nodeId": 8
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.3",
+      "chosen": "update_memory",
+      "arguments": {
+        "nodeId": 8,
+        "properties": {
+          "location": "downtown",
+          "office_location": "downtown"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.4",
+      "chosen": "update_memory",
+      "arguments": {
+        "nodeId": 15,
+        "properties": {
+          "dietary_restriction": "vegan"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.3",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "office_location": "downtown",
+          "location": "downtown"
+        },
+        "nodeId": 8
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.4",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "dietary_restriction": "vegan"
+        },
+        "nodeId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#paraphrased.1",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "title": "senior engineer"
+        },
+        "nodeId": 99
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#straightforward.4",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "dietary_restriction": "vegan"
+        },
+        "nodeId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#paraphrased.1",
+      "chosen": "update_memory",
+      "arguments": {
+        "nodeId": 99,
+        "properties": {
+          "title": "senior engineer"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#paraphrased.1",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "title": "senior engineer"
+        },
+        "nodeId": 99
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#paraphrased.2",
+      "chosen": "update_memory",
+      "arguments": {
+        "nodeId": 44,
+        "properties": {
+          "email": "placeholder@example.com"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#paraphrased.2",
+      "chosen": "update_memory",
+      "arguments": {
+        "properties": {
+          "email": "placeholder@example.com"
+        },
+        "nodeId": 44
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#hard_negative.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {},
+        "type": "UNKNOWN",
+        "toMemoryId": 15,
+        "fromMemoryId": 12
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_memory#hard_negative.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "properties": {},
+        "toMemoryId": 15,
+        "fromMemoryId": 12,
+        "type": "KNOWS"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_memory#paraphrased.2",
+      "chosen": "update_memory",
+      "arguments": {
+        "nodeId": 44,
+        "properties": {
+          "email": "new_email@example.com"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_memory"
+    },
+    {
+      "query_id": "update_memory#hard_negative.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "type": "PARTNER",
+        "toMemoryId": 8,
+        "properties": {
+          "status": "partners"
+        },
+        "fromMemoryId": 7
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_memory#hard_negative.1",
+      "chosen": "update_connection",
+      "arguments": {
+        "fromMemoryId": 12,
+        "properties": {},
+        "type": "UNKNOWN",
+        "toMemoryId": 15
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_memory#hard_negative.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "toMemoryId": 8,
+        "fromMemoryId": 7,
+        "type": "PARTNER",
+        "properties": {
+          "status": "partners"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "update_memory#hard_negative.2",
+      "chosen": "update_connection",
+      "arguments": {
+        "type": "PARTNERS",
+        "fromMemoryId": 7,
+        "properties": {
+          "status": "partners"
+        },
+        "toMemoryId": 8
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "update_connection"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "diary entry last Tuesday mood"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "diary"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "search_memories",
+      "arguments": {
+        "query": "diary entry Tuesday mood"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "ai-knowall-reverie.json",
+    "slug": "ai-knowall-reverie",
+    "registry_name": "ai.knowall/reverie",
+    "title": "Reverie",
+    "repository": "https://github.com/knowall-ai/mcp-reverie"
+  }
+}

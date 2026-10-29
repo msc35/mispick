@@ -1,0 +1,602 @@
+{
+  "generated": "2026-10-29",
+  "model": "gemini/gemini-3.5-flash-lite",
+  "n": 8,
+  "k": 3,
+  "temperature": 0.0,
+  "seed": 1,
+  "complete": true,
+  "pending": [],
+  "servers": [
+    {
+      "slug": "ai-mcpcap-mcpcap",
+      "title": "ai.mcpcap/mcpcap",
+      "registry_name": "ai.mcpcap/mcpcap",
+      "repository": "https://github.com/mcpcap/mcpcap",
+      "tool_count": 9,
+      "score": 94,
+      "accuracy": {
+        "hits": 209,
+        "total": 225,
+        "value": 0.9289,
+        "ci95": [
+          0.8876,
+          0.9558
+        ]
+      },
+      "stability": {
+        "hits": 73,
+        "total": 75,
+        "value": 0.9733,
+        "ci95": [
+          0.9079,
+          0.9927
+        ]
+      },
+      "tokens": 2011,
+      "errors": 0,
+      "top_pair": {
+        "expected": "analyze_traffic_flow",
+        "chosen": "analyze_tcp_retransmissions",
+        "count": 5
+      }
+    },
+    {
+      "slug": "ai-thiri-chord-intelligence",
+      "title": "THIRI Chord Intelligence",
+      "registry_name": "ai.thiri/chord-intelligence",
+      "repository": "https://github.com/BluesPrince/thiri-mcp",
+      "tool_count": 5,
+      "score": 92,
+      "accuracy": {
+        "hits": 114,
+        "total": 129,
+        "value": 0.8837,
+        "ci95": [
+          0.817,
+          0.9283
+        ]
+      },
+      "stability": {
+        "hits": 43,
+        "total": 43,
+        "value": 1.0,
+        "ci95": [
+          0.918,
+          1.0
+        ]
+      },
+      "tokens": 1054,
+      "errors": 0,
+      "top_pair": {
+        "expected": "resolve_chord",
+        "chosen": "conduct_band",
+        "count": 6
+      }
+    },
+    {
+      "slug": "ai-imboard-dossier",
+      "title": "ai.imboard/dossier",
+      "registry_name": "ai.imboard/dossier",
+      "repository": "https://github.com/imboard-ai/ai-dossier",
+      "tool_count": 10,
+      "score": 90,
+      "accuracy": {
+        "hits": 213,
+        "total": 249,
+        "value": 0.8554,
+        "ci95": [
+          0.8063,
+          0.8937
+        ]
+      },
+      "stability": {
+        "hits": 83,
+        "total": 83,
+        "value": 1.0,
+        "ci95": [
+          0.9558,
+          1.0
+        ]
+      },
+      "tokens": 928,
+      "errors": 0,
+      "top_pair": {
+        "expected": "read_dossier",
+        "chosen": "verify_dossier",
+        "count": 6
+      }
+    },
+    {
+      "slug": "io-github-modelcontextprotocol-server-everything",
+      "title": "Everything (reference)",
+      "registry_name": "io.github.modelcontextprotocol/server-everything",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "tool_count": 13,
+      "score": 86,
+      "accuracy": {
+        "hits": 259,
+        "total": 321,
+        "value": 0.8069,
+        "ci95": [
+          0.7601,
+          0.8463
+        ]
+      },
+      "stability": {
+        "hits": 104,
+        "total": 107,
+        "value": 0.972,
+        "ci95": [
+          0.9208,
+          0.9904
+        ]
+      },
+      "tokens": 1138,
+      "errors": 0,
+      "top_pair": {
+        "expected": "get-resource-reference",
+        "chosen": "get-resource-links",
+        "count": 9
+      }
+    },
+    {
+      "slug": "co-workix-mcp",
+      "title": "Workix",
+      "registry_name": "co.workix/mcp",
+      "repository": "https://github.com/facetoplace/Workix",
+      "tool_count": 64,
+      "score": 86,
+      "accuracy": {
+        "hits": 1252,
+        "total": 1545,
+        "value": 0.8104,
+        "ci95": [
+          0.79,
+          0.8291
+        ]
+      },
+      "stability": {
+        "hits": 491,
+        "total": 515,
+        "value": 0.9534,
+        "ci95": [
+          0.9316,
+          0.9685
+        ]
+      },
+      "tokens": 19905,
+      "errors": 0,
+      "top_pair": {
+        "expected": "workix_update_role",
+        "chosen": "workix_list_roles",
+        "count": 14
+      }
+    },
+    {
+      "slug": "ai-knowall-reverie",
+      "title": "Reverie",
+      "registry_name": "ai.knowall/reverie",
+      "repository": "https://github.com/knowall-ai/mcp-reverie",
+      "tool_count": 12,
+      "score": 85,
+      "accuracy": {
+        "hits": 234,
+        "total": 297,
+        "value": 0.7879,
+        "ci95": [
+          0.7379,
+          0.8305
+        ]
+      },
+      "stability": {
+        "hits": 97,
+        "total": 99,
+        "value": 0.9798,
+        "ci95": [
+          0.9293,
+          0.9944
+        ]
+      },
+      "tokens": 1518,
+      "errors": 0,
+      "top_pair": {
+        "expected": "create_memory",
+        "chosen": "search_memories",
+        "count": 15
+      }
+    },
+    {
+      "slug": "com-adrianczuczka-mason",
+      "title": "com.adrianczuczka/mason",
+      "registry_name": "com.adrianczuczka/mason",
+      "repository": "https://github.com/adrianczuczka/mason",
+      "tool_count": 22,
+      "score": 84,
+      "accuracy": {
+        "hits": 420,
+        "total": 537,
+        "value": 0.7821,
+        "ci95": [
+          0.7453,
+          0.815
+        ]
+      },
+      "stability": {
+        "hits": 175,
+        "total": 179,
+        "value": 0.9777,
+        "ci95": [
+          0.944,
+          0.9913
+        ]
+      },
+      "tokens": 6547,
+      "errors": 0,
+      "top_pair": {
+        "expected": "mason_repair",
+        "chosen": "mason_automation",
+        "count": 9
+      }
+    },
+    {
+      "slug": "com-1102tools-acquisition-gov-mcp",
+      "title": "Acquisition.gov",
+      "registry_name": "com.1102tools/acquisition-gov-mcp",
+      "repository": "https://github.com/1102tools-dev/federal-contracting-mcps",
+      "tool_count": 5,
+      "score": 82,
+      "accuracy": {
+        "hits": 96,
+        "total": 129,
+        "value": 0.7442,
+        "ci95": [
+          0.6626,
+          0.8117
+        ]
+      },
+      "stability": {
+        "hits": 43,
+        "total": 43,
+        "value": 1.0,
+        "ci95": [
+          0.918,
+          1.0
+        ]
+      },
+      "tokens": 575,
+      "errors": 0,
+      "top_pair": {
+        "expected": "get_rfo_part",
+        "chosen": "get_rfo_agency_deviation",
+        "count": 6
+      }
+    },
+    {
+      "slug": "ai-adeu-adeu",
+      "title": "ai.adeu/adeu",
+      "registry_name": "ai.adeu/adeu",
+      "repository": "https://github.com/dealfluence/adeu",
+      "tool_count": 9,
+      "score": 82,
+      "accuracy": {
+        "hits": 168,
+        "total": 225,
+        "value": 0.7467,
+        "ci95": [
+          0.686,
+          0.799
+        ]
+      },
+      "stability": {
+        "hits": 73,
+        "total": 75,
+        "value": 0.9733,
+        "ci95": [
+          0.9079,
+          0.9927
+        ]
+      },
+      "tokens": 1729,
+      "errors": 0,
+      "top_pair": {
+        "expected": "create_email_draft",
+        "chosen": "search_and_fetch_emails",
+        "count": 9
+      }
+    },
+    {
+      "slug": "ai-kinlab-kin",
+      "title": "Kin",
+      "registry_name": "ai.kinlab/kin",
+      "repository": "https://github.com/firelock-ai/kin",
+      "tool_count": 22,
+      "score": 77,
+      "accuracy": {
+        "hits": 368,
+        "total": 537,
+        "value": 0.6853,
+        "ci95": [
+          0.6448,
+          0.7231
+        ]
+      },
+      "stability": {
+        "hits": 170,
+        "total": 179,
+        "value": 0.9497,
+        "ci95": [
+          0.9072,
+          0.9733
+        ]
+      },
+      "tokens": 7866,
+      "errors": 0,
+      "top_pair": {
+        "expected": "graph_neighborhood",
+        "chosen": "semantic_search",
+        "count": 18
+      }
+    },
+    {
+      "slug": "io-github-modelcontextprotocol-server-sequential-thinking",
+      "title": "Sequential Thinking (reference)",
+      "registry_name": "io.github.modelcontextprotocol/server-sequential-thinking",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "tool_count": 1,
+      "score": 77,
+      "accuracy": {
+        "hits": 18,
+        "total": 27,
+        "value": 0.6667,
+        "ci95": [
+          0.4782,
+          0.8136
+        ]
+      },
+      "stability": {
+        "hits": 9,
+        "total": 9,
+        "value": 1.0,
+        "ci95": [
+          0.7009,
+          1.0
+        ]
+      },
+      "tokens": 1002,
+      "errors": 0,
+      "top_pair": null
+    },
+    {
+      "slug": "io-github-modelcontextprotocol-server-filesystem",
+      "title": "Filesystem (reference)",
+      "registry_name": "io.github.modelcontextprotocol/server-filesystem",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "tool_count": 14,
+      "score": 76,
+      "accuracy": {
+        "hits": 229,
+        "total": 345,
+        "value": 0.6638,
+        "ci95": [
+          0.6124,
+          0.7116
+        ]
+      },
+      "stability": {
+        "hits": 112,
+        "total": 115,
+        "value": 0.9739,
+        "ci95": [
+          0.9261,
+          0.9911
+        ]
+      },
+      "tokens": 1896,
+      "errors": 0,
+      "top_pair": {
+        "expected": "edit_file",
+        "chosen": "search_files",
+        "count": 15
+      }
+    },
+    {
+      "slug": "io-github-modelcontextprotocol-server-memory",
+      "title": "Memory (reference)",
+      "registry_name": "io.github.modelcontextprotocol/server-memory",
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "tool_count": 9,
+      "score": 72,
+      "accuracy": {
+        "hits": 135,
+        "total": 225,
+        "value": 0.6,
+        "ci95": [
+          0.5348,
+          0.6618
+        ]
+      },
+      "stability": {
+        "hits": 75,
+        "total": 75,
+        "value": 1.0,
+        "ci95": [
+          0.9513,
+          1.0
+        ]
+      },
+      "tokens": 991,
+      "errors": 0,
+      "top_pair": {
+        "expected": "delete_observations",
+        "chosen": "search_nodes",
+        "count": 15
+      }
+    },
+    {
+      "slug": "ai-wavespeed-mcp",
+      "title": "ai.wavespeed/mcp",
+      "registry_name": "ai.wavespeed/mcp",
+      "repository": "https://github.com/WaveSpeedAI/mcp-server",
+      "tool_count": 7,
+      "score": 69,
+      "accuracy": {
+        "hits": 99,
+        "total": 177,
+        "value": 0.5593,
+        "ci95": [
+          0.4857,
+          0.6304
+        ]
+      },
+      "stability": {
+        "hits": 58,
+        "total": 59,
+        "value": 0.9831,
+        "ci95": [
+          0.91,
+          0.997
+        ]
+      },
+      "tokens": 837,
+      "errors": 0,
+      "top_pair": {
+        "expected": "run_model",
+        "chosen": "list_models",
+        "count": 26
+      }
+    },
+    {
+      "slug": "ai-vaaya-mcp",
+      "title": "Vaaya",
+      "registry_name": "ai.vaaya/mcp",
+      "repository": "https://github.com/vaaya-ai/vaaya-mcp",
+      "tool_count": 15,
+      "score": 0,
+      "accuracy": {
+        "hits": 0,
+        "total": 0,
+        "value": null,
+        "ci95": null
+      },
+      "stability": {
+        "hits": 0,
+        "total": 0,
+        "value": null,
+        "ci95": null
+      },
+      "tokens": 5801,
+      "errors": 0,
+      "top_pair": null
+    }
+  ],
+  "skipped": [
+    {
+      "registry_name": "ai.ankimcp/anki-mcp-server",
+      "title": "Anki MCP Server",
+      "repository": "https://github.com/ankimcp/anki-mcp-server",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.ankimcp/anki-mcp-server' over stdio: MCPError: Request 'initialize' timed out | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "registry_name": "ai.toolprint/hypertool-mcp",
+      "title": "ai.toolprint/hypertool-mcp",
+      "repository": "https://github.com/toolprint/hypertool-mcp",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.toolprint/hypertool-mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "registry_name": "ai.dinglebear/unraid",
+      "title": "Unraid RMCP",
+      "repository": "https://github.com/dinglebear-ai/unraid",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'ai.dinglebear/unraid' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | Error: UNRAID_API_URL is not set"
+    },
+    {
+      "registry_name": "ai.codenib/codenib",
+      "title": "CodeNib",
+      "repository": "https://github.com/sysevol-ai/CodeNib",
+      "status": "needs_arguments",
+      "reason": "Could not start or query 'ai.codenib/codenib' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | Downloading codenib (3.2MiB) | Downloaded numpy | Downloaded codenib | Installed 25 packages in 19ms | usage: codenib [-h] [--version] | {index,wiki,export,artifact,publish,mcp,codegraph,toolchain,doctor} | ... | codenib: error: the following arguments are required: command"
+    },
+    {
+      "registry_name": "ai.zensation/zenbrain",
+      "title": "ZenBrain Memory",
+      "repository": "https://github.com/zensation-ai/zenbrain",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.zensation/zenbrain' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "registry_name": "app.cellarion/cellarion",
+      "title": "Cellarion",
+      "repository": "https://github.com/jagduvi1/Cellarion",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'app.cellarion/cellarion' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | cellarion-mcp: no token. | Mint a personal API token in Cellarion (Settings \u2192 API tokens, \"read\" scope) | and pass it as CELLARION_TOKEN (or --token). Self-hosted? Also set CELLARION_URL."
+    },
+    {
+      "registry_name": "ai.orangepro/mcp",
+      "title": "OrangePro",
+      "repository": "https://github.com/OrangeproAI/orangepro-mcp",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.orangepro/mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | [opro start 09] [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591] 75% (25% left) proof plan: sym:src/mispick/fix.py#mcnemar_exact \u2192 pytest tests/test_fix.py::TestMcNemar::test_no_change_is_no_evidence | [opro start 10] [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591] 75% (25% left) proof plan: sym:src/mispick/fix.py#check_length \u2192 pytest tests/test_fix.py::TestLengthGuard::test_a_modest_rewrite_passes | [opro start 11] [\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2591\u2591] 75% (25% left) proof plan: sym:src/mispick/fix."
+    },
+    {
+      "registry_name": "ai.buywhere/buywhere-mcp",
+      "title": "BuyWhere MCP",
+      "repository": "https://github.com/BuyWhere/buywhere-mcp",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'ai.buywhere/buywhere-mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | Error: BUYWHERE_API_KEY environment variable is required."
+    },
+    {
+      "registry_name": "ai.dinglebear/yarr",
+      "title": "Yarr MCP",
+      "repository": "https://github.com/dinglebear-ai/yarr",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.dinglebear/yarr' over stdio: MCPError: Request 'initialize' timed out | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | 16:30:27   INFO  yarr starting  auth=AuthPolicy::LoopbackDev  bind=127.0.0.1:40070  server_name=yarr | 16:30:27   INFO  MCP HTTP server listening  bind=127.0.0.1:40070 | 16:32:37   INFO  Shutdown signal received"
+    },
+    {
+      "registry_name": "ai.dinglebear/yarr-mcp",
+      "title": "Yarr MCP",
+      "repository": "https://github.com/jmagar/yarr",
+      "status": "package_unavailable",
+      "reason": "Could not start or query 'ai.dinglebear/yarr-mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | npm error code ETARGET | npm error notarget No matching version found for yarr-mcp@1.1.1. | npm error notarget In most cases you or one of your dependencies are requesting | npm error notarget a package version that doesn't exist. | npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-09-24T16_32_37_212Z-debug-0.log"
+    },
+    {
+      "registry_name": "ai.withone/mcp",
+      "title": "One",
+      "repository": "https://github.com/withoneai/mcp",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'ai.withone/mcp' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | ONE_SECRET environment variable is required"
+    },
+    {
+      "registry_name": "ai.nauro/nauro",
+      "title": "Nauro",
+      "repository": "https://github.com/Nauro-AI/nauro",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.nauro/nauro' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | projects                 Inspect and recover Nauro project registry... | questions                Maintenance commands for open-questions.md. | hook                     Client-side advisory hooks for AI coding agents. | setup                    Configure tool integrations. | config                   Inspect and remove Nauro configuration. | validate                 Validation diagnostics. | auth              "
+    },
+    {
+      "registry_name": "au.com.ato-mcp/ato-mcp",
+      "title": "Australian Tax MCP",
+      "repository": "https://github.com/william-laverty/ato-mcp",
+      "status": "needs_credentials",
+      "reason": "Could not start or query 'au.com.ato-mcp/ato-mcp' over stdio: MCPError: Request 'initialize' timed out | Check the command runs on its own, and that it speaks MCP over stdio. | The server's last output was: | [3255] Trying gio to open the browser... | [3255] Trying x-www-browser to open the browser... | [3255] Browser opened automatically. | [3255] Authentication required. Initializing auth... | [3255] Initializing auth coordination on-demand | [3255] OAuth callback server running at http://127.0.0.1:40435 | [3255] This instance is running the sign-in for this server (callback port 40435) | [3"
+    },
+    {
+      "registry_name": "ai.etincel/etincel-nonfiction",
+      "title": "ai.etincel/etincel-nonfiction",
+      "repository": "https://github.com/AIStoryHub/etincel",
+      "status": "failed",
+      "reason": "Could not start or query 'ai.etincel/etincel-nonfiction' over stdio: MCPError: Connection closed | Check the command runs on its own, and that it speaks MCP over stdio."
+    },
+    {
+      "registry_name": "ai.agenticaffiliate/affiliate-networks-mcp",
+      "title": "Affiliate Networks MCP",
+      "repository": "https://github.com/bobberrisford/affiliatemcp",
+      "status": "too_many_tools",
+      "reason": "682 tools, above the --max-tools limit of 120. Its tool list alone costs roughly 109180 tokens on every request (estimate, and a lower bound).",
+      "tool_count": 682,
+      "tokens": 109180
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{"query_id":"analyze_chord#straightforward.1","chosen":"analyze_chord","arguments":{"key":"C","chord":"Cmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#straightforward.1","chosen":"analyze_chord","arguments":{"key":"C","chord":"Cmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#straightforward.1","chosen":"analyze_chord","arguments":{"key":"C","chord":"Cmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#straightforward.2","chosen":"analyze_chord","arguments":{"chord":"F#m7b5"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#straightforward.2","chosen":"analyze_chord","arguments":{"chord":"F#m7b5"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#straightforward.2","chosen":"analyze_chord","arguments":{"chord":"F#m7b5"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#straightforward.3","chosen":"analyze_chord","arguments":{"chord":"G7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#straightforward.3","chosen":"analyze_chord","arguments":{"chord":"G7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#straightforward.3","chosen":"analyze_chord","arguments":{"chord":"G7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#straightforward.4","chosen":"analyze_chord","arguments":{"key":"Am","chord":"Bdim"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#straightforward.4","chosen":"analyze_chord","arguments":{"chord":"Bdim","key":"Am"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#straightforward.4","chosen":"analyze_chord","arguments":{"chord":"Bdim","key":"Am"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#paraphrased.1","chosen":"analyze_chord","arguments":{"chord":"Ebmaj9","key":"Bb"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#paraphrased.1","chosen":"analyze_chord","arguments":{"chord":"Ebmaj9","key":"Bb"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#paraphrased.2","chosen":"analyze_chord","arguments":{"chord":"Dm9"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#paraphrased.1","chosen":"analyze_chord","arguments":{"key":"Bb","chord":"Ebmaj9"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#paraphrased.2","chosen":"analyze_chord","arguments":{"chord":"Dm9"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#hard_negative.1","chosen":"resolve_chord","arguments":{"chord":"G7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"analyze_chord#paraphrased.2","chosen":"analyze_chord","arguments":{"chord":"Dm9"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#hard_negative.1","chosen":"resolve_chord","arguments":{"chord":"G7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#hard_negative.1","chosen":"resolve_chord","arguments":{"chord":"G7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#hard_negative.2","chosen":"analyze_chord","arguments":{"key":"Eb","chord":"Bb7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"analyze_chord#hard_negative.2","chosen":"analyze_chord","arguments":{"chord":"Bb7","key":"Eb"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"analyze_chord#hard_negative.2","chosen":"analyze_chord","arguments":{"key":"Eb","chord":"Bb7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#straightforward.1","chosen":"conduct_band","arguments":{"durationSec":30,"prompt":"A four-piece jazz arrangement with a walking bassline and a swinging drum beat that lasts for thirty seconds"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#straightforward.1","chosen":"conduct_band","arguments":{"prompt":"four-piece jazz arrangement with a walking bassline and a swinging drum beat","durationSec":30},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#straightforward.1","chosen":"conduct_band","arguments":{"durationSec":30,"prompt":"Four-piece jazz arrangement with a walking bassline and a swinging drum beat"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#straightforward.2","chosen":"conduct_band","arguments":{"prompt":"upbeat funk groove featuring synth, guitar, bass, and drums","durationSec":15},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#straightforward.2","chosen":"conduct_band","arguments":{"durationSec":15,"prompt":"15-second upbeat funk groove featuring a synth, guitar, bass, and drums"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#straightforward.2","chosen":"conduct_band","arguments":{"prompt":"15-second upbeat funk groove featuring a synth, guitar, bass, and drums","durationSec":15},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#straightforward.3","chosen":"conduct_band","arguments":{"prompt":"slow blues shuffle at 90 BPM for 20 seconds, 4-piece band","durationSec":20},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#straightforward.3","chosen":"conduct_band","arguments":{"durationSec":20,"prompt":"slow blues shuffle at 90 BPM for 20 seconds, quartet arrangement"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#straightforward.3","chosen":"conduct_band","arguments":{"prompt":"Slow blues shuffle at 90 BPM with a quartet of piano, bass, drums, and guitar","durationSec":20},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#straightforward.4","chosen":"conduct_band","arguments":{"durationSec":25,"prompt":"25-second indie rock piece for 4 instruments with a driving tempo and clear lead sheet notation"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#straightforward.4","chosen":"conduct_band","arguments":{"durationSec":25,"prompt":"25-second indie rock piece for four instruments with a driving tempo"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#straightforward.4","chosen":"conduct_band","arguments":{"prompt":"25-second indie rock piece for four instruments with a driving tempo","durationSec":25},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#paraphrased.1","chosen":"conduct_band","arguments":{"durationSec":20,"prompt":"fast tempo rock jam with heavy drums and full band"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#paraphrased.1","chosen":"conduct_band","arguments":{"prompt":"20-second fast-tempo heavy rock jam for full band with driving drums and distorted guitar","durationSec":20},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#paraphrased.2","chosen":"conduct_band","arguments":{"durationSec":10,"prompt":"fast jazz quartet backing loop"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#paraphrased.2","chosen":"conduct_band","arguments":{"durationSec":10,"prompt":"fast quartet backing loop"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#paraphrased.1","chosen":"conduct_band","arguments":{"durationSec":20,"prompt":"fast tempo rock jam with heavy drums and full band"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#paraphrased.2","chosen":"conduct_band","arguments":{"durationSec":10,"prompt":"fast quartet backing loop with drums, bass, keys and guitar"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#hard_negative.1","chosen":"conduct_band","arguments":{"prompt":"fast thirty-second jazz quartet band arrangement"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"conduct_band#hard_negative.1","chosen":"conduct_band","arguments":{"durationSec":30,"prompt":"fast jazz quartet band arrangement"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#hard_negative.1","chosen":"conduct_band","arguments":{"prompt":"fast jazz quartet band arrangement","durationSec":30},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#hard_negative.2","chosen":"conduct_band","arguments":{"prompt":"An upbeat groove band playing chord voicings and rhythm"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"conduct_band#hard_negative.2","chosen":"conduct_band","arguments":{"prompt":"upbeat groove four-instrument band"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"conduct_band#hard_negative.2","chosen":"conduct_band","arguments":{"prompt":"upbeat groove four-instrument band"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#straightforward.1","chosen":"generate_voicing","arguments":{"style":"bill_evans","octave":4,"density":4,"chord":"Fm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#straightforward.1","chosen":"generate_voicing","arguments":{"density":4,"chord":"Fm7","octave":4,"style":"bill_evans"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#straightforward.1","chosen":"generate_voicing","arguments":{"chord":"Fm7","density":4,"octave":4,"style":"bill_evans"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#straightforward.2","chosen":"generate_voicing","arguments":{"style":"drop-2","octave":3,"keyContext":"C major","chord":"Cmaj7","density":3},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#straightforward.2","chosen":"generate_voicing","arguments":{"density":3,"chord":"Cmaj7","keyContext":"C major","octave":3,"style":"drop-2"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#straightforward.2","chosen":"generate_voicing","arguments":{"chord":"Cmaj7","style":"drop-2","keyContext":"C major","octave":3,"density":3},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#straightforward.3","chosen":"generate_voicing","arguments":{"density":4,"octave":4,"style":"rootless","chord":"D7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#straightforward.3","chosen":"generate_voicing","arguments":{"style":"rootless","chord":"D7","octave":4,"density":4},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#straightforward.4","chosen":"generate_voicing","arguments":{"chord":"Bbm7","density":2,"octave":3,"style":"shell"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#straightforward.3","chosen":"generate_voicing","arguments":{"octave":4,"style":"rootless","density":4,"chord":"D7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#straightforward.4","chosen":"generate_voicing","arguments":{"octave":3,"density":2,"style":"shell","chord":"Bbm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#straightforward.4","chosen":"generate_voicing","arguments":{"style":"shell","density":2,"chord":"Bbm7","octave":3},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#paraphrased.1","chosen":"generate_voicing","arguments":{"octave":4,"style":"drop-2","chord":"Eb7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#paraphrased.1","chosen":"generate_voicing","arguments":{"octave":4,"chord":"Eb7","style":"drop-2"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#paraphrased.1","chosen":"generate_voicing","arguments":{"octave":4,"style":"drop-2","chord":"Eb7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#paraphrased.2","chosen":"generate_voicing","arguments":{"style":"pad","octave":5,"chord":"Gm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#paraphrased.2","chosen":"generate_voicing","arguments":{"chord":"Gm7","octave":5,"style":"pad"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#paraphrased.2","chosen":"generate_voicing","arguments":{"chord":"Gm7","octave":5,"style":"pad"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#hard_negative.1","chosen":"resolve_chord","arguments":{"chord":"Dm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#hard_negative.1","chosen":"resolve_chord","arguments":{"chord":"Dm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#hard_negative.1","chosen":"resolve_chord","arguments":{"chord":"Dm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"generate_voicing#hard_negative.2","chosen":"generate_voicing","arguments":{"style":"pad","octave":3,"chord":"Cmaj7sus4"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"generate_voicing#hard_negative.2","chosen":"generate_voicing","arguments":{"keyContext":"C major","style":"pad","density":3,"chord":"Cmaj7sus4","octave":3},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"generate_voicing#hard_negative.2","chosen":"generate_voicing","arguments":{"octave":3,"style":"pad","chord":"Cmaj7sus4"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#straightforward.1","chosen":"reharmonize","arguments":{"progression":["Cmaj7","A7","Dm7","G7"],"technique":"tritone_sub"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#straightforward.1","chosen":"reharmonize","arguments":{"technique":"tritone_sub","progression":["Cmaj7","A7","Dm7","G7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#straightforward.1","chosen":"reharmonize","arguments":{"technique":"tritone_sub","progression":["Cmaj7","A7","Dm7","G7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#straightforward.2","chosen":"reharmonize","arguments":{"progression":["Fmaj7","Bb7","Cmaj7"],"technique":"backdoor","key":"C"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#straightforward.2","chosen":"reharmonize","arguments":{"progression":["Fmaj7","Bb7","Cmaj7"],"technique":"backdoor","key":"C"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#straightforward.3","chosen":"reharmonize","arguments":{"technique":"modal_interchange","progression":["Gmaj7","Em7","Am7","D7"],"key":"G"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#straightforward.2","chosen":"reharmonize","arguments":{"progression":["Fmaj7","Bb7","Cmaj7"],"key":"C","technique":"backdoor"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#straightforward.3","chosen":"reharmonize","arguments":{"key":"G","progression":["Gmaj7","Em7","Am7","D7"],"technique":"modal_interchange"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#straightforward.3","chosen":"reharmonize","arguments":{"technique":"modal_interchange","key":"G","progression":["Gmaj7","Em7","Am7","D7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#straightforward.4","chosen":"reharmonize","arguments":{"progression":["Dm7","G7","Cmaj7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#straightforward.4","chosen":"reharmonize","arguments":{"progression":["Dm7","G7","Cmaj7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#paraphrased.1","chosen":"reharmonize","arguments":{"technique":"auto","progression":["Bbmaj7","Dm7","Ebmaj7","F7"],"key":"Bb"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#straightforward.4","chosen":"reharmonize","arguments":{"progression":["Dm7","G7","Cmaj7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#paraphrased.1","chosen":"reharmonize","arguments":{"key":"Bb","progression":["Bbmaj7","Dm7","Ebmaj7","F7"]},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#paraphrased.1","chosen":"reharmonize","arguments":{"progression":["Bbmaj7","Dm7","Ebmaj7","F7"],"key":"Bb"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#paraphrased.2","chosen":"reharmonize","arguments":{"technique":"auto","key":"C","progression":["C","Am","Dm","G"]},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#paraphrased.2","chosen":"reharmonize","arguments":{"technique":"auto","progression":["C","Am","Dm","G"],"key":"C"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#paraphrased.2","chosen":"reharmonize","arguments":{"progression":["C","Am","Dm","G"],"key":"C"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#hard_negative.1","chosen":"analyze_chord","arguments":{"key":"C","chord":"Cmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#hard_negative.1","chosen":"analyze_chord","arguments":{"key":"C","chord":"Cmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#hard_negative.1","chosen":"analyze_chord","arguments":{"key":"C","chord":"Cmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"reharmonize#hard_negative.2","chosen":"analyze_chord","arguments":{"key":"C","chord":"Fmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"reharmonize#hard_negative.2","chosen":"analyze_chord","arguments":{"key":"C","chord":"Fmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"reharmonize#hard_negative.2","chosen":"analyze_chord","arguments":{"chord":"Fmaj7","key":"C"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#straightforward.1","chosen":"resolve_chord","arguments":{"chord":"Cmaj7#11"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#straightforward.1","chosen":"resolve_chord","arguments":{"chord":"Cmaj7#11"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#straightforward.1","chosen":"resolve_chord","arguments":{"chord":"Cmaj7#11"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#straightforward.2","chosen":"resolve_chord","arguments":{"chord":"Fm9"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#straightforward.2","chosen":"resolve_chord","arguments":{"chord":"Fm9"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#straightforward.2","chosen":"resolve_chord","arguments":{"chord":"Fm9"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#straightforward.3","chosen":"resolve_chord","arguments":{"chord":"G7b9"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#straightforward.3","chosen":"resolve_chord","arguments":{"chord":"G7b9"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#straightforward.4","chosen":"resolve_chord","arguments":{"chord":"Ebm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#straightforward.4","chosen":"resolve_chord","arguments":{"chord":"Ebm7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#straightforward.3","chosen":"resolve_chord","arguments":{"chord":"G7b9"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#paraphrased.1","chosen":"resolve_chord","arguments":{"chord":"F#m7b5"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#straightforward.4","chosen":"resolve_chord","arguments":{"chord":"Ebm77"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#paraphrased.1","chosen":"resolve_chord","arguments":{"chord":"F#m7b5"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#paraphrased.1","chosen":"resolve_chord","arguments":{"chord":"F#m7b5"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#paraphrased.2","chosen":"resolve_chord","arguments":{"chord":"Bbaug(maj7)"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#paraphrased.2","chosen":"resolve_chord","arguments":{"chord":"Bbaugmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#paraphrased.2","chosen":"resolve_chord","arguments":{"chord":"Bbaugmaj7"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#hard_negative.1","chosen":"conduct_band","arguments":{"prompt":"Big band arrangement in D minor with horns, piano, bass, and drums"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"resolve_chord#hard_negative.1","chosen":"conduct_band","arguments":{"prompt":"big band arrangement in D minor"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#hard_negative.1","chosen":"conduct_band","arguments":{"prompt":"Big band arrangement in D minor with horns and rhythm section"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#hard_negative.2","chosen":"conduct_band","arguments":{"prompt":"syncopated horn backup line over Bb7"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"resolve_chord#hard_negative.2","chosen":"conduct_band","arguments":{"prompt":"12-second horn section playing a syncopated backup line over Bb7 in Bb"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"resolve_chord#hard_negative.2","chosen":"conduct_band","arguments":{"prompt":"syncopated horn backup line over Bb7"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#1","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#2","chosen":"resolve_chord","arguments":{"chord":"G#m(maj7)"},"phantom":null,"args_valid":true,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#2","chosen":"resolve_chord","arguments":{"chord":"G#m(maj7)"},"phantom":null,"args_valid":true,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#2","chosen":"resolve_chord","arguments":{"chord":"G#m(maj7)"},"phantom":null,"args_valid":true,"args_errors":[],"run":2,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":0,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":1,"error":null}
+{"query_id":"(none)#3","chosen":null,"arguments":{},"phantom":null,"args_valid":null,"args_errors":[],"run":2,"error":null}

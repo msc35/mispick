@@ -1,0 +1,4434 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-17",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "ai-adeu-adeu",
+      "name": "adeu-redlining-service",
+      "version": "1.0.0",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "accept_all_changes",
+      "server": null,
+      "title": null,
+      "description": "Accepts all tracked changes and removes all comments in a single operation, producing a finalized clean document. Use this when a document review is entirely complete and you want to clear all redlines.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "docx_path": {
+            "type": "string",
+            "description": "Absolute path to the DOCX file."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Optional output path."
+          }
+        },
+        "required": [
+          "docx_path"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "create_email_draft",
+      "server": null,
+      "title": null,
+      "description": "Creates an email draft in the user's native draft box. Provide `reply_to_email_id` to reply, or `subject` and `to_recipients` for a new email.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "body_markdown": {
+            "type": "string"
+          },
+          "reply_to_email_id": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "to_recipients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachment_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "body_markdown"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "diff_docx_files",
+      "server": null,
+      "title": null,
+      "description": "Compares two DOCX files and returns a unified diff of their text content. Useful for analyzing differences between versions before editing.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "original_path": {
+            "type": "string",
+            "description": "Absolute path to the baseline DOCX file."
+          },
+          "modified_path": {
+            "type": "string",
+            "description": "Absolute path to the modified DOCX file."
+          },
+          "compare_clean": {
+            "type": "boolean",
+            "description": "If True, compares 'Accepted' state. If False, compares raw text.",
+            "default": true
+          }
+        },
+        "required": [
+          "original_path",
+          "modified_path"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "finalize_document",
+      "server": null,
+      "title": null,
+      "description": "Prepares a document for external distribution or e-signature. This tool combines metadata sanitization, document locking (protection), and markup resolution into a single step. NOTE: PDF export and AES encryption are disabled in this environment.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Absolute path to the DOCX file."
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Optional output path."
+          },
+          "sanitize_mode": {
+            "type": "string",
+            "enum": [
+              "full",
+              "keep-markup"
+            ],
+            "description": "full removes all markup, keep-markup redacts metadata but keeps comments/redlines."
+          },
+          "accept_all": {
+            "type": "boolean",
+            "description": "If true, auto-accepts all unresolved track changes before finalizing."
+          },
+          "protection_mode": {
+            "type": "string",
+            "enum": [
+              "read_only",
+              "encrypt"
+            ],
+            "description": "Native OOXML document locking. encrypt falls back to read_only in this environment."
+          },
+          "password": {
+            "type": "string",
+            "description": "Ignored in this environment."
+          },
+          "author": {
+            "type": "string",
+            "description": "Replace all remaining markup authorship with this name."
+          },
+          "export_pdf": {
+            "type": "boolean",
+            "description": "Ignored in this environment."
+          }
+        },
+        "required": [
+          "file_path"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "login_to_adeu_cloud",
+      "server": null,
+      "title": null,
+      "description": "Logs the user into the Adeu Cloud backend. Securely opens a browser window for authentication.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {}
+    },
+    {
+      "name": "logout_of_adeu_cloud",
+      "server": null,
+      "title": null,
+      "description": "Logs out of the Adeu Cloud backend by clearing the local API key.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {}
+    },
+    {
+      "name": "process_document_batch",
+      "server": null,
+      "title": null,
+      "description": "Applies a batch of edits and review actions to a DOCX.\n\nAll changes evaluate against the ORIGINAL document state \u2014 do not chain dependent edits within one batch (e.g. rename X to Y, then modify Y). Apply the rename first, then send a second batch.\n\nEach item in `changes` must specify a `type`:\n1. 'modify': Search-and-replace. `target_text` must uniquely match \u2014 include surrounding context if the phrase is ambiguous. `new_text` supports Markdown: '# Heading 1' through '###### Heading 6', '**bold**', '_italic_', and '\\n\\n' to split into multiple paragraphs. Empty `new_text` deletes. Do NOT write CriticMarkup tags ({++, {--, {>>) manually \u2014 use the `comment` parameter for comments.\n2. 'accept' / 'reject': Finalize or revert a tracked change by `target_id` (e.g. 'Chg:12').\n3. 'reply': Reply to a comment by `target_id` (e.g. 'Com:5') with `text`.\n4. 'insert_row' / 'delete_row': Table edits. Disk mode only \u2014 not supported on Live Word canvas.\n\nID VOLATILITY: 'Chg:N' and 'Com:N' shift between document states. Always call `read_docx` immediately before any accept/reject/reply \u2014 do not reuse IDs from earlier in the conversation.\n\n`author_name` is used for attribution on all tracked changes and comments, in both disk and Live Word modes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "original_docx_path": {
+            "type": "string",
+            "description": "Absolute path to the source file."
+          },
+          "author_name": {
+            "type": "string",
+            "description": "Name to appear in Track Changes (e.g., 'Reviewer AI')."
+          },
+          "changes": {
+            "type": "array",
+            "description": "List of changes to apply. Each change must specify 'type'.",
+            "items": {
+              "type": "object"
+            }
+          },
+          "output_path": {
+            "type": "string",
+            "description": "Optional output path."
+          }
+        },
+        "required": [
+          "original_docx_path",
+          "author_name",
+          "changes"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "read_docx",
+      "server": null,
+      "title": null,
+      "description": "Reads a DOCX file. Returns text with inline CriticMarkup for Tracked Changes and Comments: {++inserted++}, {--deleted--}, {==highlighted==}{>>comment<<}. Set clean_view=True for the finalized 'Accepted' text without markup.\n\nModes:\n- 'full' (default): paginated body content. Use page=N to navigate.\n- 'outline': heading map only \u2014 start here for large docs to plan targeted reads. Defaults to L1-L2 headings; pass outline_max_level=3-6 to see deeper structure.\n- 'appendix': defined terms, anchors, and cross-reference targets. Consult before editing legal/technical docs to avoid breaking references.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Absolute path to the DOCX file."
+          },
+          "clean_view": {
+            "type": "boolean",
+            "description": "If False (default), returns the 'Raw' text with inline CriticMarkup. If True, returns 'Accepted' text.",
+            "default": false
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "full",
+              "outline",
+              "appendix"
+            ],
+            "description": "'full' returns body content. 'outline' returns a structural heading map. 'appendix' returns defined terms.",
+            "default": "full"
+          },
+          "page": {
+            "type": "number",
+            "description": "Page number (1-indexed) for mode='full'. Defaults to 1.",
+            "default": 1
+          },
+          "outline_max_level": {
+            "type": "number",
+            "description": "For mode='outline' only: cap on heading depth.",
+            "default": 2
+          },
+          "outline_verbose": {
+            "type": "boolean",
+            "description": "For mode='outline' only: includes metadata.",
+            "default": false
+          }
+        },
+        "required": [
+          "file_path"
+        ]
+      },
+      "annotations": {}
+    },
+    {
+      "name": "search_and_fetch_emails",
+      "server": null,
+      "title": null,
+      "description": "Searches the user's live email inbox. By default, searches only the Inbox folder. Returns a list of lightweight previews. Call again with `email_id` to fetch the full body and download attachments.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "has_attachments": {
+            "type": "boolean"
+          },
+          "attachment_name": {
+            "type": "string"
+          },
+          "is_unread": {
+            "type": "boolean"
+          },
+          "days_ago": {
+            "type": "number"
+          },
+          "folder": {
+            "type": "string",
+            "enum": [
+              "inbox",
+              "sent",
+              "all"
+            ]
+          },
+          "limit": {
+            "type": "number",
+            "default": 10
+          },
+          "offset": {
+            "type": "number",
+            "default": 0
+          },
+          "email_id": {
+            "type": "string"
+          },
+          "working_directory": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {}
+    }
+  ],
+  "score": 82,
+  "summary": {
+    "accuracy": {
+      "hits": 168,
+      "total": 225,
+      "value": 0.7467,
+      "ci95": [
+        0.686,
+        0.799
+      ]
+    },
+    "stability": {
+      "hits": 73,
+      "total": 75,
+      "value": 0.9733,
+      "ci95": [
+        0.9079,
+        0.9927
+      ]
+    },
+    "argumentValidity": {
+      "hits": 219,
+      "total": 219,
+      "value": 1.0,
+      "ci95": [
+        0.9828,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 9,
+      "total": 9,
+      "value": 1.0,
+      "ci95": [
+        0.7009,
+        1.0
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 225,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0168
+      ]
+    },
+    "trials": 225,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 1729
+  },
+  "confusionMatrix": {
+    "rows": [
+      "accept_all_changes",
+      "create_email_draft",
+      "diff_docx_files",
+      "finalize_document",
+      "login_to_adeu_cloud",
+      "logout_of_adeu_cloud",
+      "process_document_batch",
+      "read_docx",
+      "search_and_fetch_emails",
+      "(none)"
+    ],
+    "columns": [
+      "accept_all_changes",
+      "create_email_draft",
+      "diff_docx_files",
+      "finalize_document",
+      "login_to_adeu_cloud",
+      "logout_of_adeu_cloud",
+      "process_document_batch",
+      "read_docx",
+      "search_and_fetch_emails",
+      "(none)"
+    ],
+    "counts": {
+      "accept_all_changes": {
+        "accept_all_changes": 19,
+        "finalize_document": 3,
+        "search_and_fetch_emails": 2
+      },
+      "create_email_draft": {
+        "create_email_draft": 15,
+        "search_and_fetch_emails": 9
+      },
+      "diff_docx_files": {
+        "diff_docx_files": 18
+      },
+      "finalize_document": {
+        "finalize_document": 17,
+        "accept_all_changes": 1,
+        "search_and_fetch_emails": 6
+      },
+      "login_to_adeu_cloud": {
+        "login_to_adeu_cloud": 24
+      },
+      "logout_of_adeu_cloud": {
+        "logout_of_adeu_cloud": 24
+      },
+      "process_document_batch": {
+        "process_document_batch": 9,
+        "read_docx": 3,
+        "search_and_fetch_emails": 3,
+        "accept_all_changes": 3,
+        "(none)": 6
+      },
+      "read_docx": {
+        "read_docx": 21,
+        "diff_docx_files": 3,
+        "search_and_fetch_emails": 6
+      },
+      "search_and_fetch_emails": {
+        "create_email_draft": 3,
+        "search_and_fetch_emails": 21
+      },
+      "(none)": {
+        "search_and_fetch_emails": 3,
+        "login_to_adeu_cloud": 3,
+        "create_email_draft": 3
+      }
+    }
+  },
+  "perTool": {
+    "accept_all_changes": {
+      "recall": {
+        "hits": 19,
+        "total": 24,
+        "value": 0.7917,
+        "ci95": [
+          0.5953,
+          0.9076
+        ]
+      },
+      "precision": {
+        "hits": 19,
+        "total": 23,
+        "value": 0.8261,
+        "ci95": [
+          0.6286,
+          0.9302
+        ]
+      },
+      "f1": 0.8085
+    },
+    "create_email_draft": {
+      "recall": {
+        "hits": 15,
+        "total": 24,
+        "value": 0.625,
+        "ci95": [
+          0.4271,
+          0.7884
+        ]
+      },
+      "precision": {
+        "hits": 15,
+        "total": 21,
+        "value": 0.7143,
+        "ci95": [
+          0.5004,
+          0.8619
+        ]
+      },
+      "f1": 0.6667
+    },
+    "diff_docx_files": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.9231
+    },
+    "finalize_document": {
+      "recall": {
+        "hits": 17,
+        "total": 24,
+        "value": 0.7083,
+        "ci95": [
+          0.5083,
+          0.8509
+        ]
+      },
+      "precision": {
+        "hits": 17,
+        "total": 20,
+        "value": 0.85,
+        "ci95": [
+          0.6396,
+          0.9476
+        ]
+      },
+      "f1": 0.7727
+    },
+    "login_to_adeu_cloud": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 27,
+        "value": 0.8889,
+        "ci95": [
+          0.7194,
+          0.9615
+        ]
+      },
+      "f1": 0.9412
+    },
+    "logout_of_adeu_cloud": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "process_document_batch": {
+      "recall": {
+        "hits": 9,
+        "total": 24,
+        "value": 0.375,
+        "ci95": [
+          0.2116,
+          0.5729
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 9,
+        "value": 1.0,
+        "ci95": [
+          0.7009,
+          1.0
+        ]
+      },
+      "f1": 0.5455
+    },
+    "read_docx": {
+      "recall": {
+        "hits": 21,
+        "total": 30,
+        "value": 0.7,
+        "ci95": [
+          0.5212,
+          0.8334
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "f1": 0.7778
+    },
+    "search_and_fetch_emails": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 50,
+        "value": 0.42,
+        "ci95": [
+          0.2938,
+          0.5577
+        ]
+      },
+      "f1": 0.5676
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "create_email_draft",
+      "chosen": "search_and_fetch_emails",
+      "count": 9,
+      "share": 0.375
+    },
+    {
+      "expected": "finalize_document",
+      "chosen": "search_and_fetch_emails",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "process_document_batch",
+      "chosen": "(none)",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "read_docx",
+      "chosen": "search_and_fetch_emails",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "(none)",
+      "chosen": "create_email_draft",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "(none)",
+      "chosen": "login_to_adeu_cloud",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "(none)",
+      "chosen": "search_and_fetch_emails",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "accept_all_changes",
+      "chosen": "finalize_document",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "process_document_batch",
+      "chosen": "accept_all_changes",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "process_document_batch",
+      "chosen": "read_docx",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "process_document_batch",
+      "chosen": "search_and_fetch_emails",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "search_and_fetch_emails",
+      "chosen": "create_email_draft",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "read_docx",
+      "chosen": "diff_docx_files",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "accept_all_changes",
+      "chosen": "search_and_fetch_emails",
+      "count": 2,
+      "share": 0.0833
+    },
+    {
+      "expected": "finalize_document",
+      "chosen": "accept_all_changes",
+      "count": 1,
+      "share": 0.0417
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "create_email_draft",
+      "chosen": "search_and_fetch_emails",
+      "count": 9
+    },
+    {
+      "expected": "finalize_document",
+      "chosen": "search_and_fetch_emails",
+      "count": 6
+    },
+    {
+      "expected": "read_docx",
+      "chosen": "search_and_fetch_emails",
+      "count": 6
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 9,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [
+    "accept_all_changes#hard_negative.1",
+    "finalize_document#hard_negative.2"
+  ],
+  "queries": [
+    {
+      "id": "accept_all_changes#straightforward.1",
+      "text": "Please process contract.docx by accepting every tracked change and wiping out all comments, then save the final result to final_contract.docx.",
+      "expected": "accept_all_changes",
+      "kind": "straightforward",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#straightforward.2",
+      "text": "Take proposal.docx, accept all of the revisions inside it, strip out all marginal comments, and write the clean output back to the same file.",
+      "expected": "accept_all_changes",
+      "kind": "straightforward",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#straightforward.3",
+      "text": "I need you to clear out all redlines and comment balloons from report.docx so we can export a clean version called clean_report.docx.",
+      "expected": "accept_all_changes",
+      "kind": "straightforward",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#straightforward.4",
+      "text": "Run the tool on budget.docx to accept every single tracked edit and delete all reviewer notes, saving it as approved_budget.docx.",
+      "expected": "accept_all_changes",
+      "kind": "straightforward",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#paraphrased.1",
+      "text": "We are totally done editing draft.docx, so just nuke all the markup and comments in one go.",
+      "expected": "accept_all_changes",
+      "kind": "paraphrased",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#paraphrased.2",
+      "text": "Strip out all the revision clutter and side notes from my manuscript.docx before I send it to the publisher.",
+      "expected": "accept_all_changes",
+      "kind": "paraphrased",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#hard_negative.1",
+      "text": "Please run finalize_document on syllabus.docx to clear out all tracked changes and comments in a single sweep.",
+      "expected": "finalize_document",
+      "kind": "hard_negative",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "accept_all_changes#hard_negative.2",
+      "text": "I want to use finalize_document to strip every redline and margin note from manuscript_v2.docx right now.",
+      "expected": "finalize_document",
+      "kind": "hard_negative",
+      "neighbour": "finalize_document"
+    },
+    {
+      "id": "create_email_draft#straightforward.1",
+      "text": "Draft a new email to sarah@example.com with the subject Project Update and tell her the reports are ready.",
+      "expected": "create_email_draft",
+      "kind": "straightforward",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#straightforward.2",
+      "text": "Create an email draft replying to message 4589 saying I will review the documents tomorrow morning.",
+      "expected": "create_email_draft",
+      "kind": "straightforward",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#straightforward.3",
+      "text": "Start a new message for david.smith@company.com about the budget review with markdown formatting for the bullet points.",
+      "expected": "create_email_draft",
+      "kind": "straightforward",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#straightforward.4",
+      "text": "Draft a reply to message id 9921 attaching the quarterly pdf from /docs/q3.pdf.",
+      "expected": "create_email_draft",
+      "kind": "straightforward",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#paraphrased.1",
+      "text": "Send a quick note over to Marcus letting him know dinner is postponed until eight.",
+      "expected": "create_email_draft",
+      "kind": "paraphrased",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#paraphrased.2",
+      "text": "Write something back to that last HR message explaining I am out sick today.",
+      "expected": "create_email_draft",
+      "kind": "paraphrased",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#hard_negative.1",
+      "text": "Draft an email to find out where my flight confirmation message went.",
+      "expected": "search_and_fetch_emails",
+      "kind": "hard_negative",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "create_email_draft#hard_negative.2",
+      "text": "Create a draft responding to the missing invoice email thread by looking up its identifier.",
+      "expected": "search_and_fetch_emails",
+      "kind": "hard_negative",
+      "neighbour": "search_and_fetch_emails"
+    },
+    {
+      "id": "diff_docx_files#straightforward.1",
+      "text": "Can you compare the original draft at documents/contract_v1.docx with the updated version at documents/contract_v2.docx and show me what changed?",
+      "expected": "diff_docx_files",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#straightforward.2",
+      "text": "Please run a comparison between reports/quarterly_q3.docx and reports/quarterly_q4.docx to highlight the text differences.",
+      "expected": "diff_docx_files",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#straightforward.3",
+      "text": "I need a unified diff of the text between my old proposal at C:/Users/Admin/Desktop/proposal_old.docx and my revised proposal at C:/Users/Admin/Desktop/proposal_new.docx.",
+      "expected": "diff_docx_files",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#straightforward.4",
+      "text": "Check the differences in text content by comparing base_policy.docx and edited_policy.docx.",
+      "expected": "diff_docx_files",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#paraphrased.1",
+      "text": "Take a look at what I altered between yesterday's file draft_final.docx and today's version latest_edit.docx.",
+      "expected": "diff_docx_files",
+      "kind": "paraphrased",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#paraphrased.2",
+      "text": "Quickly scan the changes I made going from backup_v1.docx to current_work.docx.",
+      "expected": "diff_docx_files",
+      "kind": "paraphrased",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#hard_negative.1",
+      "text": "Please compare the text inside my document at projects/specs_draft.docx to see what needs editing.",
+      "expected": "read_docx",
+      "kind": "hard_negative",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "diff_docx_files#hard_negative.2",
+      "text": "Check the differences by reading through the contents of my two files, resume_old.docx and resume_new.docx.",
+      "expected": "read_docx",
+      "kind": "hard_negative",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "finalize_document#straightforward.1",
+      "text": "Please prepare the contract at /docs/agreement.docx for e-signature and save it to /final/agreement_final.docx.",
+      "expected": "finalize_document",
+      "kind": "straightforward",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#straightforward.2",
+      "text": "Run the finalize_document tool on /reports/q3_review.docx using strict metadata sanitization and lock the file.",
+      "expected": "finalize_document",
+      "kind": "straightforward",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#straightforward.3",
+      "text": "I need to lock and clean the metadata for my resume located at /users/john/resume.docx.",
+      "expected": "finalize_document",
+      "kind": "straightforward",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#straightforward.4",
+      "text": "Apply password protection and strip all hidden metadata from /finances/budget.docx before I send it out.",
+      "expected": "finalize_document",
+      "kind": "straightforward",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#paraphrased.1",
+      "text": "Get my paper ready to ship out by scrubbing all the hidden revision history and locking down the editing permissions.",
+      "expected": "finalize_document",
+      "kind": "paraphrased",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#paraphrased.2",
+      "text": "Wrap up the final version of the project proposal so nobody can mess with the text after I send it to the client.",
+      "expected": "finalize_document",
+      "kind": "paraphrased",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#hard_negative.1",
+      "text": "Make sure all tracked edits and review comments are resolved in /docs/draft.docx right now.",
+      "expected": "accept_all_changes",
+      "kind": "hard_negative",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "finalize_document#hard_negative.2",
+      "text": "Go through my manuscript and clear out every single tracked change currently visible in the margins.",
+      "expected": "accept_all_changes",
+      "kind": "hard_negative",
+      "neighbour": "accept_all_changes"
+    },
+    {
+      "id": "login_to_adeu_cloud#straightforward.1",
+      "text": "Please log me into the Adeu Cloud backend now.",
+      "expected": "login_to_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#straightforward.2",
+      "text": "I need to sign in to my Adeu Cloud account.",
+      "expected": "login_to_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#straightforward.3",
+      "text": "Open the authentication window for Adeu Cloud so I can access the system.",
+      "expected": "login_to_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#straightforward.4",
+      "text": "Run the login process for Adeu Cloud.",
+      "expected": "login_to_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#paraphrased.1",
+      "text": "get me connected to adeu cloud",
+      "expected": "login_to_adeu_cloud",
+      "kind": "paraphrased",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#paraphrased.2",
+      "text": "auth into adeu backend real quick",
+      "expected": "login_to_adeu_cloud",
+      "kind": "paraphrased",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#hard_negative.1",
+      "text": "Log me out of the Adeu Cloud backend.",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "hard_negative",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "login_to_adeu_cloud#hard_negative.2",
+      "text": "Sign me out of my Adeu Cloud session.",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "hard_negative",
+      "neighbour": "logout_of_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#straightforward.1",
+      "text": "Please log out of Adeu Cloud right now.",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#straightforward.2",
+      "text": "Run the command to sign out of Adeu Cloud.",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#straightforward.3",
+      "text": "I need to terminate my Adeu Cloud session.",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#straightforward.4",
+      "text": "Execute the Adeu Cloud logout procedure.",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "straightforward",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#paraphrased.1",
+      "text": "wipe my credentials for the cloud backend so I am completely disconnected",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "paraphrased",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#paraphrased.2",
+      "text": "drop the current auth token for adeu so nobody else uses it",
+      "expected": "logout_of_adeu_cloud",
+      "kind": "paraphrased",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#hard_negative.1",
+      "text": "Please log in to Adeu Cloud right now.",
+      "expected": "login_to_adeu_cloud",
+      "kind": "hard_negative",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "logout_of_adeu_cloud#hard_negative.2",
+      "text": "Execute the Adeu Cloud login procedure.",
+      "expected": "login_to_adeu_cloud",
+      "kind": "hard_negative",
+      "neighbour": "login_to_adeu_cloud"
+    },
+    {
+      "id": "process_document_batch#straightforward.1",
+      "text": "Please run batch edits on contracts/agreement.docx using author Jane Doe, swapping every instance of 'Acme Corp' for 'Globex Inc' while deleting the outdated indemnity clause in section four.",
+      "expected": "process_document_batch",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#straightforward.2",
+      "text": "Take project_spec.docx and apply a batch update under the name Bob Smith to insert a new row into the budget table and leave a review reply on comment Com:2 agreeing to the timeline shift.",
+      "expected": "process_document_batch",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#straightforward.3",
+      "text": "Update final_draft.docx with a batch of changes attributed to Alice Wong that accepts tracked change Chg:14 and replaces the phrase 'beta release' with '**version one**'.",
+      "expected": "process_document_batch",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#straightforward.4",
+      "text": "Apply a modification batch to reports/annual.docx as Charlie Brown to turn the heading 'Q3 Results' into '# Q4 Performance' and delete the trailing placeholder paragraph.",
+      "expected": "process_document_batch",
+      "kind": "straightforward",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#paraphrased.1",
+      "text": "Go ahead and push through a quick batch of edits for notes.docx under my name, Dave, just deleting that awkward paragraph about travel expenses and fixing the typo in the executive summary.",
+      "expected": "process_document_batch",
+      "kind": "paraphrased",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#paraphrased.2",
+      "text": "I need you to process a round of document tweaks for proposal.docx as Sarah, which means clearing out the redundant pricing table rows and accepting all those pending edits hanging out in the margins.",
+      "expected": "process_document_batch",
+      "kind": "paraphrased",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#hard_negative.1",
+      "text": "Can you run a batch process to pull the text out of contracts/agreement.docx so I can check what tracked changes and comments are currently sitting inside it?",
+      "expected": "read_docx",
+      "kind": "hard_negative",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "process_document_batch#hard_negative.2",
+      "text": "Process a quick batch read of proposal.docx under my name to see all the existing revision IDs and paragraph text before I decide what edits to send over.",
+      "expected": "read_docx",
+      "kind": "hard_negative",
+      "neighbour": "read_docx"
+    },
+    {
+      "id": "read_docx#straightforward.1",
+      "text": "Please open the agreement stored at contracts/vendor_agreement_v2.docx and show me the text on page four.",
+      "expected": "read_docx",
+      "kind": "straightforward",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#straightforward.2",
+      "text": "Can you read the Word document located at reports/Q3_financial_review.docx using the clean view mode to strip out all the track changes?",
+      "expected": "read_docx",
+      "kind": "straightforward",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#straightforward.3",
+      "text": "I need to inspect the document structure of policy/employee_handbook.docx, so please fetch its outline down to level four.",
+      "expected": "read_docx",
+      "kind": "straightforward",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#straightforward.4",
+      "text": "Check the appendix of manual/hardware_spec.docx and list all the defined terms and cross-reference targets for me.",
+      "expected": "read_docx",
+      "kind": "straightforward",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#paraphrased.1",
+      "text": "Take a look at the contract draft in my downloads folder and pull up the section where legal redlines were made yesterday.",
+      "expected": "read_docx",
+      "kind": "paraphrased",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#paraphrased.2",
+      "text": "Can you scan through that big manuscript file I uploaded this morning and give me a table of contents showing just the main chapters?",
+      "expected": "read_docx",
+      "kind": "paraphrased",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#hard_negative.1",
+      "text": "Please read all the Word files in the client_submissions folder and compile them into a single archive.",
+      "expected": "process_document_batch",
+      "kind": "hard_negative",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "read_docx#hard_negative.2",
+      "text": "Can you open every DOCX document stored in the quarterly_reports directory and extract their text simultaneously?",
+      "expected": "process_document_batch",
+      "kind": "hard_negative",
+      "neighbour": "process_document_batch"
+    },
+    {
+      "id": "search_and_fetch_emails#straightforward.1",
+      "text": "Find unread emails from Sarah Miller about the project proposal received in the last seven days.",
+      "expected": "search_and_fetch_emails",
+      "kind": "straightforward",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#straightforward.2",
+      "text": "Search my inbox for messages from billing@utilities.com that have PDF attachments.",
+      "expected": "search_and_fetch_emails",
+      "kind": "straightforward",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#straightforward.3",
+      "text": "Can you look up the email with ID msg_98234 and download its attachments to my desktop folder?",
+      "expected": "search_and_fetch_emails",
+      "kind": "straightforward",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#straightforward.4",
+      "text": "Filter messages in the Archive folder sent by David concerning the budget review.",
+      "expected": "search_and_fetch_emails",
+      "kind": "straightforward",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#paraphrased.1",
+      "text": "Pull up whatever Alex sent over regarding the conference tickets so I can check the details.",
+      "expected": "search_and_fetch_emails",
+      "kind": "paraphrased",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#paraphrased.2",
+      "text": "Dig through my inbox to see if HR dropped any notes about my benefits enrollment recently.",
+      "expected": "search_and_fetch_emails",
+      "kind": "paraphrased",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#hard_negative.1",
+      "text": "Find the message from my accountant about tax documents and send a reply back to her.",
+      "expected": "create_email_draft",
+      "kind": "hard_negative",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "search_and_fetch_emails#hard_negative.2",
+      "text": "Search for the thread with my manager about vacation time and forward it to my personal address.",
+      "expected": "create_email_draft",
+      "kind": "hard_negative",
+      "neighbour": "create_email_draft"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you summarize the attached employment contract in three bullet points and explain the termination clause?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What is the standard password policy and session timeout duration required for our corporate Adeu Cloud account?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Draft a professional response to Sarah Jenkins declining her job offer for the senior project manager role.",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "accept_all_changes#straightforward.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "contract.docx",
+        "output_path": "final_contract.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "contract.docx",
+        "output_path": "final_contract.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "proposal.docx",
+        "docx_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "final_contract.docx",
+        "docx_path": "contract.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "proposal.docx",
+        "docx_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "proposal.docx",
+        "docx_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.3",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "clean_report.docx",
+        "docx_path": "report.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.3",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "report.docx",
+        "output_path": "clean_report.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.3",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "clean_report.docx",
+        "docx_path": "report.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.4",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "approved_budget.docx",
+        "docx_path": "budget.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.4",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "output_path": "approved_budget.docx",
+        "docx_path": "budget.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#straightforward.4",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "budget.docx",
+        "output_path": "approved_budget.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#paraphrased.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#paraphrased.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#paraphrased.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "protection_mode": "read_only",
+        "accept_all": true,
+        "file_path": "manuscript.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#paraphrased.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#paraphrased.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "accept_all": true,
+        "file_path": "manuscript.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#paraphrased.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "accept_all": true,
+        "file_path": "manuscript.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "accept_all_changes#hard_negative.1",
+      "chosen": "finalize_document",
+      "arguments": {
+        "sanitize_mode": "full",
+        "file_path": "syllabus.docx",
+        "accept_all": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "accept_all_changes#hard_negative.1",
+      "chosen": "finalize_document",
+      "arguments": {
+        "accept_all": true,
+        "sanitize_mode": "full",
+        "file_path": "syllabus.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "accept_all_changes#hard_negative.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "syllabus.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "accept_all_changes#hard_negative.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "accept_all": true,
+        "file_path": "manuscript_v2.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "accept_all_changes#hard_negative.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "accept_all": true,
+        "file_path": "manuscript_v2.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "accept_all_changes#hard_negative.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "accept_all": true,
+        "file_path": "manuscript_v2.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "to_recipients": [
+          "sarah@example.com"
+        ],
+        "subject": "Project Update",
+        "body_markdown": "Hi Sarah,\n\nThe reports are ready."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "subject": "Project Update",
+        "body_markdown": "The reports are ready.",
+        "to_recipients": [
+          "sarah@example.com"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "to_recipients": [
+          "sarah@example.com"
+        ],
+        "body_markdown": "The reports are ready.",
+        "subject": "Project Update"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.2",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "reply_to_email_id": "4589",
+        "body_markdown": "I will review the documents tomorrow morning."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.2",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "reply_to_email_id": "4589",
+        "body_markdown": "I will review the documents tomorrow morning."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.2",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "reply_to_email_id": "4589",
+        "body_markdown": "I will review the documents tomorrow morning."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.3",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "to_recipients": [
+          "david.smith@company.com"
+        ],
+        "body_markdown": "Hi David,\n\nHere are the notes for our upcoming budget review:\n\n* Review Q3 actuals against forecast\n* Discuss headcount allocations for Q4\n* Identify potential cost-saving measures\n\nBest regards,",
+        "subject": "Budget Review"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.3",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "body_markdown": "Here are the items for our upcoming budget review:\n\n* Q3 actuals vs. projections\n* Departmental headcount requests\n* Proposed cost-saving measures\n* Q4 forecast adjustments",
+        "subject": "Budget Review",
+        "to_recipients": [
+          "david.smith@company.com"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.3",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "body_markdown": "Hi David,\n\nHere is the update regarding the upcoming budget review:\n\n* Review Q3 actuals vs. projections\n* Discuss departmental allocation requests\n* Finalize timeline for Q4 planning\n\nBest regards,",
+        "subject": "Budget Review",
+        "to_recipients": [
+          "david.smith@company.com"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.4",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "attachment_paths": [
+          "/docs/q3.pdf"
+        ],
+        "body_markdown": "Please find attached the quarterly PDF.",
+        "reply_to_email_id": "9921"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.4",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "attachment_paths": [
+          "/docs/q3.pdf"
+        ],
+        "reply_to_email_id": "9921",
+        "body_markdown": "Please find attached the quarterly PDF."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#straightforward.4",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "reply_to_email_id": "9921",
+        "attachment_paths": [
+          "/docs/q3.pdf"
+        ],
+        "body_markdown": "Please find the quarterly PDF attached."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#paraphrased.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "body_markdown": "Hi Marcus,\\n\\nJust wanted to let you know that dinner is postponed until eight.\\n\\nBest,",
+        "subject": "Dinner postponed",
+        "to_recipients": [
+          "Marcus"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#paraphrased.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "subject": "Dinner postponed",
+        "body_markdown": "Hi Marcus,\\n\\nJust letting you know that dinner is postponed until eight.",
+        "to_recipients": [
+          "Marcus"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#paraphrased.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "body_markdown": "Hi Marcus,\\n\\nJust wanted to let you know that dinner is postponed until eight.\\n\\nBest,",
+        "to_recipients": [
+          "Marcus"
+        ],
+        "subject": "Dinner postponed"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "limit": 1,
+        "sender": "HR"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "limit": 1
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "limit": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "create_email_draft#hard_negative.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "body_markdown": "Hi,\\n\\nI'm writing to check on the status of my flight confirmation message. Could you please resend it or let me know when I might expect to receive it?\\n\\nThank you!",
+        "subject": "Flight Confirmation Missing"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "create_email_draft#hard_negative.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "subject": "Missing Flight Confirmation Message",
+        "body_markdown": "Hello,\\n\\nI am writing to check on the status of my flight confirmation message. I haven't received it yet and wanted to make sure everything is in order.\\n\\nThank you,\\n[Your Name]"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "create_email_draft#hard_negative.1",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "subject": "Flight Confirmation Message Inquiry",
+        "body_markdown": "Hi,\\n\\nI'm writing to check on the status of my flight confirmation message. Could you please resend it or let me know where I can find it?\\n\\nThank you!"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "create_email_draft#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "missing invoice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "create_email_draft#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "missing invoice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "create_email_draft#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "missing invoice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.1",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "documents/contract_v2.docx",
+        "original_path": "documents/contract_v1.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.1",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "documents/contract_v2.docx",
+        "original_path": "documents/contract_v1.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.1",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "documents/contract_v1.docx",
+        "modified_path": "documents/contract_v2.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "reports/quarterly_q4.docx",
+        "original_path": "reports/quarterly_q3.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "reports/quarterly_q4.docx",
+        "original_path": "reports/quarterly_q3.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "reports/quarterly_q3.docx",
+        "modified_path": "reports/quarterly_q4.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.3",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "C:/Users/Admin/Desktop/proposal_old.docx",
+        "modified_path": "C:/Users/Admin/Desktop/proposal_new.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.3",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "C:/Users/Admin/Desktop/proposal_old.docx",
+        "modified_path": "C:/Users/Admin/Desktop/proposal_new.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.3",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "C:/Users/Admin/Desktop/proposal_old.docx",
+        "modified_path": "C:/Users/Admin/Desktop/proposal_new.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.4",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "base_policy.docx",
+        "modified_path": "edited_policy.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.4",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "base_policy.docx",
+        "modified_path": "edited_policy.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#straightforward.4",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "edited_policy.docx",
+        "original_path": "base_policy.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#paraphrased.1",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "latest_edit.docx",
+        "original_path": "draft_final.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#paraphrased.1",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "latest_edit.docx",
+        "original_path": "draft_final.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#paraphrased.1",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "draft_final.docx",
+        "modified_path": "latest_edit.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#paraphrased.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "current_work.docx",
+        "original_path": "backup_v1.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#paraphrased.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "backup_v1.docx",
+        "modified_path": "current_work.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#paraphrased.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "backup_v1.docx",
+        "modified_path": "current_work.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "diff_docx_files"
+    },
+    {
+      "query_id": "diff_docx_files#hard_negative.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "projects/specs_draft.docx",
+        "mode": "outline"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "diff_docx_files#hard_negative.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "projects/specs_draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "diff_docx_files#hard_negative.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "projects/specs_draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "diff_docx_files#hard_negative.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "modified_path": "resume_new.docx",
+        "original_path": "resume_old.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "diff_docx_files#hard_negative.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "resume_old.docx",
+        "modified_path": "resume_new.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "diff_docx_files#hard_negative.2",
+      "chosen": "diff_docx_files",
+      "arguments": {
+        "original_path": "resume_old.docx",
+        "modified_path": "resume_new.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "finalize_document#straightforward.1",
+      "chosen": "finalize_document",
+      "arguments": {
+        "file_path": "/docs/agreement.docx",
+        "output_path": "/final/agreement_final.docx",
+        "protection_mode": "read_only",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.1",
+      "chosen": "finalize_document",
+      "arguments": {
+        "file_path": "/docs/agreement.docx",
+        "sanitize_mode": "full",
+        "output_path": "/final/agreement_final.docx",
+        "protection_mode": "read_only"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.1",
+      "chosen": "finalize_document",
+      "arguments": {
+        "file_path": "/docs/agreement.docx",
+        "protection_mode": "read_only",
+        "output_path": "/final/agreement_final.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "protection_mode": "read_only",
+        "sanitize_mode": "full",
+        "file_path": "/reports/q3_review.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "sanitize_mode": "full",
+        "protection_mode": "read_only",
+        "file_path": "/reports/q3_review.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.2",
+      "chosen": "finalize_document",
+      "arguments": {
+        "sanitize_mode": "full",
+        "protection_mode": "read_only",
+        "file_path": "/reports/q3_review.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.3",
+      "chosen": "finalize_document",
+      "arguments": {
+        "sanitize_mode": "full",
+        "file_path": "/users/john/resume.docx",
+        "protection_mode": "read_only"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.3",
+      "chosen": "finalize_document",
+      "arguments": {
+        "file_path": "/users/john/resume.docx",
+        "sanitize_mode": "full",
+        "protection_mode": "read_only"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.3",
+      "chosen": "finalize_document",
+      "arguments": {
+        "protection_mode": "read_only",
+        "file_path": "/users/john/resume.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.4",
+      "chosen": "finalize_document",
+      "arguments": {
+        "protection_mode": "read_only",
+        "file_path": "/finances/budget.docx",
+        "sanitize_mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.4",
+      "chosen": "finalize_document",
+      "arguments": {
+        "file_path": "/finances/budget.docx",
+        "sanitize_mode": "full",
+        "protection_mode": "read_only"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#straightforward.4",
+      "chosen": "finalize_document",
+      "arguments": {
+        "sanitize_mode": "full",
+        "protection_mode": "read_only",
+        "file_path": "/finances/budget.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "has_attachments": true,
+        "limit": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "limit": 1
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#hard_negative.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "/docs/draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "finalize_document#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "project proposal"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "finalize_document"
+    },
+    {
+      "query_id": "finalize_document#hard_negative.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "/docs/draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "finalize_document#hard_negative.1",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "/docs/draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "finalize_document#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "finalize_document#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "finalize_document#hard_negative.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "manuscript.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "accept_all_changes"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.3",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.3",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.3",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.4",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.4",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#straightforward.4",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#paraphrased.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#paraphrased.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#paraphrased.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#paraphrased.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#paraphrased.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#hard_negative.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#paraphrased.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#hard_negative.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#hard_negative.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#hard_negative.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#hard_negative.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "login_to_adeu_cloud#hard_negative.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.3",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.3",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.3",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.4",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.4",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#straightforward.4",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#paraphrased.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#paraphrased.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#paraphrased.1",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#paraphrased.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#paraphrased.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#paraphrased.2",
+      "chosen": "logout_of_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "logout_of_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#hard_negative.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#hard_negative.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#hard_negative.1",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#hard_negative.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#hard_negative.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "logout_of_adeu_cloud#hard_negative.2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "login_to_adeu_cloud"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.1",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "changes": [
+          {
+            "target_text": "Acme Corp",
+            "new_text": "Globex Inc",
+            "type": "modify"
+          },
+          {
+            "new_text": "",
+            "target_text": "indemnity clause in section four",
+            "type": "modify"
+          }
+        ],
+        "original_docx_path": "contracts/agreement.docx",
+        "author_name": "Jane Doe"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.1",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "original_docx_path": "contracts/agreement.docx",
+        "author_name": "Jane Doe",
+        "changes": [
+          {
+            "new_text": "Globex Inc",
+            "target_text": "Acme Corp",
+            "type": "modify"
+          },
+          {
+            "target_text": "[Outdated indemnity clause text placeholder or exact text]",
+            "type": "modify",
+            "new_text": ""
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.1",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "author_name": "Jane Doe",
+        "changes": [
+          {
+            "type": "modify",
+            "new_text": "Globex Inc",
+            "target_text": "Acme Corp"
+          },
+          {
+            "new_text": "",
+            "type": "modify",
+            "target_text": "outdated indemnity clause in section four"
+          }
+        ],
+        "original_docx_path": "contracts/agreement.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "project_spec.docx",
+        "mode": "full"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "project_spec.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "project_spec.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.3",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "changes": [
+          {
+            "target_id": "Chg:14",
+            "type": "accept"
+          },
+          {
+            "target_text": "beta release",
+            "new_text": "**version one**",
+            "type": "modify"
+          }
+        ],
+        "original_docx_path": "final_draft.docx",
+        "author_name": "Alice Wong"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.3",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "original_docx_path": "final_draft.docx",
+        "changes": [
+          {
+            "type": "accept",
+            "target_id": "Chg:14"
+          },
+          {
+            "type": "modify",
+            "new_text": "**version one**",
+            "target_text": "beta release"
+          }
+        ],
+        "author_name": "Alice Wong"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.3",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "changes": [
+          {
+            "target_id": "Chg:14",
+            "type": "accept"
+          },
+          {
+            "target_text": "beta release",
+            "type": "modify",
+            "new_text": "**version one**"
+          }
+        ],
+        "author_name": "Alice Wong",
+        "original_docx_path": "final_draft.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.4",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "changes": [
+          {
+            "new_text": "# Q4 Performance",
+            "type": "modify",
+            "target_text": "Q3 Results"
+          },
+          {
+            "type": "modify",
+            "target_text": "placeholder paragraph",
+            "new_text": ""
+          }
+        ],
+        "original_docx_path": "reports/annual.docx",
+        "author_name": "Charlie Brown"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.4",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "changes": [
+          {
+            "type": "modify",
+            "target_text": "Q3 Results",
+            "new_text": "# Q4 Performance"
+          },
+          {
+            "type": "modify",
+            "new_text": "",
+            "target_text": "[Placeholder]"
+          }
+        ],
+        "author_name": "Charlie Brown",
+        "original_docx_path": "reports/annual.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#straightforward.4",
+      "chosen": "process_document_batch",
+      "arguments": {
+        "changes": [
+          {
+            "type": "modify",
+            "new_text": "# Q4 Performance",
+            "target_text": "Q3 Results"
+          },
+          {
+            "type": "modify",
+            "new_text": "",
+            "target_text": "[placeholder paragraph]"
+          }
+        ],
+        "author_name": "Charlie Brown",
+        "original_docx_path": "reports/annual.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "limit": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "notes.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#paraphrased.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#paraphrased.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#paraphrased.2",
+      "chosen": "accept_all_changes",
+      "arguments": {
+        "docx_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "process_document_batch#hard_negative.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "contracts/agreement.docx",
+        "clean_view": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "process_document_batch#hard_negative.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "clean_view": false,
+        "page": 1,
+        "mode": "full",
+        "file_path": "contracts/agreement.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "process_document_batch#hard_negative.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "page": 1,
+        "file_path": "contracts/agreement.docx",
+        "mode": "full",
+        "clean_view": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "process_document_batch#hard_negative.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "page": 1,
+        "mode": "full",
+        "file_path": "proposal.docx",
+        "clean_view": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "process_document_batch#hard_negative.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "process_document_batch#hard_negative.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "proposal.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "page": 4,
+        "file_path": "contracts/vendor_agreement_v2.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "contracts/vendor_agreement_v2.docx",
+        "page": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.1",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "contracts/vendor_agreement_v2.docx",
+        "page": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "reports/Q3_financial_review.docx",
+        "clean_view": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "reports/Q3_financial_review.docx",
+        "clean_view": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.2",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "reports/Q3_financial_review.docx",
+        "clean_view": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.3",
+      "chosen": "read_docx",
+      "arguments": {
+        "mode": "outline",
+        "file_path": "policy/employee_handbook.docx",
+        "outline_max_level": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.3",
+      "chosen": "read_docx",
+      "arguments": {
+        "outline_max_level": 4,
+        "file_path": "policy/employee_handbook.docx",
+        "mode": "outline"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.3",
+      "chosen": "read_docx",
+      "arguments": {
+        "outline_max_level": 4,
+        "file_path": "policy/employee_handbook.docx",
+        "mode": "outline"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.4",
+      "chosen": "read_docx",
+      "arguments": {
+        "mode": "appendix",
+        "file_path": "manual/hardware_spec.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.4",
+      "chosen": "read_docx",
+      "arguments": {
+        "file_path": "manual/hardware_spec.docx",
+        "mode": "appendix"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#straightforward.4",
+      "chosen": "read_docx",
+      "arguments": {
+        "mode": "appendix",
+        "file_path": "manual/hardware_spec.docx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "limit": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "limit": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_docx"
+    },
+    {
+      "query_id": "read_docx#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "read_docx#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "read_docx#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "read_docx#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "read_docx#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "read_docx#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "process_document_batch"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "is_unread": true,
+        "sender": "Sarah Miller",
+        "subject": "project proposal",
+        "days_ago": 7
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "project proposal",
+        "sender": "Sarah Miller",
+        "is_unread": true,
+        "days_ago": 7
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "sender": "Sarah Miller",
+        "days_ago": 7,
+        "subject": "project proposal",
+        "is_unread": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "has_attachments": true,
+        "folder": "inbox",
+        "sender": "billing@utilities.com"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "has_attachments": true,
+        "sender": "billing@utilities.com",
+        "folder": "inbox"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "has_attachments": true,
+        "folder": "inbox",
+        "sender": "billing@utilities.com"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.3",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "email_id": "msg_98234",
+        "working_directory": "/Users/desktop"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.3",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "email_id": "msg_98234",
+        "working_directory": "/Users/desktop"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.3",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "working_directory": "/Users/desktop",
+        "email_id": "msg_98234"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.4",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "budget review",
+        "sender": "David",
+        "folder": "all"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.4",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "sender": "David",
+        "subject": "budget review",
+        "folder": "all"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#straightforward.4",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "budget review",
+        "folder": "all",
+        "sender": "David"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "conference tickets",
+        "sender": "Alex"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "sender": "Alex",
+        "subject": "conference tickets"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#paraphrased.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "sender": "Alex",
+        "subject": "conference tickets"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "benefits enrollment",
+        "folder": "inbox"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "benefits enrollment"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#paraphrased.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "subject": "benefits enrollment"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_and_fetch_emails"
+    },
+    {
+      "query_id": "search_and_fetch_emails#hard_negative.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "subject": "tax"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "search_and_fetch_emails#hard_negative.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "subject": "tax documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "search_and_fetch_emails#hard_negative.1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "inbox",
+        "subject": "tax"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "search_and_fetch_emails#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "vacation time",
+        "folder": "all"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "search_and_fetch_emails#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "subject": "vacation time"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "search_and_fetch_emails#hard_negative.2",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "folder": "all",
+        "subject": "vacation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_email_draft"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "limit": 5,
+        "has_attachments": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "has_attachments": true,
+        "limit": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "search_and_fetch_emails",
+      "arguments": {
+        "limit": 5,
+        "has_attachments": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "login_to_adeu_cloud",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "subject": "Job Offer - Senior Project Manager - [Your Name]",
+        "body_markdown": "Dear Sarah,\n\nThank you very much for offering me the Senior Project Manager position. I truly appreciate the time and effort you and the team took to speak with me about the role and the company.\n\nAfter much consideration, I have decided to decline the offer. While I was impressed by the team and the vision for the projects, I have chosen to pursue another opportunity that closely aligns with my current career path.\n\nThank you again for your time, consideration, and the opportunity. I wish you and the company all the best in finding the right person for the role, and I hope our paths cross in the future.\n\nBest regards,\n\n[Your Name]",
+        "to_recipients": [
+          "Sarah Jenkins"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "to_recipients": [
+          "Sarah Jenkins"
+        ],
+        "subject": "Job Offer - Senior Project Manager - [Your Name]",
+        "body_markdown": "Dear Sarah,\n\nThank you very much for offering me the Senior Project Manager position. I truly appreciate the time and effort you and the team took to speak with me and share more about the company and the role.\n\nAfter careful consideration, I have decided to decline the offer. While I was deeply impressed by your team and the exciting work you are doing, I have accepted another opportunity that closely aligns with my current career path and goals.\n\nThank you again for your time, consideration, and kindness throughout the interview process. I hope we can stay in touch, and I wish you and the company all the best in finding the right person for the role.\n\nSincerely,\n\n[Your Name]"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "create_email_draft",
+      "arguments": {
+        "to_recipients": [
+          "Sarah Jenkins"
+        ],
+        "body_markdown": "Dear Sarah,\n\nThank you very much for offering me the Senior Project Manager position. I truly appreciate the time you and the team took to speak with me and share more about the company and your upcoming projects. \n\nAfter careful consideration, I have decided to decline the offer. This was a difficult decision, as I was very impressed with the team and the vision of the organization, but I have chosen to pursue another opportunity that aligns more closely with my current career path.\n\nThank you once again for your time, consideration, and the opportunity. I wish you and the team all the best in finding the right person for the role, and I hope our paths cross again in the future.\n\nSincerely,\n\n[Your Name]",
+        "subject": "Job Offer - Senior Project Manager - [Your Name]"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "ai-adeu-adeu.json",
+    "slug": "ai-adeu-adeu",
+    "registry_name": "ai.adeu/adeu",
+    "title": "ai.adeu/adeu",
+    "repository": "https://github.com/dealfluence/adeu"
+  }
+}

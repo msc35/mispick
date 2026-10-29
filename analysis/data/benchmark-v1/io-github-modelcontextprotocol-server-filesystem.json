@@ -1,0 +1,6390 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-28",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "io-github-modelcontextprotocol-server-filesystem",
+      "name": "secure-filesystem-server",
+      "version": "0.2.0",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "create_directory",
+      "server": null,
+      "title": "Create Directory",
+      "description": "Create a new directory or ensure a directory exists. Can create multiple nested directories in one operation. If the directory already exists, this operation will succeed silently. Perfect for setting up directory structures for projects or ensuring required paths exist. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "directory_tree",
+      "server": null,
+      "title": "Directory Tree",
+      "description": "Get a recursive tree view of files and directories as a JSON structure. Each entry includes 'name', 'type' (file/directory), and 'children' for directories. Files have no children array, while directories always have a children array (which may be empty). The output is formatted with 2-space indentation for readability. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "excludePatterns": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "edit_file",
+      "server": null,
+      "title": "Edit File",
+      "description": "Make line-based edits to a text file. Each edit replaces exact line sequences with new content. Returns a git-style diff showing the changes made. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "edits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "oldText": {
+                  "type": "string",
+                  "description": "Text to search for - must match exactly"
+                },
+                "newText": {
+                  "type": "string",
+                  "description": "Text to replace with"
+                }
+              },
+              "required": [
+                "oldText",
+                "newText"
+              ]
+            }
+          },
+          "dryRun": {
+            "default": false,
+            "description": "Preview changes using git-style diff format",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "path",
+          "edits"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_file_info",
+      "server": null,
+      "title": "Get File Info",
+      "description": "Retrieve detailed metadata about a file or directory. Returns comprehensive information including size, creation time, last modified time, permissions, and type. This tool is perfect for understanding file characteristics without reading the actual content. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_allowed_directories",
+      "server": null,
+      "title": "List Allowed Directories",
+      "description": "Returns the list of directories that this server is allowed to access. Subdirectories within these allowed directories are also accessible. Use this to understand which directories and their nested paths are available before trying to access files.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_directory",
+      "server": null,
+      "title": "List Directory",
+      "description": "Get a detailed listing of all files and directories in a specified path. Results clearly distinguish between files and directories with [FILE] and [DIR] prefixes. This tool is essential for understanding directory structure and finding specific files within a directory. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "list_directory_with_sizes",
+      "server": null,
+      "title": "List Directory with Sizes",
+      "description": "Get a detailed listing of all files and directories in a specified path, including sizes. Results clearly distinguish between files and directories with [FILE] and [DIR] prefixes. This tool is useful for understanding directory structure and finding specific files within a directory. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sortBy": {
+            "default": "name",
+            "description": "Sort entries by name or size",
+            "type": "string",
+            "enum": [
+              "name",
+              "size"
+            ]
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "move_file",
+      "server": null,
+      "title": "Move File",
+      "description": "Move or rename files and directories. Can move files between directories and rename them in a single operation. If the destination exists, the operation will fail. Works across different directories and can be used for simple renaming within the same directory. Both source and destination must be within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "read_file",
+      "server": null,
+      "title": "Read File (Deprecated)",
+      "description": "Read the complete contents of a file as text. DEPRECATED: Use read_text_file instead.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "tail": {
+            "description": "If provided, returns only the last N lines of the file",
+            "type": "number"
+          },
+          "head": {
+            "description": "If provided, returns only the first N lines of the file",
+            "type": "number"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "read_media_file",
+      "server": null,
+      "title": "Read Media File",
+      "description": "Read a file and return it as a base64-encoded content block with its MIME type. Image and audio files are returned as image/audio content; any other file type is returned as an embedded resource. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "read_multiple_files",
+      "server": null,
+      "title": "Read Multiple Files",
+      "description": "Read the contents of multiple files simultaneously. This is more efficient than reading files one by one when you need to analyze or compare multiple files. Each file's content is returned with its path as a reference. Failed reads for individual files won't stop the entire operation. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "paths": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of file paths to read. Each path must be a string pointing to a valid file within allowed directories."
+          }
+        },
+        "required": [
+          "paths"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "read_text_file",
+      "server": null,
+      "title": "Read Text File",
+      "description": "Read the complete contents of a file from the file system as text. Handles various text encodings and provides detailed error messages if the file cannot be read. Use this tool when you need to examine the contents of a single file. Use the 'head' parameter to read only the first N lines of a file, or the 'tail' parameter to read only the last N lines of a file. Operates on the file as text regardless of extension. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "tail": {
+            "description": "If provided, returns only the last N lines of the file",
+            "type": "number"
+          },
+          "head": {
+            "description": "If provided, returns only the first N lines of the file",
+            "type": "number"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "search_files",
+      "server": null,
+      "title": "Search Files",
+      "description": "Recursively search for files and directories matching a pattern. The patterns should be glob-style patterns that match paths relative to the working directory. Use pattern like '*.ext' to match files in current directory, and '**/*.ext' to match files in all subdirectories. Returns full paths to all matching items. Great for finding files when you don't know their exact location. Only searches within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "excludePatterns": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "path",
+          "pattern"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "write_file",
+      "server": null,
+      "title": "Write File",
+      "description": "Create a new file or completely overwrite an existing file with new content. Use with caution as it will overwrite existing files without warning. Handles text content with proper encoding. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "score": 76,
+  "summary": {
+    "accuracy": {
+      "hits": 229,
+      "total": 345,
+      "value": 0.6638,
+      "ci95": [
+        0.6124,
+        0.7116
+      ]
+    },
+    "stability": {
+      "hits": 112,
+      "total": 115,
+      "value": 0.9739,
+      "ci95": [
+        0.9261,
+        0.9911
+      ]
+    },
+    "argumentValidity": {
+      "hits": 345,
+      "total": 345,
+      "value": 1.0,
+      "ci95": [
+        0.989,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 9,
+      "total": 9,
+      "value": 1.0,
+      "ci95": [
+        0.7009,
+        1.0
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 345,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.011
+      ]
+    },
+    "trials": 345,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 1896
+  },
+  "confusionMatrix": {
+    "rows": [
+      "create_directory",
+      "directory_tree",
+      "edit_file",
+      "get_file_info",
+      "list_allowed_directories",
+      "list_directory",
+      "list_directory_with_sizes",
+      "move_file",
+      "read_file",
+      "read_media_file",
+      "read_multiple_files",
+      "read_text_file",
+      "search_files",
+      "write_file",
+      "(none)"
+    ],
+    "columns": [
+      "create_directory",
+      "directory_tree",
+      "edit_file",
+      "get_file_info",
+      "list_allowed_directories",
+      "list_directory",
+      "list_directory_with_sizes",
+      "move_file",
+      "read_file",
+      "read_media_file",
+      "read_multiple_files",
+      "read_text_file",
+      "search_files",
+      "write_file"
+    ],
+    "counts": {
+      "create_directory": {
+        "create_directory": 24
+      },
+      "directory_tree": {
+        "directory_tree": 18
+      },
+      "edit_file": {
+        "search_files": 15,
+        "read_text_file": 3
+      },
+      "get_file_info": {
+        "get_file_info": 15,
+        "list_allowed_directories": 3
+      },
+      "list_allowed_directories": {
+        "list_allowed_directories": 24
+      },
+      "list_directory": {
+        "directory_tree": 6,
+        "list_directory": 12,
+        "list_directory_with_sizes": 9,
+        "list_allowed_directories": 3
+      },
+      "list_directory_with_sizes": {
+        "list_directory_with_sizes": 24,
+        "list_allowed_directories": 6
+      },
+      "move_file": {
+        "create_directory": 6,
+        "move_file": 15,
+        "search_files": 3
+      },
+      "read_file": {
+        "read_text_file": 12,
+        "read_file": 6
+      },
+      "read_media_file": {
+        "read_media_file": 14,
+        "read_text_file": 4,
+        "read_multiple_files": 6,
+        "list_allowed_directories": 5,
+        "move_file": 1
+      },
+      "read_multiple_files": {
+        "read_multiple_files": 24
+      },
+      "read_text_file": {
+        "read_text_file": 23,
+        "search_files": 1
+      },
+      "search_files": {
+        "list_allowed_directories": 3,
+        "search_files": 21
+      },
+      "write_file": {
+        "search_files": 6,
+        "write_file": 9,
+        "list_allowed_directories": 15
+      },
+      "(none)": {
+        "read_text_file": 9
+      }
+    }
+  },
+  "perTool": {
+    "create_directory": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "f1": 0.8889
+    },
+    "directory_tree": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "f1": 0.8571
+    },
+    "edit_file": {
+      "recall": {
+        "hits": 0,
+        "total": 18,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.1759
+        ]
+      },
+      "precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null,
+        "ci95": null
+      },
+      "f1": 0.0
+    },
+    "get_file_info": {
+      "recall": {
+        "hits": 15,
+        "total": 18,
+        "value": 0.8333,
+        "ci95": [
+          0.6078,
+          0.9416
+        ]
+      },
+      "precision": {
+        "hits": 15,
+        "total": 15,
+        "value": 1.0,
+        "ci95": [
+          0.7961,
+          1.0
+        ]
+      },
+      "f1": 0.9091
+    },
+    "list_allowed_directories": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 59,
+        "value": 0.4068,
+        "ci95": [
+          0.2909,
+          0.5341
+        ]
+      },
+      "f1": 0.5783
+    },
+    "list_directory": {
+      "recall": {
+        "hits": 12,
+        "total": 30,
+        "value": 0.4,
+        "ci95": [
+          0.2459,
+          0.5768
+        ]
+      },
+      "precision": {
+        "hits": 12,
+        "total": 12,
+        "value": 1.0,
+        "ci95": [
+          0.7575,
+          1.0
+        ]
+      },
+      "f1": 0.5714
+    },
+    "list_directory_with_sizes": {
+      "recall": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 33,
+        "value": 0.7273,
+        "ci95": [
+          0.5578,
+          0.8493
+        ]
+      },
+      "f1": 0.7619
+    },
+    "move_file": {
+      "recall": {
+        "hits": 15,
+        "total": 24,
+        "value": 0.625,
+        "ci95": [
+          0.4271,
+          0.7884
+        ]
+      },
+      "precision": {
+        "hits": 15,
+        "total": 16,
+        "value": 0.9375,
+        "ci95": [
+          0.7167,
+          0.9889
+        ]
+      },
+      "f1": 0.75
+    },
+    "read_file": {
+      "recall": {
+        "hits": 6,
+        "total": 18,
+        "value": 0.3333,
+        "ci95": [
+          0.1628,
+          0.5625
+        ]
+      },
+      "precision": {
+        "hits": 6,
+        "total": 6,
+        "value": 1.0,
+        "ci95": [
+          0.6097,
+          1.0
+        ]
+      },
+      "f1": 0.5
+    },
+    "read_media_file": {
+      "recall": {
+        "hits": 14,
+        "total": 30,
+        "value": 0.4667,
+        "ci95": [
+          0.3023,
+          0.6386
+        ]
+      },
+      "precision": {
+        "hits": 14,
+        "total": 14,
+        "value": 1.0,
+        "ci95": [
+          0.7847,
+          1.0
+        ]
+      },
+      "f1": 0.6364
+    },
+    "read_multiple_files": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "f1": 0.8889
+    },
+    "read_text_file": {
+      "recall": {
+        "hits": 23,
+        "total": 24,
+        "value": 0.9583,
+        "ci95": [
+          0.7976,
+          0.9926
+        ]
+      },
+      "precision": {
+        "hits": 23,
+        "total": 51,
+        "value": 0.451,
+        "ci95": [
+          0.3227,
+          0.5862
+        ]
+      },
+      "f1": 0.6133
+    },
+    "search_files": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 46,
+        "value": 0.4565,
+        "ci95": [
+          0.3215,
+          0.5982
+        ]
+      },
+      "f1": 0.6
+    },
+    "write_file": {
+      "recall": {
+        "hits": 9,
+        "total": 30,
+        "value": 0.3,
+        "ci95": [
+          0.1666,
+          0.4788
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 9,
+        "value": 1.0,
+        "ci95": [
+          0.7009,
+          1.0
+        ]
+      },
+      "f1": 0.4615
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "edit_file",
+      "chosen": "search_files",
+      "count": 15,
+      "share": 0.8333
+    },
+    {
+      "expected": "write_file",
+      "chosen": "list_allowed_directories",
+      "count": 15,
+      "share": 0.5
+    },
+    {
+      "expected": "read_file",
+      "chosen": "read_text_file",
+      "count": 12,
+      "share": 0.6667
+    },
+    {
+      "expected": "(none)",
+      "chosen": "read_text_file",
+      "count": 9,
+      "share": 1.0
+    },
+    {
+      "expected": "list_directory",
+      "chosen": "list_directory_with_sizes",
+      "count": 9,
+      "share": 0.3
+    },
+    {
+      "expected": "move_file",
+      "chosen": "create_directory",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "list_directory",
+      "chosen": "directory_tree",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "list_directory_with_sizes",
+      "chosen": "list_allowed_directories",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "read_media_file",
+      "chosen": "read_multiple_files",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "write_file",
+      "chosen": "search_files",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "read_media_file",
+      "chosen": "list_allowed_directories",
+      "count": 5,
+      "share": 0.1667
+    },
+    {
+      "expected": "read_media_file",
+      "chosen": "read_text_file",
+      "count": 4,
+      "share": 0.1333
+    },
+    {
+      "expected": "edit_file",
+      "chosen": "read_text_file",
+      "count": 3,
+      "share": 0.1667
+    },
+    {
+      "expected": "get_file_info",
+      "chosen": "list_allowed_directories",
+      "count": 3,
+      "share": 0.1667
+    },
+    {
+      "expected": "move_file",
+      "chosen": "search_files",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "search_files",
+      "chosen": "list_allowed_directories",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "list_directory",
+      "chosen": "list_allowed_directories",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "read_text_file",
+      "chosen": "search_files",
+      "count": 1,
+      "share": 0.0417
+    },
+    {
+      "expected": "read_media_file",
+      "chosen": "move_file",
+      "count": 1,
+      "share": 0.0333
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "edit_file",
+      "chosen": "search_files",
+      "count": 15
+    },
+    {
+      "expected": "write_file",
+      "chosen": "list_allowed_directories",
+      "count": 15
+    },
+    {
+      "expected": "read_file",
+      "chosen": "read_text_file",
+      "count": 12
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 14,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [
+    "read_media_file#straightforward.3",
+    "read_text_file#paraphrased.1",
+    "write_file#hard_negative.2"
+  ],
+  "queries": [
+    {
+      "id": "create_directory#straightforward.1",
+      "text": "Please make a new folder called project_docs in the current workspace.",
+      "expected": "create_directory",
+      "kind": "straightforward",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#straightforward.2",
+      "text": "I need you to create a directory named src/components/ui for my frontend work.",
+      "expected": "create_directory",
+      "kind": "straightforward",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#straightforward.3",
+      "text": "Set up a logs folder inside the root directory so the application can write output files.",
+      "expected": "create_directory",
+      "kind": "straightforward",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#straightforward.4",
+      "text": "Run the command to generate the build/output path before compiling the code.",
+      "expected": "create_directory",
+      "kind": "straightforward",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#paraphrased.1",
+      "text": "gimme a fresh folder named backups right away",
+      "expected": "create_directory",
+      "kind": "paraphrased",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#paraphrased.2",
+      "text": "make sure the tmp/cache path is ready to go for the script I'm about to run",
+      "expected": "create_directory",
+      "kind": "paraphrased",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#hard_negative.1",
+      "text": "Make a new folder structure called backup_old inside the archive path.",
+      "expected": "move_file",
+      "kind": "hard_negative",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "create_directory#hard_negative.2",
+      "text": "Set up a destination directory named archive_2024 for the files we are relocating.",
+      "expected": "move_file",
+      "kind": "hard_negative",
+      "neighbour": "move_file"
+    },
+    {
+      "id": "directory_tree#straightforward.1",
+      "text": "Get a recursive tree view of files and directories for the /var/www/html folder as a JSON structure.",
+      "expected": "directory_tree",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#straightforward.2",
+      "text": "Generate a nested directory listing for /home/user/projects in JSON format with children included for all folders.",
+      "expected": "directory_tree",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#straightforward.3",
+      "text": "Run a recursive directory scan on C:\\Users\\Admin\\Documents and return the full hierarchy as a JSON tree.",
+      "expected": "directory_tree",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#straightforward.4",
+      "text": "Produce a complete JSON tree structure of the /opt/app/data directory including all nested subfolders.",
+      "expected": "directory_tree",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#paraphrased.1",
+      "text": "Map out the whole folder hierarchy under /var/log into a JSON object so I can see what is nested inside where.",
+      "expected": "directory_tree",
+      "kind": "paraphrased",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#paraphrased.2",
+      "text": "Dump the complete file and folder nest for my workspace at /home/dev/repo as a formatted JSON payload.",
+      "expected": "directory_tree",
+      "kind": "paraphrased",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#hard_negative.1",
+      "text": "Give me a recursive tree view of the /etc/nginx folder formatted as JSON, but omit any backup files.",
+      "expected": "list_directory",
+      "kind": "hard_negative",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "directory_tree#hard_negative.2",
+      "text": "Show me a recursive tree view of /var/log in JSON format with two-space indentation.",
+      "expected": "list_directory",
+      "kind": "hard_negative",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "edit_file#straightforward.1",
+      "text": "Please modify lines 10 through 15 in src/main.py to update the database connection timeout.",
+      "expected": "edit_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#straightforward.2",
+      "text": "Change the return statement in the calculate_total function located in app/utils.js.",
+      "expected": "edit_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#straightforward.3",
+      "text": "Replace the configuration block in config/settings.json to use the new API endpoint URL.",
+      "expected": "edit_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#straightforward.4",
+      "text": "Update the copyright year in the header section of index.html.",
+      "expected": "edit_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#paraphrased.1",
+      "text": "Fix that typo on line 42 of docs/readme.md right away.",
+      "expected": "edit_file",
+      "kind": "paraphrased",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#paraphrased.2",
+      "text": "Swab out the old log path for the new one in scripts/deploy.sh.",
+      "expected": "edit_file",
+      "kind": "paraphrased",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#hard_negative.1",
+      "text": "Modify the routing table in src/routes.py by replacing the old endpoints with the new ones.",
+      "expected": "write_file",
+      "kind": "hard_negative",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "edit_file#hard_negative.2",
+      "text": "Update the CSS rules inside styles/main.css to change the primary button color.",
+      "expected": "write_file",
+      "kind": "hard_negative",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "get_file_info#straightforward.1",
+      "text": "Can you check the file size and creation date for /var/log/syslog?",
+      "expected": "get_file_info",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#straightforward.2",
+      "text": "What are the permissions and last modified time on /etc/passwd?",
+      "expected": "get_file_info",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#straightforward.3",
+      "text": "Retrieve the metadata for the script located at /home/user/scripts/deploy.sh.",
+      "expected": "get_file_info",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#straightforward.4",
+      "text": "Please run a check on /var/www/html/index.html to see its file type and attributes.",
+      "expected": "get_file_info",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#paraphrased.1",
+      "text": "how big is /opt/app/data.db and when was it last touched",
+      "expected": "get_file_info",
+      "kind": "paraphrased",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#paraphrased.2",
+      "text": "need stats on /var/backups/db_dump.sql",
+      "expected": "get_file_info",
+      "kind": "paraphrased",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#hard_negative.1",
+      "text": "Check the sizes of everything inside /var/log so I can see how much space each log file is taking up.",
+      "expected": "list_directory_with_sizes",
+      "kind": "hard_negative",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "get_file_info#hard_negative.2",
+      "text": "Get the file sizes for all items located in /home/user/downloads.",
+      "expected": "list_directory_with_sizes",
+      "kind": "hard_negative",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_allowed_directories#straightforward.1",
+      "text": "Can you give me the list of directories that this server is allowed to access?",
+      "expected": "list_allowed_directories",
+      "kind": "straightforward",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#straightforward.2",
+      "text": "What folders am I permitted to read files from on this machine?",
+      "expected": "list_allowed_directories",
+      "kind": "straightforward",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#straightforward.3",
+      "text": "Please show me all the approved root paths available for file operations.",
+      "expected": "list_allowed_directories",
+      "kind": "straightforward",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#straightforward.4",
+      "text": "Which base directories currently have permission enabled for access?",
+      "expected": "list_allowed_directories",
+      "kind": "straightforward",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#paraphrased.1",
+      "text": "Where am I even allowed to look around in the file system?",
+      "expected": "list_allowed_directories",
+      "kind": "paraphrased",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#paraphrased.2",
+      "text": "dump accessible paths",
+      "expected": "list_allowed_directories",
+      "kind": "paraphrased",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#hard_negative.1",
+      "text": "Show me the directories that contain files matching my search terms across the allowed paths.",
+      "expected": "search_files",
+      "kind": "hard_negative",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_allowed_directories#hard_negative.2",
+      "text": "List the matching file paths inside the permitted directories.",
+      "expected": "search_files",
+      "kind": "hard_negative",
+      "neighbour": "search_files"
+    },
+    {
+      "id": "list_directory#straightforward.1",
+      "text": "Show me everything inside the var/log folder.",
+      "expected": "list_directory",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#straightforward.2",
+      "text": "Can you list the contents of the /home/user/documents directory?",
+      "expected": "list_directory",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#straightforward.3",
+      "text": "What files and folders are currently located in /tmp?",
+      "expected": "list_directory",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#straightforward.4",
+      "text": "Print a detailed directory listing for /var/www/html.",
+      "expected": "list_directory",
+      "kind": "straightforward",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#paraphrased.1",
+      "text": "what's in /etc right now",
+      "expected": "list_directory",
+      "kind": "paraphrased",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#paraphrased.2",
+      "text": "dump the contents of projects/webapp",
+      "expected": "list_directory",
+      "kind": "paraphrased",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#hard_negative.1",
+      "text": "List the contents of /var/log including how large every file is.",
+      "expected": "list_directory_with_sizes",
+      "kind": "hard_negative",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory#hard_negative.2",
+      "text": "Show me what is inside /home/user/downloads along with the exact size of each item.",
+      "expected": "list_directory_with_sizes",
+      "kind": "hard_negative",
+      "neighbour": "list_directory_with_sizes"
+    },
+    {
+      "id": "list_directory_with_sizes#straightforward.1",
+      "text": "Can you show me every item inside the /var/log folder along with how large each one is?",
+      "expected": "list_directory_with_sizes",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#straightforward.2",
+      "text": "List all the files and folders in /home/user/documents and include their sizes.",
+      "expected": "list_directory_with_sizes",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#straightforward.3",
+      "text": "Run a detailed directory listing for /var/www/html with file and folder sizes included.",
+      "expected": "list_directory_with_sizes",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#straightforward.4",
+      "text": "What is the contents and file size breakdown of the /etc/nginx directory?",
+      "expected": "list_directory_with_sizes",
+      "kind": "straightforward",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#paraphrased.1",
+      "text": "check storage usage inside /var/lib/docker by file",
+      "expected": "list_directory_with_sizes",
+      "kind": "paraphrased",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#paraphrased.2",
+      "text": "whats taking up space in /tmp",
+      "expected": "list_directory_with_sizes",
+      "kind": "paraphrased",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#hard_negative.1",
+      "text": "Show me a detailed listing of all files and directories in /var/log including their sizes.",
+      "expected": "list_directory",
+      "kind": "hard_negative",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "list_directory_with_sizes#hard_negative.2",
+      "text": "Get a detailed listing of all files and directories in /home/user/documents, including sizes, distinguishing files with [FILE] and [DIR].",
+      "expected": "list_directory",
+      "kind": "hard_negative",
+      "neighbour": "list_directory"
+    },
+    {
+      "id": "move_file#straightforward.1",
+      "text": "Please move report.pdf from the downloads folder to the archive directory.",
+      "expected": "move_file",
+      "kind": "straightforward",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#straightforward.2",
+      "text": "Rename old_logo.png to new_logo.png in the assets folder.",
+      "expected": "move_file",
+      "kind": "straightforward",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#straightforward.3",
+      "text": "Shift budget_2023.xlsx from documents to the financial_records directory.",
+      "expected": "move_file",
+      "kind": "straightforward",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#straightforward.4",
+      "text": "Transfer index.html from the backup folder into the public_html directory.",
+      "expected": "move_file",
+      "kind": "straightforward",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#paraphrased.1",
+      "text": "can u shove that quarterly presentation into my work folder already",
+      "expected": "move_file",
+      "kind": "paraphrased",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#paraphrased.2",
+      "text": "swap the name of draft_v1.txt to final_v1.txt real quick",
+      "expected": "move_file",
+      "kind": "paraphrased",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#hard_negative.1",
+      "text": "Set up a new folder named project_alpha inside documents.",
+      "expected": "create_directory",
+      "kind": "hard_negative",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "move_file#hard_negative.2",
+      "text": "Make a fresh directory called client_files under the workspace path.",
+      "expected": "create_directory",
+      "kind": "hard_negative",
+      "neighbour": "create_directory"
+    },
+    {
+      "id": "read_file#straightforward.1",
+      "text": "Please read the complete contents of package.json as text.",
+      "expected": "read_file",
+      "kind": "straightforward",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#straightforward.2",
+      "text": "Can you open and read_file the config/settings.yaml file?",
+      "expected": "read_file",
+      "kind": "straightforward",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#straightforward.3",
+      "text": "Execute read_file on /var/log/syslog now.",
+      "expected": "read_file",
+      "kind": "straightforward",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#straightforward.4",
+      "text": "I need you to use the read_file tool on docs/api.md.",
+      "expected": "read_file",
+      "kind": "straightforward",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#paraphrased.1",
+      "text": "Dump src/main.py.",
+      "expected": "read_file",
+      "kind": "paraphrased",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#paraphrased.2",
+      "text": "Grab everything inside notes.txt.",
+      "expected": "read_file",
+      "kind": "paraphrased",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#hard_negative.1",
+      "text": "Read the entire contents of README.md from start to finish.",
+      "expected": "read_text_file",
+      "kind": "hard_negative",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_file#hard_negative.2",
+      "text": "Pull up the full text stored in data/users.csv.",
+      "expected": "read_text_file",
+      "kind": "hard_negative",
+      "neighbour": "read_text_file"
+    },
+    {
+      "id": "read_media_file#straightforward.1",
+      "text": "Can you open and read the contents of /home/user/photos/vacation.jpg?",
+      "expected": "read_media_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#straightforward.2",
+      "text": "Please fetch the audio file located at /var/data/sounds/notification.mp3.",
+      "expected": "read_media_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#straightforward.3",
+      "text": "I need you to load the document at /shared/docs/report.pdf into the context.",
+      "expected": "read_media_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#straightforward.4",
+      "text": "Pull the raw data from /opt/config/settings.json so I can inspect it.",
+      "expected": "read_media_file",
+      "kind": "straightforward",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#paraphrased.1",
+      "text": "Grab that picture from my downloads folder at /home/user/Downloads/logo.png real quick.",
+      "expected": "read_media_file",
+      "kind": "paraphrased",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#paraphrased.2",
+      "text": "Pull up the voice memo sitting in /tmp/recording.wav.",
+      "expected": "read_media_file",
+      "kind": "paraphrased",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#hard_negative.1",
+      "text": "Save the text of my new python script directly into /home/user/projects/main.py.",
+      "expected": "write_file",
+      "kind": "hard_negative",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_media_file#hard_negative.2",
+      "text": "Output the final translated document straight to /var/www/html/output.html.",
+      "expected": "write_file",
+      "kind": "hard_negative",
+      "neighbour": "write_file"
+    },
+    {
+      "id": "read_multiple_files#straightforward.1",
+      "text": "Can you open src/main.rs and src/lib.rs at the same time and show me what's inside?",
+      "expected": "read_multiple_files",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#straightforward.2",
+      "text": "Please read config.json, package.json, and README.md simultaneously so I can check their contents.",
+      "expected": "read_multiple_files",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#straightforward.3",
+      "text": "I need to inspect the contents of logs/error.log and logs/output.log together.",
+      "expected": "read_multiple_files",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#straightforward.4",
+      "text": "Fetch the contents of data/users.csv and data/orders.csv in one go.",
+      "expected": "read_multiple_files",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#paraphrased.1",
+      "text": "grab notes.txt and TODO.md for me real quick",
+      "expected": "read_multiple_files",
+      "kind": "paraphrased",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#paraphrased.2",
+      "text": "pull up both index.js and server.js so I can look at them side by side",
+      "expected": "read_multiple_files",
+      "kind": "paraphrased",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#hard_negative.1",
+      "text": "Can you open clip1.mp4 and clip2.mp4 at the same time and show me what's inside?",
+      "expected": "read_media_file",
+      "kind": "hard_negative",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_multiple_files#hard_negative.2",
+      "text": "Please read audio1.wav and audio2.mp3 simultaneously so I can check their contents.",
+      "expected": "read_media_file",
+      "kind": "hard_negative",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "read_text_file#straightforward.1",
+      "text": "Can you open up /var/log/application.log and show me everything inside it?",
+      "expected": "read_text_file",
+      "kind": "straightforward",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#straightforward.2",
+      "text": "Read the entire contents of config.json located in the project root directory.",
+      "expected": "read_text_file",
+      "kind": "straightforward",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#straightforward.3",
+      "text": "Please use the read_text_file tool to load notes.txt from the documents folder.",
+      "expected": "read_text_file",
+      "kind": "straightforward",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#straightforward.4",
+      "text": "I need you to fetch the complete text from /home/user/script.py so I can review the code.",
+      "expected": "read_text_file",
+      "kind": "straightforward",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#paraphrased.1",
+      "text": "grab readme.md quick",
+      "expected": "read_text_file",
+      "kind": "paraphrased",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#paraphrased.2",
+      "text": "whats in the package.json file",
+      "expected": "read_text_file",
+      "kind": "paraphrased",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#hard_negative.1",
+      "text": "Read the entire contents of file_one.txt and file_two.txt from the current directory.",
+      "expected": "read_multiple_files",
+      "kind": "hard_negative",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "read_text_file#hard_negative.2",
+      "text": "Can you open up /var/log/app1.log and /var/log/app2.log to show me what is inside both of them?",
+      "expected": "read_multiple_files",
+      "kind": "hard_negative",
+      "neighbour": "read_multiple_files"
+    },
+    {
+      "id": "search_files#straightforward.1",
+      "text": "Find all Python script files located anywhere inside the src directory.",
+      "expected": "search_files",
+      "kind": "straightforward",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#straightforward.2",
+      "text": "Recursively search the project folder for any files ending with the .log extension.",
+      "expected": "search_files",
+      "kind": "straightforward",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#straightforward.3",
+      "text": "Run a pattern match for configuration files matching *.json across the workspace.",
+      "expected": "search_files",
+      "kind": "straightforward",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#straightforward.4",
+      "text": "Locate every markdown document throughout all subdirectories of the documentation folder.",
+      "expected": "search_files",
+      "kind": "straightforward",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#paraphrased.1",
+      "text": "Where did I put all my old backup archives buried in the data folders?",
+      "expected": "search_files",
+      "kind": "paraphrased",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#paraphrased.2",
+      "text": "Dig through the repo to sniff out any hidden image assets.",
+      "expected": "search_files",
+      "kind": "paraphrased",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#hard_negative.1",
+      "text": "Find out what folders I am permitted to search in for our project files.",
+      "expected": "list_allowed_directories",
+      "kind": "hard_negative",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "search_files#hard_negative.2",
+      "text": "List the base directory paths that we have access permissions to access right now.",
+      "expected": "list_allowed_directories",
+      "kind": "hard_negative",
+      "neighbour": "list_allowed_directories"
+    },
+    {
+      "id": "write_file#straightforward.1",
+      "text": "Please create a text file at /home/user/notes.txt and put the meeting minutes inside it.",
+      "expected": "write_file",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#straightforward.2",
+      "text": "Overwrite /var/www/html/index.html with the new HTML code I just pasted.",
+      "expected": "write_file",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#straightforward.3",
+      "text": "Save this python script to /usr/local/bin/script.py right now.",
+      "expected": "write_file",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#straightforward.4",
+      "text": "Make a new configuration file at /etc/app.conf containing the default server settings.",
+      "expected": "write_file",
+      "kind": "straightforward",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#paraphrased.1",
+      "text": "drop a quick todo list into notes.txt",
+      "expected": "write_file",
+      "kind": "paraphrased",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#paraphrased.2",
+      "text": "dump the raw json payload into /tmp/output.json",
+      "expected": "write_file",
+      "kind": "paraphrased",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#hard_negative.1",
+      "text": "Save the recorded voice clip to /media/audio/podcast.mp3 so I can edit it later.",
+      "expected": "read_media_file",
+      "kind": "hard_negative",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "write_file#hard_negative.2",
+      "text": "Put the exported video file into /var/media/exports/final_cut.mp4 right away.",
+      "expected": "read_media_file",
+      "kind": "hard_negative",
+      "neighbour": "read_media_file"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Could you analyze the runtime complexity of the sorting algorithm implemented in /src/utils/sorter.py and explain how to optimize it for large datasets?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "Please translate the error handling documentation located at /docs/errors.md from English into fluent Spanish while keeping all technical terms intact.",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Can you review the CSS styling in /styles/main.css and rewrite it to use modern CSS Grid layouts instead of floats for the main dashboard container?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "create_directory#straightforward.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "project_docs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "project_docs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "project_docs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "src/components/ui"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "src/components/ui"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "src/components/ui"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.3",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "logs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.3",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "logs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.3",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "logs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.4",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "build"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.4",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "build"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#straightforward.4",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "build"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#paraphrased.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "backups"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#paraphrased.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "backups"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#paraphrased.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "backups"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#paraphrased.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "tmp/cache"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#paraphrased.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "tmp/cache"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#hard_negative.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "archive/backup_old"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "create_directory#paraphrased.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "tmp/cache"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "create_directory#hard_negative.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "archive/backup_old"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "create_directory#hard_negative.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "archive/backup_old"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "create_directory#hard_negative.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "archive_2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "create_directory#hard_negative.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "archive_2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "create_directory#hard_negative.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "archive_2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "directory_tree#straightforward.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/home/user/projects"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/home/user/projects"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/home/user/projects"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.3",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "C:\\Users\\Admin\\Documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.3",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "C:\\Users\\Admin\\Documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.3",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "C:\\Users\\Admin\\Documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.4",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/opt/app/data"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.4",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/opt/app/data"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#straightforward.4",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/opt/app/data"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#paraphrased.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#paraphrased.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#paraphrased.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#paraphrased.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/home/dev/repo"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#paraphrased.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/home/dev/repo"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#paraphrased.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/home/dev/repo"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "directory_tree"
+    },
+    {
+      "query_id": "directory_tree#hard_negative.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "excludePatterns": [
+          "*.bak",
+          "*~",
+          "*.backup"
+        ],
+        "path": "/etc/nginx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "directory_tree#hard_negative.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "excludePatterns": [
+          "*backup*",
+          "*.bak",
+          "*~"
+        ],
+        "path": "/etc/nginx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "directory_tree#hard_negative.1",
+      "chosen": "directory_tree",
+      "arguments": {
+        "excludePatterns": [
+          "*backup*",
+          "*.bak",
+          "*~"
+        ],
+        "path": "/etc/nginx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "directory_tree#hard_negative.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "directory_tree#hard_negative.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "directory_tree#hard_negative.2",
+      "chosen": "directory_tree",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "edit_file#straightforward.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*main.py",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*src/main.py*",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "**/src/main.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*utils.js"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*utils.js",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*utils.js"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.3",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "settings.json",
+        "path": "config"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.3",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*settings.json",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.3",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*settings.json",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.4",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*index.html",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.4",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#straightforward.4",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "head": 50,
+        "path": "docs/readme.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "docs/readme.md",
+        "head": 50
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "head": 50,
+        "path": "docs/readme.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#paraphrased.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*deploy.sh*",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#paraphrased.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*deploy.sh"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#paraphrased.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*deploy.sh"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "edit_file"
+    },
+    {
+      "query_id": "edit_file#hard_negative.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*routes.py",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "edit_file#hard_negative.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*routes.py",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "edit_file#hard_negative.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*styles/main.css"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "edit_file#hard_negative.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*routes.py*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "edit_file#hard_negative.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*styles/main.css",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "get_file_info#straightforward.1",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/log/syslog"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "edit_file#hard_negative.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*styles/main.css"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "get_file_info#straightforward.1",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/log/syslog"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.1",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/log/syslog"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.3",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/home/user/scripts/deploy.sh"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.3",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/home/user/scripts/deploy.sh"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.3",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/home/user/scripts/deploy.sh"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.4",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/www/html/index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.4",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/www/html/index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#straightforward.4",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/www/html/index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#paraphrased.1",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/opt/app/data.db"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#paraphrased.1",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/opt/app/data.db"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#paraphrased.1",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/opt/app/data.db"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#paraphrased.2",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/backups/db_dump.sql"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#paraphrased.2",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/backups/db_dump.sql"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#paraphrased.2",
+      "chosen": "get_file_info",
+      "arguments": {
+        "path": "/var/backups/db_dump.sql"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_file_info"
+    },
+    {
+      "query_id": "get_file_info#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "get_file_info#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log",
+        "sortBy": "size"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "get_file_info#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "get_file_info#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/downloads"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "get_file_info#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/downloads"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "get_file_info#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/downloads"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.3",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.3",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.3",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#paraphrased.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#paraphrased.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#paraphrased.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "list_allowed_directories#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "list_allowed_directories#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "list_allowed_directories#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "list_allowed_directories#hard_negative.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "list_allowed_directories#hard_negative.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "list_allowed_directories#hard_negative.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "list_directory#straightforward.1",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.1",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.1",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.2",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.2",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.2",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.3",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "/tmp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.3",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "/tmp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.4",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.3",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "/tmp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.4",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#straightforward.4",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#paraphrased.2",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "projects/webapp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#paraphrased.2",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "projects/webapp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory#paraphrased.2",
+      "chosen": "list_directory",
+      "arguments": {
+        "path": "projects/webapp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/downloads"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/downloads"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/downloads"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.3",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.3",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.3",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/www/html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#paraphrased.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#paraphrased.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/tmp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#paraphrased.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/tmp"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#paraphrased.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/tmp",
+        "sortBy": "size"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory_with_sizes"
+    },
+    {
+      "query_id": "list_directory_with_sizes#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory_with_sizes#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory_with_sizes#hard_negative.1",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/var/log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory_with_sizes#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory_with_sizes#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "list_directory_with_sizes#hard_negative.2",
+      "chosen": "list_directory_with_sizes",
+      "arguments": {
+        "path": "/home/user/documents"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_directory"
+    },
+    {
+      "query_id": "move_file#straightforward.1",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "archive/report.pdf",
+        "source": "downloads/report.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.1",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "downloads/report.pdf",
+        "destination": "archive/report.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.1",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "downloads/report.pdf",
+        "destination": "archive/report.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.2",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "assets/old_logo.png",
+        "destination": "assets/new_logo.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.2",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "assets/old_logo.png",
+        "destination": "assets/new_logo.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.2",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "assets/old_logo.png",
+        "destination": "assets/new_logo.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.3",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "documents/budget_2023.xlsx",
+        "destination": "financial_records/budget_2023.xlsx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.3",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "financial_records/budget_2023.xlsx",
+        "source": "documents/budget_2023.xlsx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.3",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "financial_records/budget_2023.xlsx",
+        "source": "documents/budget_2023.xlsx"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.4",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "public_html/index.html",
+        "source": "backup/index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.4",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "backup/index.html",
+        "destination": "public_html/index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#straightforward.4",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "public_html/index.html",
+        "source": "backup/index.html"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*quarterly*presentation*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*quarterly*",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*quarterly*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#paraphrased.2",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "draft_v1.txt",
+        "destination": "final_v1.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#paraphrased.2",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "final_v1.txt",
+        "source": "draft_v1.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#hard_negative.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "documents/project_alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "move_file#paraphrased.2",
+      "chosen": "move_file",
+      "arguments": {
+        "source": "draft_v1.txt",
+        "destination": "final_v1.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "move_file"
+    },
+    {
+      "query_id": "move_file#hard_negative.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "documents/project_alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "move_file#hard_negative.1",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "documents/project_alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "move_file#hard_negative.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "client_files"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "move_file#hard_negative.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "client_files"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "move_file#hard_negative.2",
+      "chosen": "create_directory",
+      "arguments": {
+        "path": "client_files"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_directory"
+    },
+    {
+      "query_id": "read_file#straightforward.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "package.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "package.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "package.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "config/settings.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "config/settings.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "config/settings.yaml"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.3",
+      "chosen": "read_file",
+      "arguments": {
+        "path": "/var/log/syslog"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.3",
+      "chosen": "read_file",
+      "arguments": {
+        "path": "/var/log/syslog"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.3",
+      "chosen": "read_file",
+      "arguments": {
+        "path": "/var/log/syslog"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.4",
+      "chosen": "read_file",
+      "arguments": {
+        "path": "docs/api.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.4",
+      "chosen": "read_file",
+      "arguments": {
+        "path": "docs/api.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#straightforward.4",
+      "chosen": "read_file",
+      "arguments": {
+        "path": "docs/api.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "src/main.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "src/main.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "src/main.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#paraphrased.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#paraphrased.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#hard_negative.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_file#paraphrased.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_file"
+    },
+    {
+      "query_id": "read_file#hard_negative.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_file#hard_negative.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_file#hard_negative.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "data/users.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_file#hard_negative.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "data/users.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_file#hard_negative.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "data/users.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.1",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/home/user/photos/vacation.jpg"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.1",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/home/user/photos/vacation.jpg"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.1",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/home/user/photos/vacation.jpg"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.2",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/var/data/sounds/notification.mp3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.2",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/var/data/sounds/notification.mp3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.2",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/var/data/sounds/notification.mp3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.3",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/shared/docs/report.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/shared/docs/report.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.4",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/opt/config/settings.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.4",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/opt/config/settings.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.3",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/shared/docs/report.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#paraphrased.1",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/home/user/Downloads/logo.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#straightforward.4",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/opt/config/settings.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#paraphrased.1",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/home/user/Downloads/logo.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#paraphrased.2",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/tmp/recording.wav"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#paraphrased.1",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/home/user/Downloads/logo.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#paraphrased.2",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/tmp/recording.wav"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#paraphrased.2",
+      "chosen": "read_media_file",
+      "arguments": {
+        "path": "/tmp/recording.wav"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_media_file#hard_negative.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "# New python script\n",
+        "path": "/home/user/projects/main.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "read_media_file#hard_negative.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "# my new python script",
+        "path": "/home/user/projects/main.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "read_media_file#hard_negative.1",
+      "chosen": "write_file",
+      "arguments": {
+        "path": "/home/user/projects/main.py",
+        "content": "# my new python script"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "read_media_file#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "read_media_file#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "read_media_file#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "src/main.rs",
+          "src/lib.rs"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "src/main.rs",
+          "src/lib.rs"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "config.json",
+          "package.json",
+          "README.md"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "src/main.rs",
+          "src/lib.rs"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "config.json",
+          "package.json",
+          "README.md"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "config.json",
+          "package.json",
+          "README.md"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.3",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "logs/error.log",
+          "logs/output.log"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.3",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "logs/error.log",
+          "logs/output.log"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.3",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "logs/error.log",
+          "logs/output.log"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.4",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "data/users.csv",
+          "data/orders.csv"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.4",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "data/users.csv",
+          "data/orders.csv"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#straightforward.4",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "data/users.csv",
+          "data/orders.csv"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#paraphrased.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "notes.txt",
+          "TODO.md"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#paraphrased.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "notes.txt",
+          "TODO.md"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#paraphrased.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "notes.txt",
+          "TODO.md"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#paraphrased.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "index.js",
+          "server.js"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#paraphrased.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "index.js",
+          "server.js"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#paraphrased.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "index.js",
+          "server.js"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_multiple_files#hard_negative.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "clip1.mp4",
+          "clip2.mp4"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_multiple_files#hard_negative.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "clip1.mp4",
+          "clip2.mp4"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_multiple_files#hard_negative.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "clip1.mp4",
+          "clip2.mp4"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_multiple_files#hard_negative.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "audio1.wav",
+          "audio2.mp3"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_multiple_files#hard_negative.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "audio1.wav",
+          "audio2.mp3"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/var/log/application.log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_multiple_files#hard_negative.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "audio1.wav",
+          "audio2.mp3"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/var/log/application.log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/var/log/application.log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "config.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "config.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "config.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "documents/notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "documents/notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.4",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/home/user/script.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.4",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/home/user/script.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.4",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/home/user/script.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#straightforward.3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "documents/notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*README.md",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#paraphrased.1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#paraphrased.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "package.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#paraphrased.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "package.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#paraphrased.2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "package.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_text_file"
+    },
+    {
+      "query_id": "read_text_file#hard_negative.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "file_one.txt",
+          "file_two.txt"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_text_file#hard_negative.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "file_one.txt",
+          "file_two.txt"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_text_file#hard_negative.1",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "file_one.txt",
+          "file_two.txt"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_text_file#hard_negative.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "/var/log/app1.log",
+          "/var/log/app2.log"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_text_file#hard_negative.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "/var/log/app1.log",
+          "/var/log/app2.log"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "read_text_file#hard_negative.2",
+      "chosen": "read_multiple_files",
+      "arguments": {
+        "paths": [
+          "/var/log/app1.log",
+          "/var/log/app2.log"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_multiple_files"
+    },
+    {
+      "query_id": "search_files#straightforward.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": "src",
+        "pattern": "**/*.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": "src",
+        "pattern": "**/*.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*.py",
+        "path": "src"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "**/*.log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.2",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "**/*.log"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.3",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*.json",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*.log",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.3",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.3",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "*.json"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.4",
+      "chosen": "search_files",
+      "arguments": {
+        "path": "documentation",
+        "pattern": "**/*.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.4",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*.md",
+        "path": "documentation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#straightforward.4",
+      "chosen": "search_files",
+      "arguments": {
+        "path": "documentation",
+        "pattern": "**/*.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*backup*",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "path": ".",
+        "pattern": "**/*backup*"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#paraphrased.1",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*backup*",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#paraphrased.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*.{png,jpg,jpeg,gif,svg,webp,ico}",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#paraphrased.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "**/*.{png,jpg,jpeg,gif,svg,webp,ico}",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#paraphrased.2",
+      "chosen": "search_files",
+      "arguments": {
+        "pattern": "*.{png,jpg,jpeg,gif,svg,webp,ico}",
+        "path": "."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_files"
+    },
+    {
+      "query_id": "search_files#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "search_files#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "search_files#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "search_files#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "search_files#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "search_files#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_allowed_directories"
+    },
+    {
+      "query_id": "write_file#straightforward.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "meeting minutes",
+        "path": "/home/user/notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "meeting minutes",
+        "path": "/home/user/notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "meeting minutes",
+        "path": "/home/user/notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.3",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.3",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.3",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#straightforward.4",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#paraphrased.1",
+      "chosen": "write_file",
+      "arguments": {
+        "path": "notes.txt",
+        "content": "- Todo list\n"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#paraphrased.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "- Todo list",
+        "path": "notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#paraphrased.1",
+      "chosen": "write_file",
+      "arguments": {
+        "content": "- Todo list\n- Item 1\n- Item 2\n",
+        "path": "notes.txt"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#paraphrased.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#paraphrased.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#paraphrased.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "write_file"
+    },
+    {
+      "query_id": "write_file#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "write_file#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "write_file#hard_negative.1",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "write_file#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "write_file#hard_negative.2",
+      "chosen": "list_allowed_directories",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/src/utils/sorter.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "write_file#hard_negative.2",
+      "chosen": "move_file",
+      "arguments": {
+        "destination": "/var/media/exports/final_cut.mp4",
+        "source": "exported video file"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_media_file"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/src/utils/sorter.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/docs/errors.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/src/utils/sorter.py"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/docs/errors.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/docs/errors.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/styles/main.css"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/styles/main.css"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "read_text_file",
+      "arguments": {
+        "path": "/styles/main.css"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "io-github-modelcontextprotocol-server-filesystem.json",
+    "slug": "io-github-modelcontextprotocol-server-filesystem",
+    "registry_name": "io.github.modelcontextprotocol/server-filesystem",
+    "title": "Filesystem (reference)",
+    "repository": "https://github.com/modelcontextprotocol/servers"
+  }
+}

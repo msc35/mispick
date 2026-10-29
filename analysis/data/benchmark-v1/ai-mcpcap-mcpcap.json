@@ -1,0 +1,4179 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-20",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "ai-mcpcap-mcpcap",
+      "name": "mcpcap",
+      "version": "2.14.7",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "analyze_capinfos",
+      "server": null,
+      "title": null,
+      "description": "Return metadata from a PCAP file, similar to Wireshark's capinfos utility.\n\nIMPORTANT: This tool expects a FILE PATH or URL, not file content.\n- For local files: \"/path/to/capture.pcap\"\n- For remote files: \"https://example.com/capture.pcap\"\n- File uploads are NOT supported - save the file locally first\n\nArgs:\n    pcap_file: Path to local PCAP file or HTTP URL to remote PCAP file\n              (NOT file content - must be a path or URL)\n\nReturns:\n    A structured dictionary containing PCAP metadata including:\n    - File information (size, name, encapsulation type)\n    - Packet statistics (count, data size, average sizes)\n    - Temporal data (duration, timestamps, rates)",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_dhcp_packets",
+      "server": null,
+      "title": null,
+      "description": "Analyze DHCP packets from a PCAP file and return comprehensive analysis results.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing DHCP packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_dns_packets",
+      "server": null,
+      "title": null,
+      "description": "Analyze DNS packets from a PCAP file and return comprehensive analysis results.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing DNS packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_icmp_packets",
+      "server": null,
+      "title": null,
+      "description": "Analyze ICMP packets from a PCAP file and return comprehensive analysis results.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing ICMP packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_sip_packets",
+      "server": null,
+      "title": null,
+      "description": "Analyze SIP packets from a PCAP file and return structured signaling details.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n\nReturns:\n    A structured dictionary containing SIP packet analysis results",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_tcp_anomalies",
+      "server": null,
+      "title": null,
+      "description": "Detect TCP traffic patterns through statistical analysis.\n\nThis tool analyzes TCP traffic to identify observable patterns without\nmaking assumptions about root causes. It provides factual metrics and\npattern detection that can be used for further investigation.\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Optional filter for server IP address\n    server_port: Optional filter for server port\n\nReturns:\n    A structured dictionary containing:\n    - statistics: Comprehensive TCP metrics (handshakes, flags, RST distribution, etc.)\n    - patterns: Observable patterns detected in the traffic\n    - summary: High-level summary of findings\n\nDetected pattern categories:\n- connection_establishment: Handshake success/failure rates, SYN response ratios\n- connection_termination: RST distribution, normal vs abnormal closes\n- reliability: Retransmission rates, packet loss indicators\n- connection_lifecycle: Connection state transitions\n\nThe analysis is purely observational - it reports what is seen in the traffic\nwithout attempting to diagnose specific issues like \"firewall block\" or\n\"network congestion\". This allows the data to be interpreted in context.",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "server_port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_tcp_connections",
+      "server": null,
+      "title": null,
+      "description": "Analyze TCP connection states and lifecycle.\n\nThis is the core tool for TCP connection analysis, solving 80% of TCP-related issues.\n\nFILE UPLOAD LIMITATION: This MCP tool cannot process files uploaded through\nClaude's web interface. Files must be accessible via URL or local file path.\n\nSUPPORTED INPUT FORMATS:\n- Remote files: \"https://example.com/capture.pcap\"\n- Local files: \"/absolute/path/to/capture.pcap\"\n\nUNSUPPORTED:\n- Files uploaded through Claude's file upload feature\n- Base64 file content\n- Relative file paths\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Optional filter for server IP address\n    server_port: Optional filter for server port\n    detailed: Whether to return detailed connection information\n\nReturns:\n    A structured dictionary containing TCP connection analysis results including:\n    - summary: Overall connection statistics\n    - connections: List of individual connections with states\n    - issues: Detected problems",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "server_port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "detailed": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_tcp_retransmissions",
+      "server": null,
+      "title": null,
+      "description": "Analyze TCP retransmission patterns.\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Optional filter for server IP address\n    threshold: Retransmission rate threshold (default: 2%)\n\nReturns:\n    A structured dictionary containing:\n    - total_retransmissions: Total number of retransmissions\n    - retransmission_rate: Overall retransmission rate\n    - by_connection: Per-connection retransmission statistics\n    - summary: Worst connections and threshold violations",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "threshold": {
+            "default": 0.02,
+            "type": "number"
+          }
+        },
+        "required": [
+          "pcap_file"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    },
+    {
+      "name": "analyze_traffic_flow",
+      "server": null,
+      "title": null,
+      "description": "Analyze bidirectional traffic flow characteristics.\n\nIdentifies traffic direction, asymmetry, RST sources, and data transfer patterns.\n\nArgs:\n    pcap_file: HTTP URL or absolute local file path to PCAP file\n    server_ip: Server IP address (required)\n    server_port: Optional filter for server port\n\nReturns:\n    A structured dictionary containing:\n    - client_to_server: Client-to-server traffic statistics\n    - server_to_client: Server-to-client traffic statistics\n    - analysis: Asymmetry analysis and interpretations",
+      "inputSchema": {
+        "properties": {
+          "pcap_file": {
+            "type": "string"
+          },
+          "server_ip": {
+            "type": "string"
+          },
+          "server_port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "pcap_file",
+          "server_ip"
+        ],
+        "type": "object"
+      },
+      "annotations": {}
+    }
+  ],
+  "score": 94,
+  "summary": {
+    "accuracy": {
+      "hits": 209,
+      "total": 225,
+      "value": 0.9289,
+      "ci95": [
+        0.8876,
+        0.9558
+      ]
+    },
+    "stability": {
+      "hits": 73,
+      "total": 75,
+      "value": 0.9733,
+      "ci95": [
+        0.9079,
+        0.9927
+      ]
+    },
+    "argumentValidity": {
+      "hits": 216,
+      "total": 216,
+      "value": 1.0,
+      "ci95": [
+        0.9825,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 0,
+      "total": 9,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.2991
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 225,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0168
+      ]
+    },
+    "trials": 225,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 2011
+  },
+  "confusionMatrix": {
+    "rows": [
+      "analyze_capinfos",
+      "analyze_dhcp_packets",
+      "analyze_dns_packets",
+      "analyze_icmp_packets",
+      "analyze_sip_packets",
+      "analyze_tcp_anomalies",
+      "analyze_tcp_connections",
+      "analyze_tcp_retransmissions",
+      "analyze_traffic_flow",
+      "(none)"
+    ],
+    "columns": [
+      "analyze_capinfos",
+      "analyze_dhcp_packets",
+      "analyze_dns_packets",
+      "analyze_icmp_packets",
+      "analyze_sip_packets",
+      "analyze_tcp_anomalies",
+      "analyze_tcp_connections",
+      "analyze_tcp_retransmissions",
+      "analyze_traffic_flow",
+      "(none)"
+    ],
+    "counts": {
+      "analyze_capinfos": {
+        "analyze_capinfos": 18
+      },
+      "analyze_dhcp_packets": {
+        "analyze_dhcp_packets": 41,
+        "analyze_dns_packets": 3,
+        "analyze_tcp_connections": 4
+      },
+      "analyze_dns_packets": {
+        "analyze_dns_packets": 24
+      },
+      "analyze_icmp_packets": {
+        "analyze_icmp_packets": 18
+      },
+      "analyze_sip_packets": {
+        "analyze_sip_packets": 18
+      },
+      "analyze_tcp_anomalies": {
+        "analyze_tcp_anomalies": 18
+      },
+      "analyze_tcp_connections": {
+        "analyze_tcp_connections": 24
+      },
+      "analyze_tcp_retransmissions": {
+        "analyze_tcp_retransmissions": 21,
+        "analyze_tcp_connections": 3
+      },
+      "analyze_traffic_flow": {
+        "analyze_tcp_anomalies": 1,
+        "analyze_tcp_retransmissions": 5,
+        "analyze_traffic_flow": 18
+      },
+      "(none)": {
+        "(none)": 9
+      }
+    }
+  },
+  "perTool": {
+    "analyze_capinfos": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "analyze_dhcp_packets": {
+      "recall": {
+        "hits": 41,
+        "total": 48,
+        "value": 0.8542,
+        "ci95": [
+          0.7283,
+          0.9275
+        ]
+      },
+      "precision": {
+        "hits": 41,
+        "total": 41,
+        "value": 1.0,
+        "ci95": [
+          0.9143,
+          1.0
+        ]
+      },
+      "f1": 0.9213
+    },
+    "analyze_dns_packets": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 27,
+        "value": 0.8889,
+        "ci95": [
+          0.7194,
+          0.9615
+        ]
+      },
+      "f1": 0.9412
+    },
+    "analyze_icmp_packets": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "analyze_sip_packets": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "analyze_tcp_anomalies": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 19,
+        "value": 0.9474,
+        "ci95": [
+          0.7536,
+          0.9906
+        ]
+      },
+      "f1": 0.973
+    },
+    "analyze_tcp_connections": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 31,
+        "value": 0.7742,
+        "ci95": [
+          0.6019,
+          0.886
+        ]
+      },
+      "f1": 0.8727
+    },
+    "analyze_tcp_retransmissions": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 26,
+        "value": 0.8077,
+        "ci95": [
+          0.6212,
+          0.9149
+        ]
+      },
+      "f1": 0.84
+    },
+    "analyze_traffic_flow": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 0.8571
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "analyze_traffic_flow",
+      "chosen": "analyze_tcp_retransmissions",
+      "count": 5,
+      "share": 0.2083
+    },
+    {
+      "expected": "analyze_dhcp_packets",
+      "chosen": "analyze_tcp_connections",
+      "count": 4,
+      "share": 0.0833
+    },
+    {
+      "expected": "analyze_tcp_retransmissions",
+      "chosen": "analyze_tcp_connections",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "analyze_dhcp_packets",
+      "chosen": "analyze_dns_packets",
+      "count": 3,
+      "share": 0.0625
+    },
+    {
+      "expected": "analyze_traffic_flow",
+      "chosen": "analyze_tcp_anomalies",
+      "count": 1,
+      "share": 0.0417
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "analyze_traffic_flow",
+      "chosen": "analyze_tcp_retransmissions",
+      "count": 5
+    },
+    {
+      "expected": "analyze_dhcp_packets",
+      "chosen": "analyze_tcp_connections",
+      "count": 4
+    },
+    {
+      "expected": "analyze_tcp_retransmissions",
+      "chosen": "analyze_tcp_connections",
+      "count": 3
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 9,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [
+    "analyze_tcp_connections#hard_negative.1",
+    "analyze_tcp_retransmissions#hard_negative.1"
+  ],
+  "queries": [
+    {
+      "id": "analyze_capinfos#straightforward.1",
+      "text": "Can you run capinfos on /home/user/captures/trace.pcap to check the packet count and file size?",
+      "expected": "analyze_capinfos",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#straightforward.2",
+      "text": "Please analyze the PCAP metadata for https://example.com/network_logs/malware_sample.pcap.",
+      "expected": "analyze_capinfos",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#straightforward.3",
+      "text": "Get the capture statistics and duration for the file located at /var/log/wireshark/session_42.pcap.",
+      "expected": "analyze_capinfos",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#straightforward.4",
+      "text": "What is the encapsulation type and average packet size for /opt/traces/test_run.pcap?",
+      "expected": "analyze_capinfos",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#paraphrased.1",
+      "text": "check stats on /tmp/capture.pcap",
+      "expected": "analyze_capinfos",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#paraphrased.2",
+      "text": "pull header info and duration from https://internal.server.net/dumps/live_feed.pcap",
+      "expected": "analyze_capinfos",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#hard_negative.1",
+      "text": "Can you run capinfos to extract the DHCP transaction details from /home/user/captures/trace.pcap?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_capinfos#hard_negative.2",
+      "text": "What are the packet statistics and lease durations inside https://example.com/network_logs/dhcp_capture.pcap?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#straightforward.1",
+      "text": "Can you run analyze_dhcp_packets on /var/log/captures/dhcp_lease_test.pcap?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#straightforward.2",
+      "text": "Please execute analyze_dhcp_packets using https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#straightforward.3",
+      "text": "Run the analyze_dhcp_packets tool for /home/admin/captures/scope_exhaustion.pcap.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#straightforward.4",
+      "text": "Execute analyze_dhcp_packets on https://storage.example.com/network-logs/dhcp_discover_issue.pcap.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#paraphrased.1",
+      "text": "parse out the dynamic host config traffic sitting in /opt/traces/office_subnet_bad_leases.pcap.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#paraphrased.2",
+      "text": "take a look at https://diag.corp.net/dumps/bootp_relay_fail.pcap and tell me why the lease assignments are dropping.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#hard_negative.1",
+      "text": "Can you run analyze_dns_packets on /var/log/captures/dhcp_lease_test.pcap?",
+      "expected": "analyze_dns_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dhcp_packets#hard_negative.2",
+      "text": "Please execute analyze_dns_packets using https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap.",
+      "expected": "analyze_dns_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dns_packets"
+    },
+    {
+      "id": "analyze_dns_packets#straightforward.1",
+      "text": "Can you run an analysis on the DNS packets located at /var/log/captures/dns_query_test.pcap?",
+      "expected": "analyze_dns_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#straightforward.2",
+      "text": "Please inspect the DNS traffic found in https://internal.network/traces/malformed_dns.pcap.",
+      "expected": "analyze_dns_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#straightforward.3",
+      "text": "I need a complete breakdown of all DNS queries and responses stored in /home/admin/captures/external_lookup.pcap.",
+      "expected": "analyze_dns_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#straightforward.4",
+      "text": "Execute a parsing job on the DNS packet capture available at https://storage.company.com/pcaps/dns_flood.pcap.",
+      "expected": "analyze_dns_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#paraphrased.1",
+      "text": "Check out that name resolution traffic dump sitting at /tmp/captures/sniffed_queries.pcap when you get a sec.",
+      "expected": "analyze_dns_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#paraphrased.2",
+      "text": "Pull the domain lookup logs apart from https://ops.net/dumps/weekend_traffic.pcap and show me what's breaking.",
+      "expected": "analyze_dns_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#hard_negative.1",
+      "text": "Can you parse the DNS lease traffic in /var/log/dhcp_leases_capture.pcap right away?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_dns_packets#hard_negative.2",
+      "text": "Analyze the DNS packet records stored at https://gateway.local/logs/ip_assignment_dump.pcap for anomalies.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#straightforward.1",
+      "text": "Can you run analyze_icmp_packets on https://example.com/captures/ping_test.pcap?",
+      "expected": "analyze_icmp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#straightforward.2",
+      "text": "Please process the PCAP file located at /var/log/network/icmp_sweep.pcap using analyze_icmp_packets.",
+      "expected": "analyze_icmp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#straightforward.3",
+      "text": "I need you to execute analyze_icmp_packets for the file at https://internal.corp/net/router_ping.pcap.",
+      "expected": "analyze_icmp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#straightforward.4",
+      "text": "Run the analyze_icmp_packets function on /home/admin/captures/diagnostic_ping.pcap.",
+      "expected": "analyze_icmp_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#paraphrased.1",
+      "text": "Hey check out https://sec-ops.net/dumps/ping_flood.pcap and pull all the ping stats out for me.",
+      "expected": "analyze_icmp_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#paraphrased.2",
+      "text": "Quickly parse /mnt/shared/traces/router_ping_test.pcap to see what's going on with the echo requests.",
+      "expected": "analyze_icmp_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#hard_negative.1",
+      "text": "Can you run analyze_dhcp_packets on https://example.com/captures/ping_test.pcap?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_icmp_packets#hard_negative.2",
+      "text": "Please process the PCAP file located at /var/log/network/icmp_sweep.pcap using analyze_dhcp_packets.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#straightforward.1",
+      "text": "Can you parse the VoIP call signaling in https://internal.server.net/captures/voip_test.pcap?",
+      "expected": "analyze_sip_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#straightforward.2",
+      "text": "Please run an analysis on the SIP traffic located at /var/log/captures/session_01.pcap.",
+      "expected": "analyze_sip_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#straightforward.3",
+      "text": "Extract all the session initiation details from https://storage.company.com/traces/sip_debug.pcap.",
+      "expected": "analyze_sip_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#straightforward.4",
+      "text": "Examine the telephone signaling packets inside /home/admin/captures/trunk_fail.pcap.",
+      "expected": "analyze_sip_packets",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#paraphrased.1",
+      "text": "pull session logs from https://ops.net/pcap/pbx_error.pcap real quick.",
+      "expected": "analyze_sip_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#paraphrased.2",
+      "text": "need to check call setup flows in /data/captures/outage_today.pcap.",
+      "expected": "analyze_sip_packets",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#hard_negative.1",
+      "text": "Can you parse the IP assignment traffic in https://internal.server.net/captures/voip_test.pcap?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_sip_packets#hard_negative.2",
+      "text": "Please run an analysis on the DHCP traffic located at /var/log/captures/session_01.pcap.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_anomalies#straightforward.1",
+      "text": "Run a statistical check on tcp traffic metrics in /var/log/captures/suspect_flow.pcap.",
+      "expected": "analyze_tcp_anomalies",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#straightforward.2",
+      "text": "Inspect the pcap file located at https://internal.storage.net/pcaps/incident_8842.pcap for abnormal tcp behavior.",
+      "expected": "analyze_tcp_anomalies",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#straightforward.3",
+      "text": "Analyze the tcp handshake success rates and flag distributions for server 192.168.1.50 using /data/traffic/outage.pcap.",
+      "expected": "analyze_tcp_anomalies",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#straightforward.4",
+      "text": "Check /home/admin/captures/ddos_test.pcap focusing on port 443 to see patterns in connection termination and retransmissions.",
+      "expected": "analyze_tcp_anomalies",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#paraphrased.1",
+      "text": "pull up stats on retransmits and reset flags from https://blob.corp.com/net-dumps/client_timeout.pcap filtered by port 8080.",
+      "expected": "analyze_tcp_anomalies",
+      "kind": "paraphrased",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#paraphrased.2",
+      "text": "run metrics on packet loss and handshake failures for server 10.0.4.15 in /mnt/volume/captures/spike.pcap.",
+      "expected": "analyze_tcp_anomalies",
+      "kind": "paraphrased",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#hard_negative.1",
+      "text": "Can you analyze all active tcp connections targeting port 80 in /var/log/traffic/web_spike.pcap?",
+      "expected": "analyze_tcp_connections",
+      "kind": "hard_negative",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_anomalies#hard_negative.2",
+      "text": "Give me a breakdown of established tcp connections involving server 172.16.0.4 from /opt/captures/sessions.pcap.",
+      "expected": "analyze_tcp_connections",
+      "kind": "hard_negative",
+      "neighbour": "analyze_tcp_connections"
+    },
+    {
+      "id": "analyze_tcp_connections#straightforward.1",
+      "text": "Can you analyze the TCP connection states in /var/log/captures/traffic_20231024.pcap and give me a detailed breakdown?",
+      "expected": "analyze_tcp_connections",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#straightforward.2",
+      "text": "Run a TCP connection analysis on https://storage.company.com/network-dumps/incident_4092.pcap focusing specifically on server IP 192.168.1.50.",
+      "expected": "analyze_tcp_connections",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#straightforward.3",
+      "text": "Check /home/admin/captures/handshake_failures.pcap for any dropped packets or connection lifecycle issues on port 443.",
+      "expected": "analyze_tcp_connections",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#straightforward.4",
+      "text": "I need to inspect all TCP flows and summary statistics from https://internal.net/pcap/webserver_crash.pcap without detailed logs.",
+      "expected": "analyze_tcp_connections",
+      "kind": "straightforward",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#paraphrased.1",
+      "text": "Hey, pull up that packet dump at /opt/traces/active_sessions.pcap and tell me why connections are hanging.",
+      "expected": "analyze_tcp_connections",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#paraphrased.2",
+      "text": "Quick check on https://ci.internal/artifacts/netdump.pcap to see if the database server port 3306 had any weird session drops.",
+      "expected": "analyze_tcp_connections",
+      "kind": "paraphrased",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#hard_negative.1",
+      "text": "Can you inspect the handshake and connection states in /var/log/dhcp_leases_debug.pcap to see why clients aren't getting addresses?",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_connections#hard_negative.2",
+      "text": "Run a session lifecycle breakdown on https://dhcp-server.local/captures/leases_oct24.pcap filtering for server IP 10.0.0.1.",
+      "expected": "analyze_dhcp_packets",
+      "kind": "hard_negative",
+      "neighbour": "analyze_dhcp_packets"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#straightforward.1",
+      "text": "Run the tcp retransmission analysis on /var/log/captures/production_load.pcap using a 5 percent threshold.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "straightforward",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#straightforward.2",
+      "text": "Check http://internal-storage.local/pcaps/incident_4092.pcap for packet loss issues targeting 10.0.4.15.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "straightforward",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#straightforward.3",
+      "text": "Please inspect C:\\Captures\\web_traffic_202311.pcap to see if the retransmission rate exceeds the standard 2 percent limit.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "straightforward",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#straightforward.4",
+      "text": "Execute the TCP retransmission breakdown on /home/admin/traces/bad_session.pcap filtered for server IP 192.168.1.50.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "straightforward",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#paraphrased.1",
+      "text": "Find out why connection drops are happening in /mnt/storage/client_handshake.pcap.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "paraphrased",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#paraphrased.2",
+      "text": "Audit ftp://diag-server.internal/dumps/overflow_test.pcap to see how many packets had to be resent.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "paraphrased",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#hard_negative.1",
+      "text": "Analyze the traffic flow for /var/log/captures/production_load.pcap to check for missing packet acknowledgments.",
+      "expected": "analyze_traffic_flow",
+      "kind": "hard_negative",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_tcp_retransmissions#hard_negative.2",
+      "text": "Run the traffic flow analyzer on C:\\Captures\\web_traffic_202311.pcap focusing on connection retry statistics.",
+      "expected": "analyze_traffic_flow",
+      "kind": "hard_negative",
+      "neighbour": "analyze_traffic_flow"
+    },
+    {
+      "id": "analyze_traffic_flow#straightforward.1",
+      "text": "Can you run analyze_traffic_flow on /var/log/captures/web_auth.pcap for the server at 192.168.1.50?",
+      "expected": "analyze_traffic_flow",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#straightforward.2",
+      "text": "Please analyze traffic flow for https://storage.company.com/pcaps/edge_router.pcap targeting server IP 10.0.0.15 on port 443.",
+      "expected": "analyze_traffic_flow",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#straightforward.3",
+      "text": "Inspect the bidirectional packet flow in /home/analyst/dumps/ddos_event.pcap using 172.16.4.100 as the primary server IP.",
+      "expected": "analyze_traffic_flow",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#straightforward.4",
+      "text": "Check the traffic characteristics in https://internal.net/captures/db_sync.pcap for server 10.10.50.22 with port 3306 specified.",
+      "expected": "analyze_traffic_flow",
+      "kind": "straightforward",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#paraphrased.1",
+      "text": "Need a quick breakdown of upload versus download ratios and RST flags from https://box.corp/net_issue.pcap hitting 192.168.100.5.",
+      "expected": "analyze_traffic_flow",
+      "kind": "paraphrased",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#paraphrased.2",
+      "text": "Figure out who is sending all the resets and check the asymmetry on /mnt/share/capture_0812.pcap for 10.0.2.15 on port 8080.",
+      "expected": "analyze_traffic_flow",
+      "kind": "paraphrased",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#hard_negative.1",
+      "text": "Check the traffic flow characteristics to see how many packets are being resent in /var/log/captures/dropped_packets.pcap for server 192.168.1.50.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "hard_negative",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "analyze_traffic_flow#hard_negative.2",
+      "text": "Run a traffic flow inspection to find all the lost and resent segments in https://storage.company.com/pcaps/bad_connection.pcap targeting 10.0.0.15.",
+      "expected": "analyze_tcp_retransmissions",
+      "kind": "hard_negative",
+      "neighbour": "analyze_tcp_retransmissions"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you decrypt this captured WPA3 handshake from capture.pcap using the SSID corporate_wifi and the pre-shared key secretpass123?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What is the exact syntax for creating a custom packet filter rule in Wireshark to isolate all traffic originating from IP address 192.168.1.55 on port 443?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "How do I configure a custom Lua postdissector script in Tshark to automatically extract and log HTTP POST request bodies to a local file named requests.log?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "analyze_capinfos#straightforward.1",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/home/user/captures/trace.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.1",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/home/user/captures/trace.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.2",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "https://example.com/network_logs/malware_sample.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.1",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/home/user/captures/trace.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.2",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "https://example.com/network_logs/malware_sample.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.2",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "https://example.com/network_logs/malware_sample.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.3",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/var/log/wireshark/session_42.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.3",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/var/log/wireshark/session_42.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.3",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/var/log/wireshark/session_42.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.4",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/opt/traces/test_run.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.4",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/opt/traces/test_run.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#straightforward.4",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/opt/traces/test_run.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#paraphrased.1",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/tmp/capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#paraphrased.1",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/tmp/capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#paraphrased.2",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/dumps/live_feed.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#paraphrased.1",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "/tmp/capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#paraphrased.2",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/dumps/live_feed.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#paraphrased.2",
+      "chosen": "analyze_capinfos",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/dumps/live_feed.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_capinfos"
+    },
+    {
+      "query_id": "analyze_capinfos#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/home/user/captures/trace.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_capinfos#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/home/user/captures/trace.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_capinfos#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/network_logs/dhcp_capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_capinfos#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/network_logs/dhcp_capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_capinfos#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/network_logs/dhcp_capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_capinfos#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/home/user/captures/trace.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dhcp_lease_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dhcp_lease_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dhcp_lease_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.3",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/scope_exhaustion.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.3",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/scope_exhaustion.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.3",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/scope_exhaustion.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.4",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://storage.example.com/network-logs/dhcp_discover_issue.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.4",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://storage.example.com/network-logs/dhcp_discover_issue.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#straightforward.4",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://storage.example.com/network-logs/dhcp_discover_issue.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#paraphrased.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/opt/traces/office_subnet_bad_leases.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#paraphrased.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/opt/traces/office_subnet_bad_leases.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#paraphrased.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/opt/traces/office_subnet_bad_leases.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#paraphrased.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://diag.corp.net/dumps/bootp_relay_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#paraphrased.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://diag.corp.net/dumps/bootp_relay_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#hard_negative.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dhcp_lease_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#paraphrased.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://diag.corp.net/dumps/bootp_relay_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#hard_negative.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dhcp_lease_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#hard_negative.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dhcp_lease_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#hard_negative.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#hard_negative.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dns_query_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dhcp_packets#hard_negative.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://network-traces.internal.corp/pcaps/dhcp_offer_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dns_query_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dns_query_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://internal.network/traces/malformed_dns.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://internal.network/traces/malformed_dns.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://internal.network/traces/malformed_dns.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.3",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/external_lookup.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.3",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/external_lookup.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.4",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/pcaps/dns_flood.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.4",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/pcaps/dns_flood.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.3",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/external_lookup.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#straightforward.4",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/pcaps/dns_flood.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#paraphrased.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/tmp/captures/sniffed_queries.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#paraphrased.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/tmp/captures/sniffed_queries.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#paraphrased.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://ops.net/dumps/weekend_traffic.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#paraphrased.1",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "/tmp/captures/sniffed_queries.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#paraphrased.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://ops.net/dumps/weekend_traffic.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/dhcp_leases_capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/dhcp_leases_capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#paraphrased.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://ops.net/dumps/weekend_traffic.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dns_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/dhcp_leases_capture.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#hard_negative.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://gateway.local/logs/ip_assignment_dump.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#hard_negative.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://gateway.local/logs/ip_assignment_dump.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_dns_packets#hard_negative.2",
+      "chosen": "analyze_dns_packets",
+      "arguments": {
+        "pcap_file": "https://gateway.local/logs/ip_assignment_dump.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.1",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/captures/ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.1",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/captures/ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.1",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/captures/ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.2",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/network/icmp_sweep.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.2",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/network/icmp_sweep.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.2",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/network/icmp_sweep.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.3",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://internal.corp/net/router_ping.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.3",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://internal.corp/net/router_ping.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.3",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://internal.corp/net/router_ping.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.4",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/diagnostic_ping.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.4",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/diagnostic_ping.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#straightforward.4",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/diagnostic_ping.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#paraphrased.1",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://sec-ops.net/dumps/ping_flood.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#paraphrased.1",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://sec-ops.net/dumps/ping_flood.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#paraphrased.1",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "https://sec-ops.net/dumps/ping_flood.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#paraphrased.2",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/mnt/shared/traces/router_ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#paraphrased.2",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/mnt/shared/traces/router_ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#paraphrased.2",
+      "chosen": "analyze_icmp_packets",
+      "arguments": {
+        "pcap_file": "/mnt/shared/traces/router_ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_icmp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/captures/ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/captures/ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://example.com/captures/ping_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/network/icmp_sweep.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/network/icmp_sweep.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_icmp_packets#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/network/icmp_sweep.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.1",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/captures/voip_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.1",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/captures/voip_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.1",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/captures/voip_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.2",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/session_01.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.2",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/session_01.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.2",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/session_01.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.3",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/traces/sip_debug.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.3",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/traces/sip_debug.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.3",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/traces/sip_debug.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.4",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/trunk_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.4",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/trunk_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#straightforward.4",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/trunk_fail.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#paraphrased.1",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://ops.net/pcap/pbx_error.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#paraphrased.1",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://ops.net/pcap/pbx_error.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#paraphrased.1",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "https://ops.net/pcap/pbx_error.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#paraphrased.2",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/data/captures/outage_today.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#paraphrased.2",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/data/captures/outage_today.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/captures/voip_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/captures/voip_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#paraphrased.2",
+      "chosen": "analyze_sip_packets",
+      "arguments": {
+        "pcap_file": "/data/captures/outage_today.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_sip_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/session_01.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "https://internal.server.net/captures/voip_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/session_01.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_sip_packets#hard_negative.2",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/captures/session_01.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/var/log/captures/suspect_flow.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/var/log/captures/suspect_flow.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/var/log/captures/suspect_flow.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.2",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "https://internal.storage.net/pcaps/incident_8842.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.2",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "https://internal.storage.net/pcaps/incident_8842.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.2",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "https://internal.storage.net/pcaps/incident_8842.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.3",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/data/traffic/outage.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.3",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/data/traffic/outage.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.3",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/data/traffic/outage.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.4",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/ddos_test.pcap",
+        "server_port": 443
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.4",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/ddos_test.pcap",
+        "server_port": 443
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#straightforward.4",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/ddos_test.pcap",
+        "server_port": 443
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#paraphrased.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_port": 8080,
+        "pcap_file": "https://blob.corp.com/net-dumps/client_timeout.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#paraphrased.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_port": 8080,
+        "pcap_file": "https://blob.corp.com/net-dumps/client_timeout.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#paraphrased.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_port": 8080,
+        "pcap_file": "https://blob.corp.com/net-dumps/client_timeout.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#paraphrased.2",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_ip": "10.0.4.15",
+        "pcap_file": "/mnt/volume/captures/spike.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#paraphrased.2",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "server_ip": "10.0.4.15",
+        "pcap_file": "/mnt/volume/captures/spike.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#paraphrased.2",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/mnt/volume/captures/spike.pcap",
+        "server_ip": "10.0.4.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_anomalies"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#hard_negative.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "server_port": 80,
+        "pcap_file": "/var/log/traffic/web_spike.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#hard_negative.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/var/log/traffic/web_spike.pcap",
+        "server_port": 80
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#hard_negative.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/opt/captures/sessions.pcap",
+        "server_ip": "172.16.0.4",
+        "detailed": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#hard_negative.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/var/log/traffic/web_spike.pcap",
+        "server_port": 80
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#hard_negative.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/opt/captures/sessions.pcap",
+        "detailed": true,
+        "server_ip": "172.16.0.4"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/var/log/captures/traffic_20231024.pcap",
+        "detailed": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_anomalies#hard_negative.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": true,
+        "server_ip": "172.16.0.4",
+        "pcap_file": "/opt/captures/sessions.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": true,
+        "pcap_file": "/var/log/captures/traffic_20231024.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": true,
+        "pcap_file": "/var/log/captures/traffic_20231024.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "https://storage.company.com/network-dumps/incident_4092.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/network-dumps/incident_4092.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/network-dumps/incident_4092.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.3",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/handshake_failures.pcap",
+        "server_port": 443
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.3",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "server_port": 443,
+        "pcap_file": "/home/admin/captures/handshake_failures.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.4",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "https://internal.net/pcap/webserver_crash.pcap",
+        "detailed": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.3",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/home/admin/captures/handshake_failures.pcap",
+        "server_port": 443
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.4",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": false,
+        "pcap_file": "https://internal.net/pcap/webserver_crash.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#straightforward.4",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": false,
+        "pcap_file": "https://internal.net/pcap/webserver_crash.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#paraphrased.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": true,
+        "pcap_file": "/opt/traces/active_sessions.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#paraphrased.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/opt/traces/active_sessions.pcap",
+        "detailed": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#paraphrased.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "detailed": true,
+        "pcap_file": "/opt/traces/active_sessions.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#paraphrased.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "https://ci.internal/artifacts/netdump.pcap",
+        "server_port": 3306
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#paraphrased.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "server_port": 3306,
+        "pcap_file": "https://ci.internal/artifacts/netdump.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#hard_negative.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/var/log/dhcp_leases_debug.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_connections#paraphrased.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "https://ci.internal/artifacts/netdump.pcap",
+        "server_port": 3306
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_connections"
+    },
+    {
+      "query_id": "analyze_tcp_connections#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/dhcp_leases_debug.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_connections#hard_negative.1",
+      "chosen": "analyze_dhcp_packets",
+      "arguments": {
+        "pcap_file": "/var/log/dhcp_leases_debug.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_connections#hard_negative.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "server_ip": "10.0.0.1",
+        "pcap_file": "https://dhcp-server.local/captures/leases_oct24.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_connections#hard_negative.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "https://dhcp-server.local/captures/leases_oct24.pcap",
+        "server_ip": "10.0.0.1"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_connections#hard_negative.2",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "server_ip": "10.0.0.1",
+        "pcap_file": "https://dhcp-server.local/captures/leases_oct24.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_dhcp_packets"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/var/log/captures/production_load.pcap",
+        "threshold": 0.05
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/var/log/captures/production_load.pcap",
+        "threshold": 0.05
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "threshold": 0.05,
+        "pcap_file": "/var/log/captures/production_load.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "10.0.4.15",
+        "pcap_file": "http://internal-storage.local/pcaps/incident_4092.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "10.0.4.15",
+        "pcap_file": "http://internal-storage.local/pcaps/incident_4092.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "10.0.4.15",
+        "pcap_file": "http://internal-storage.local/pcaps/incident_4092.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.3",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "threshold": 0.02,
+        "pcap_file": "C:\\Captures\\web_traffic_202311.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.3",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "C:\\Captures\\web_traffic_202311.pcap",
+        "threshold": 0.02
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.4",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/home/admin/traces/bad_session.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.3",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "C:\\Captures\\web_traffic_202311.pcap",
+        "threshold": 0.02
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.4",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/home/admin/traces/bad_session.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#straightforward.4",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/home/admin/traces/bad_session.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#paraphrased.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/mnt/storage/client_handshake.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#paraphrased.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/mnt/storage/client_handshake.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#paraphrased.1",
+      "chosen": "analyze_tcp_connections",
+      "arguments": {
+        "pcap_file": "/mnt/storage/client_handshake.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#paraphrased.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "ftp://diag-server.internal/dumps/overflow_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#paraphrased.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "ftp://diag-server.internal/dumps/overflow_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#paraphrased.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "ftp://diag-server.internal/dumps/overflow_test.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#hard_negative.1",
+      "chosen": "analyze_tcp_anomalies",
+      "arguments": {
+        "pcap_file": "/var/log/captures/production_load.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#hard_negative.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/var/log/captures/production_load.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#hard_negative.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/var/log/captures/production_load.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#hard_negative.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "C:\\Captures\\web_traffic_202311.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#hard_negative.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "C:\\Captures\\web_traffic_202311.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_tcp_retransmissions#hard_negative.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "C:\\Captures\\web_traffic_202311.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.1",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/var/log/captures/web_auth.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.1",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/var/log/captures/web_auth.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.1",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/var/log/captures/web_auth.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.2",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/pcaps/edge_router.pcap",
+        "server_ip": "10.0.0.15",
+        "server_port": 443
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.2",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/pcaps/edge_router.pcap",
+        "server_port": 443,
+        "server_ip": "10.0.0.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.2",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_port": 443,
+        "pcap_file": "https://storage.company.com/pcaps/edge_router.pcap",
+        "server_ip": "10.0.0.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.3",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "172.16.4.100",
+        "pcap_file": "/home/analyst/dumps/ddos_event.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.3",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "172.16.4.100",
+        "pcap_file": "/home/analyst/dumps/ddos_event.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.3",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "pcap_file": "/home/analyst/dumps/ddos_event.pcap",
+        "server_ip": "172.16.4.100"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.4",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "pcap_file": "https://internal.net/captures/db_sync.pcap",
+        "server_port": 3306,
+        "server_ip": "10.10.50.22"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.4",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "10.10.50.22",
+        "pcap_file": "https://internal.net/captures/db_sync.pcap",
+        "server_port": 3306
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#straightforward.4",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_port": 3306,
+        "pcap_file": "https://internal.net/captures/db_sync.pcap",
+        "server_ip": "10.10.50.22"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#paraphrased.1",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "pcap_file": "https://box.corp/net_issue.pcap",
+        "server_ip": "192.168.100.5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#paraphrased.1",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_ip": "192.168.100.5",
+        "pcap_file": "https://box.corp/net_issue.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#paraphrased.1",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "pcap_file": "https://box.corp/net_issue.pcap",
+        "server_ip": "192.168.100.5"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#paraphrased.2",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_port": 8080,
+        "pcap_file": "/mnt/share/capture_0812.pcap",
+        "server_ip": "10.0.2.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#paraphrased.2",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_port": 8080,
+        "pcap_file": "/mnt/share/capture_0812.pcap",
+        "server_ip": "10.0.2.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#paraphrased.2",
+      "chosen": "analyze_traffic_flow",
+      "arguments": {
+        "server_port": 8080,
+        "pcap_file": "/mnt/share/capture_0812.pcap",
+        "server_ip": "10.0.2.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_traffic_flow"
+    },
+    {
+      "query_id": "analyze_traffic_flow#hard_negative.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dropped_packets.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_traffic_flow#hard_negative.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "192.168.1.50",
+        "pcap_file": "/var/log/captures/dropped_packets.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_traffic_flow#hard_negative.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "10.0.0.15",
+        "pcap_file": "https://storage.company.com/pcaps/bad_connection.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_traffic_flow#hard_negative.1",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "/var/log/captures/dropped_packets.pcap",
+        "server_ip": "192.168.1.50"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_traffic_flow#hard_negative.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "server_ip": "10.0.0.15",
+        "pcap_file": "https://storage.company.com/pcaps/bad_connection.pcap"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "analyze_traffic_flow#hard_negative.2",
+      "chosen": "analyze_tcp_retransmissions",
+      "arguments": {
+        "pcap_file": "https://storage.company.com/pcaps/bad_connection.pcap",
+        "server_ip": "10.0.0.15"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "analyze_tcp_retransmissions"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "ai-mcpcap-mcpcap.json",
+    "slug": "ai-mcpcap-mcpcap",
+    "registry_name": "ai.mcpcap/mcpcap",
+    "title": "ai.mcpcap/mcpcap",
+    "repository": "https://github.com/mcpcap/mcpcap"
+  }
+}

@@ -1,0 +1,5638 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-27",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "io-github-modelcontextprotocol-server-everything",
+      "name": "mcp-servers/everything",
+      "version": "2.0.0",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "echo",
+      "server": null,
+      "title": "Echo Tool",
+      "description": "Echoes back the input string",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message to echo"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-annotated-message",
+      "server": null,
+      "title": "Get Annotated Message Tool",
+      "description": "Demonstrates how annotations can be used to provide metadata about content.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "error",
+              "success",
+              "debug"
+            ],
+            "description": "Type of message to demonstrate different annotation patterns"
+          },
+          "includeImage": {
+            "default": false,
+            "description": "Whether to include an example image",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "messageType"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-env",
+      "server": null,
+      "title": "Print Environment Tool",
+      "description": "Returns all environment variables, helpful for debugging MCP server configuration",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-resource-links",
+      "server": null,
+      "title": "Get Resource Links Tool",
+      "description": "Returns up to ten resource links that reference different types of resources",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "count": {
+            "default": 3,
+            "description": "Number of resource links to return (1-10)",
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-resource-reference",
+      "server": null,
+      "title": "Get Resource Reference Tool",
+      "description": "Returns a resource reference that can be used by MCP clients",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "default": "Text",
+            "type": "string",
+            "enum": [
+              "Text",
+              "Blob"
+            ]
+          },
+          "resourceId": {
+            "default": 1,
+            "description": "ID of the text resource to fetch",
+            "type": "number"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-structured-content",
+      "server": null,
+      "title": "Get Structured Content Tool",
+      "description": "Returns structured content along with an output schema for client data validation",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "enum": [
+              "New York",
+              "Chicago",
+              "Los Angeles"
+            ],
+            "description": "Choose city"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-sum",
+      "server": null,
+      "title": "Get Sum Tool",
+      "description": "Returns the sum of two numbers",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "number",
+            "description": "First number"
+          },
+          "b": {
+            "type": "number",
+            "description": "Second number"
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-tiny-image",
+      "server": null,
+      "title": "Get Tiny Image Tool",
+      "description": "Returns a tiny MCP logo image.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "gzip-file-as-resource",
+      "server": null,
+      "title": "GZip File as Resource Tool",
+      "description": "Compresses a single file using gzip compression. Depending upon the selected output type, returns either the compressed data as a gzipped resource or a resource link, allowing it to be downloaded in a subsequent request during the current session.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "name": {
+            "default": "README.md.gz",
+            "type": "string",
+            "description": "Name of the output file"
+          },
+          "data": {
+            "default": "https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md",
+            "type": "string",
+            "format": "uri",
+            "description": "URL or data URI of the file content to compress"
+          },
+          "outputType": {
+            "default": "resourceLink",
+            "description": "How the resulting gzipped file should be returned. 'resourceLink' returns a link to a resource that can be read later, 'resource' returns a full resource object.",
+            "type": "string",
+            "enum": [
+              "resourceLink",
+              "resource"
+            ]
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "simulate-research-query",
+      "server": null,
+      "title": "Simulate Research Query",
+      "description": "Simulates a deep research operation that gathers, analyzes, and synthesizes information. Demonstrates MCP task-based operations with progress through multiple stages. If 'ambiguous' is true and client supports elicitation, sends an elicitation request for clarification.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "description": "The research topic to investigate"
+          },
+          "ambiguous": {
+            "default": false,
+            "description": "Simulate an ambiguous query that requires clarification (triggers input_required status)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "topic"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "toggle-simulated-logging",
+      "server": null,
+      "title": "Toggle Simulated Logging",
+      "description": "Toggles simulated, random-leveled logging on or off.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "toggle-subscriber-updates",
+      "server": null,
+      "title": "Toggle Subscriber Updates",
+      "description": "Toggles simulated resource subscription updates on or off.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "trigger-long-running-operation",
+      "server": null,
+      "title": "Trigger Long Running Operation Tool",
+      "description": "Demonstrates a long running operation with progress updates.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "duration": {
+            "default": 10,
+            "description": "Duration of the operation in seconds",
+            "type": "number"
+          },
+          "steps": {
+            "default": 5,
+            "description": "Number of steps in the operation",
+            "type": "number"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "score": 86,
+  "summary": {
+    "accuracy": {
+      "hits": 259,
+      "total": 321,
+      "value": 0.8069,
+      "ci95": [
+        0.7601,
+        0.8463
+      ]
+    },
+    "stability": {
+      "hits": 104,
+      "total": 107,
+      "value": 0.972,
+      "ci95": [
+        0.9208,
+        0.9904
+      ]
+    },
+    "argumentValidity": {
+      "hits": 288,
+      "total": 288,
+      "value": 1.0,
+      "ci95": [
+        0.9868,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 3,
+      "total": 9,
+      "value": 0.3333,
+      "ci95": [
+        0.1206,
+        0.6458
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 321,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0118
+      ]
+    },
+    "trials": 321,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 1138
+  },
+  "confusionMatrix": {
+    "rows": [
+      "echo",
+      "get-annotated-message",
+      "get-env",
+      "get-resource-links",
+      "get-resource-reference",
+      "get-structured-content",
+      "get-sum",
+      "get-tiny-image",
+      "gzip-file-as-resource",
+      "simulate-research-query",
+      "toggle-simulated-logging",
+      "toggle-subscriber-updates",
+      "trigger-long-running-operation",
+      "(none)"
+    ],
+    "columns": [
+      "echo",
+      "get-annotated-message",
+      "get-env",
+      "get-resource-links",
+      "get-resource-reference",
+      "get-structured-content",
+      "get-sum",
+      "get-tiny-image",
+      "gzip-file-as-resource",
+      "simulate-research-query",
+      "toggle-simulated-logging",
+      "toggle-subscriber-updates",
+      "trigger-long-running-operation",
+      "(none)"
+    ],
+    "counts": {
+      "echo": {
+        "echo": 18
+      },
+      "get-annotated-message": {
+        "get-annotated-message": 18
+      },
+      "get-env": {
+        "get-env": 24
+      },
+      "get-resource-links": {
+        "get-resource-links": 18,
+        "(none)": 6
+      },
+      "get-resource-reference": {
+        "get-annotated-message": 5,
+        "get-resource-reference": 20,
+        "get-resource-links": 9,
+        "(none)": 3,
+        "get-tiny-image": 2,
+        "gzip-file-as-resource": 3
+      },
+      "get-structured-content": {
+        "(none)": 15,
+        "get-env": 3
+      },
+      "get-sum": {
+        "get-sum": 24
+      },
+      "get-tiny-image": {
+        "get-tiny-image": 30
+      },
+      "gzip-file-as-resource": {
+        "gzip-file-as-resource": 18
+      },
+      "simulate-research-query": {
+        "simulate-research-query": 18,
+        "trigger-long-running-operation": 6
+      },
+      "toggle-simulated-logging": {
+        "toggle-simulated-logging": 24
+      },
+      "toggle-subscriber-updates": {
+        "toggle-subscriber-updates": 21,
+        "(none)": 3
+      },
+      "trigger-long-running-operation": {
+        "simulate-research-query": 4,
+        "trigger-long-running-operation": 20
+      },
+      "(none)": {
+        "(none)": 6,
+        "get-env": 3
+      }
+    }
+  },
+  "perTool": {
+    "echo": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "get-annotated-message": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 23,
+        "value": 0.7826,
+        "ci95": [
+          0.581,
+          0.9034
+        ]
+      },
+      "f1": 0.878
+    },
+    "get-env": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "f1": 0.8889
+    },
+    "get-resource-links": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 27,
+        "value": 0.6667,
+        "ci95": [
+          0.4782,
+          0.8136
+        ]
+      },
+      "f1": 0.7059
+    },
+    "get-resource-reference": {
+      "recall": {
+        "hits": 20,
+        "total": 42,
+        "value": 0.4762,
+        "ci95": [
+          0.3336,
+          0.6228
+        ]
+      },
+      "precision": {
+        "hits": 20,
+        "total": 20,
+        "value": 1.0,
+        "ci95": [
+          0.8389,
+          1.0
+        ]
+      },
+      "f1": 0.6452
+    },
+    "get-structured-content": {
+      "recall": {
+        "hits": 0,
+        "total": 18,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.1759
+        ]
+      },
+      "precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null,
+        "ci95": null
+      },
+      "f1": 0.0
+    },
+    "get-sum": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "get-tiny-image": {
+      "recall": {
+        "hits": 30,
+        "total": 30,
+        "value": 1.0,
+        "ci95": [
+          0.8865,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 30,
+        "total": 32,
+        "value": 0.9375,
+        "ci95": [
+          0.7985,
+          0.9827
+        ]
+      },
+      "f1": 0.9677
+    },
+    "gzip-file-as-resource": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.9231
+    },
+    "simulate-research-query": {
+      "recall": {
+        "hits": 18,
+        "total": 24,
+        "value": 0.75,
+        "ci95": [
+          0.551,
+          0.88
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 22,
+        "value": 0.8182,
+        "ci95": [
+          0.6148,
+          0.9269
+        ]
+      },
+      "f1": 0.7826
+    },
+    "toggle-simulated-logging": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "f1": 1.0
+    },
+    "toggle-subscriber-updates": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 21,
+        "value": 1.0,
+        "ci95": [
+          0.8454,
+          1.0
+        ]
+      },
+      "f1": 0.9333
+    },
+    "trigger-long-running-operation": {
+      "recall": {
+        "hits": 20,
+        "total": 24,
+        "value": 0.8333,
+        "ci95": [
+          0.6415,
+          0.9332
+        ]
+      },
+      "precision": {
+        "hits": 20,
+        "total": 26,
+        "value": 0.7692,
+        "ci95": [
+          0.5795,
+          0.8897
+        ]
+      },
+      "f1": 0.8
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "get-structured-content",
+      "chosen": "(none)",
+      "count": 15,
+      "share": 0.8333
+    },
+    {
+      "expected": "get-resource-reference",
+      "chosen": "get-resource-links",
+      "count": 9,
+      "share": 0.2143
+    },
+    {
+      "expected": "get-resource-links",
+      "chosen": "(none)",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "simulate-research-query",
+      "chosen": "trigger-long-running-operation",
+      "count": 6,
+      "share": 0.25
+    },
+    {
+      "expected": "get-resource-reference",
+      "chosen": "get-annotated-message",
+      "count": 5,
+      "share": 0.119
+    },
+    {
+      "expected": "trigger-long-running-operation",
+      "chosen": "simulate-research-query",
+      "count": 4,
+      "share": 0.1667
+    },
+    {
+      "expected": "(none)",
+      "chosen": "get-env",
+      "count": 3,
+      "share": 0.3333
+    },
+    {
+      "expected": "get-structured-content",
+      "chosen": "get-env",
+      "count": 3,
+      "share": 0.1667
+    },
+    {
+      "expected": "toggle-subscriber-updates",
+      "chosen": "(none)",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "get-resource-reference",
+      "chosen": "(none)",
+      "count": 3,
+      "share": 0.0714
+    },
+    {
+      "expected": "get-resource-reference",
+      "chosen": "gzip-file-as-resource",
+      "count": 3,
+      "share": 0.0714
+    },
+    {
+      "expected": "get-resource-reference",
+      "chosen": "get-tiny-image",
+      "count": 2,
+      "share": 0.0476
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "get-resource-reference",
+      "chosen": "get-resource-links",
+      "count": 9
+    },
+    {
+      "expected": "simulate-research-query",
+      "chosen": "trigger-long-running-operation",
+      "count": 6
+    },
+    {
+      "expected": "get-resource-reference",
+      "chosen": "get-annotated-message",
+      "count": 5
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 13,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [
+    "get-annotated-message#hard_negative.1",
+    "get-tiny-image#hard_negative.2",
+    "simulate-research-query#hard_negative.1"
+  ],
+  "queries": [
+    {
+      "id": "echo#straightforward.1",
+      "text": "Please repeat this exact phrase back to me: System check complete.",
+      "expected": "echo",
+      "kind": "straightforward",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#straightforward.2",
+      "text": "Send back the following text in your response: Ready for deployment.",
+      "expected": "echo",
+      "kind": "straightforward",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#straightforward.3",
+      "text": "Can you echo the words: Connection established.",
+      "expected": "echo",
+      "kind": "straightforward",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#straightforward.4",
+      "text": "Just output this message verbatim: Backup successful.",
+      "expected": "echo",
+      "kind": "straightforward",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#paraphrased.1",
+      "text": "throw this line back at me quick: alpha Bravo 99",
+      "expected": "echo",
+      "kind": "paraphrased",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#paraphrased.2",
+      "text": "parrot my words: update pending",
+      "expected": "echo",
+      "kind": "paraphrased",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#hard_negative.1",
+      "text": "Please echo the total sum of 45 and 89.",
+      "expected": "get-sum",
+      "kind": "hard_negative",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "echo#hard_negative.2",
+      "text": "Repeat back the combined sum of 120 and 350.",
+      "expected": "get-sum",
+      "kind": "hard_negative",
+      "neighbour": "get-sum"
+    },
+    {
+      "id": "get-annotated-message#straightforward.1",
+      "text": "Get the annotated message where the message type is urgent and include the image.",
+      "expected": "get-annotated-message",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#straightforward.2",
+      "text": "Fetch the annotated message of type notification without including the image.",
+      "expected": "get-annotated-message",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#straightforward.3",
+      "text": "Retrieve the annotated message using message type system_alert and set include image to true.",
+      "expected": "get-annotated-message",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#straightforward.4",
+      "text": "Show me the annotated message for message type reminder and make sure to include the image.",
+      "expected": "get-annotated-message",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#paraphrased.1",
+      "text": "Pull up that tagged broadcast regarding security updates and grab its visual attachment too.",
+      "expected": "get-annotated-message",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#paraphrased.2",
+      "text": "I need the metadata-tagged bulletin for the maintenance window, skip the picture though.",
+      "expected": "get-annotated-message",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#hard_negative.1",
+      "text": "Get the resource reference for the message type urgent including the image metadata.",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-annotated-message#hard_negative.2",
+      "text": "Fetch the resource reference where message type is notification and include image is set.",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-env#straightforward.1",
+      "text": "Call get-env to show me every active system variable currently loaded in the shell.",
+      "expected": "get-env",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#straightforward.2",
+      "text": "Run get-env so I can see all environment settings available to the current process.",
+      "expected": "get-env",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#straightforward.3",
+      "text": "Execute get-env to output a complete list of all environment variables present in the runtime.",
+      "expected": "get-env",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#straightforward.4",
+      "text": "Trigger get-env to fetch all environment variables configured for this session.",
+      "expected": "get-env",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#paraphrased.1",
+      "text": "Dump all the runtime config variables so I can figure out why this integration is failing.",
+      "expected": "get-env",
+      "kind": "paraphrased",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#paraphrased.2",
+      "text": "List the active process settings right now because something is misconfigured.",
+      "expected": "get-env",
+      "kind": "paraphrased",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#hard_negative.1",
+      "text": "Grab get-tiny-image to dump all configuration settings and runtime variables for debugging the setup.",
+      "expected": "get-tiny-image",
+      "kind": "hard_negative",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-env#hard_negative.2",
+      "text": "Execute get-tiny-image so I can inspect every active system variable and process parameter.",
+      "expected": "get-tiny-image",
+      "kind": "hard_negative",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-links#straightforward.1",
+      "text": "Can you fetch me five external asset URLs?",
+      "expected": "get-resource-links",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#straightforward.2",
+      "text": "Please provide three reference links for documentation.",
+      "expected": "get-resource-links",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#straightforward.3",
+      "text": "I need a list of ten learning material addresses.",
+      "expected": "get-resource-links",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#straightforward.4",
+      "text": "Show me six helpful reference items.",
+      "expected": "get-resource-links",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#paraphrased.1",
+      "text": "Drop a few helpful URLs I can check out real quick.",
+      "expected": "get-resource-links",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#paraphrased.2",
+      "text": "Need a handful of reference pointers ASAP.",
+      "expected": "get-resource-links",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#hard_negative.1",
+      "text": "Can you grab ten resource links for me?",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-links#hard_negative.2",
+      "text": "Please return resource links for the project.",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-resource-reference#straightforward.1",
+      "text": "Call get-resource-reference with resourceType user and resourceId 45.",
+      "expected": "get-resource-reference",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#straightforward.2",
+      "text": "I need a resource reference for resourceType document and resourceId 102.",
+      "expected": "get-resource-reference",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#straightforward.3",
+      "text": "Please fetch the resource reference where resourceType is project and resourceId is 789.",
+      "expected": "get-resource-reference",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#straightforward.4",
+      "text": "Run get-resource-reference for resourceType item and resourceId 5.",
+      "expected": "get-resource-reference",
+      "kind": "straightforward",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#paraphrased.1",
+      "text": "Pull up item 88 in the system so I can link it.",
+      "expected": "get-resource-reference",
+      "kind": "paraphrased",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#paraphrased.2",
+      "text": "Gimme the pointer for user record 331 quick.",
+      "expected": "get-resource-reference",
+      "kind": "paraphrased",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#hard_negative.1",
+      "text": "Get a tiny image of resourceType icon and resourceId 12.",
+      "expected": "get-tiny-image",
+      "kind": "hard_negative",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-resource-reference#hard_negative.2",
+      "text": "I need to get-tiny-image for resourceType avatar and resourceId 99.",
+      "expected": "get-tiny-image",
+      "kind": "hard_negative",
+      "neighbour": "get-tiny-image"
+    },
+    {
+      "id": "get-structured-content#straightforward.1",
+      "text": "Pull the latest user profile details from the production database located in us-east-1.",
+      "expected": "get-structured-content",
+      "kind": "straightforward",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#straightforward.2",
+      "text": "Fetch the configuration object stored at config/settings.json.",
+      "expected": "get-structured-content",
+      "kind": "straightforward",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#straightforward.3",
+      "text": "Retrieve the JSON payload for the inventory catalog at warehouse/stock/main.json.",
+      "expected": "get-structured-content",
+      "kind": "straightforward",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#straightforward.4",
+      "text": "Grab the customer onboarding form data from the bucket at s3://company-forms-2024/intake.json.",
+      "expected": "get-structured-content",
+      "kind": "straightforward",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#paraphrased.1",
+      "text": "Pull the data schema for the main app residing in production.",
+      "expected": "get-structured-content",
+      "kind": "paraphrased",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#paraphrased.2",
+      "text": "Grab the configuration layout from the primary server path.",
+      "expected": "get-structured-content",
+      "kind": "paraphrased",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#hard_negative.1",
+      "text": "Fetch the runtime variables located in the production environment.",
+      "expected": "get-env",
+      "kind": "hard_negative",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-structured-content#hard_negative.2",
+      "text": "Pull the system configurations defined for the staging deployment.",
+      "expected": "get-env",
+      "kind": "hard_negative",
+      "neighbour": "get-env"
+    },
+    {
+      "id": "get-sum#straightforward.1",
+      "text": "Add 45 and 89 together.",
+      "expected": "get-sum",
+      "kind": "straightforward",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#straightforward.2",
+      "text": "What is the total of 1056 and 3892?",
+      "expected": "get-sum",
+      "kind": "straightforward",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#straightforward.3",
+      "text": "Calculate the sum of 12.5 and 7.8.",
+      "expected": "get-sum",
+      "kind": "straightforward",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#straightforward.4",
+      "text": "Compute 500 plus 350.",
+      "expected": "get-sum",
+      "kind": "straightforward",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#paraphrased.1",
+      "text": "throw 14 and 9 together quick",
+      "expected": "get-sum",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#paraphrased.2",
+      "text": "need the total for 99 + 450",
+      "expected": "get-sum",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#hard_negative.1",
+      "text": "Add the source files and documentation.",
+      "expected": "get-resource-links",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-sum#hard_negative.2",
+      "text": "Combine the asset and document locations.",
+      "expected": "get-resource-links",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-links"
+    },
+    {
+      "id": "get-tiny-image#straightforward.1",
+      "text": "Please fetch the little Model Context Protocol logo graphic.",
+      "expected": "get-tiny-image",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#straightforward.2",
+      "text": "Display the tiny MCP brand picture for me right now.",
+      "expected": "get-tiny-image",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#straightforward.3",
+      "text": "I need to view the micro-sized image of the Model Context Protocol icon.",
+      "expected": "get-tiny-image",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#straightforward.4",
+      "text": "Can you pull up the compact logo for MCP?",
+      "expected": "get-tiny-image",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#paraphrased.1",
+      "text": "drop that little protocol icon in the chat",
+      "expected": "get-tiny-image",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#paraphrased.2",
+      "text": "need the mini square brand asset fast",
+      "expected": "get-tiny-image",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#hard_negative.1",
+      "text": "Please fetch the little Model Context Protocol resource link.",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "get-tiny-image#hard_negative.2",
+      "text": "Can you pull up the compact pointer for the MCP asset?",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#straightforward.1",
+      "text": "Please compress the document report.txt using gzip format.",
+      "expected": "gzip-file-as-resource",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#straightforward.2",
+      "text": "Run gzip on database.sql and provide the compressed output as a downloadable resource.",
+      "expected": "gzip-file-as-resource",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#straightforward.3",
+      "text": "I need to zip the file archive.tar with gzip and return it as a resource.",
+      "expected": "gzip-file-as-resource",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#straightforward.4",
+      "text": "Compress backup.log using the gzip tool and make the output available as a resource link.",
+      "expected": "gzip-file-as-resource",
+      "kind": "straightforward",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#paraphrased.1",
+      "text": "gzip config.json real quick and hand me the link.",
+      "expected": "gzip-file-as-resource",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#paraphrased.2",
+      "text": "pack up data.csv into a gzipped file so I can download it.",
+      "expected": "gzip-file-as-resource",
+      "kind": "paraphrased",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#hard_negative.1",
+      "text": "Get me the resource reference for the file that was just compressed using gzip.",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "gzip-file-as-resource#hard_negative.2",
+      "text": "Retrieve the downloadable resource link for the gzipped archive created earlier.",
+      "expected": "get-resource-reference",
+      "kind": "hard_negative",
+      "neighbour": "get-resource-reference"
+    },
+    {
+      "id": "simulate-research-query#straightforward.1",
+      "text": "Run a deep research operation on the economic impacts of quantum computing in the financial sector.",
+      "expected": "simulate-research-query",
+      "kind": "straightforward",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#straightforward.2",
+      "text": "Please simulate a comprehensive research query regarding current regulatory frameworks for artificial intelligence in the European Union.",
+      "expected": "simulate-research-query",
+      "kind": "straightforward",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#straightforward.3",
+      "text": "Execute a full research simulation on lithium-ion battery recycling technologies and supply chain bottlenecks.",
+      "expected": "simulate-research-query",
+      "kind": "straightforward",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#straightforward.4",
+      "text": "Perform a deep investigation and synthesize findings about the history of mRNA vaccine development.",
+      "expected": "simulate-research-query",
+      "kind": "straightforward",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#paraphrased.1",
+      "text": "Dig into how modern microprocessors are designed and put together a thorough breakdown of the current state of the art.",
+      "expected": "simulate-research-query",
+      "kind": "paraphrased",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#paraphrased.2",
+      "text": "I need a deep dive into the 2008 financial crisis root causes, so pull together and analyze everything relevant.",
+      "expected": "simulate-research-query",
+      "kind": "paraphrased",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#hard_negative.1",
+      "text": "Trigger a long-running operation to synthesize and research the effects of deep sea mining on marine ecosystems.",
+      "expected": "trigger-long-running-operation",
+      "kind": "hard_negative",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "simulate-research-query#hard_negative.2",
+      "text": "Initiate the long-running process to gather and analyze data on global semiconductor manufacturing output.",
+      "expected": "trigger-long-running-operation",
+      "kind": "hard_negative",
+      "neighbour": "trigger-long-running-operation"
+    },
+    {
+      "id": "toggle-simulated-logging#straightforward.1",
+      "text": "Turn on simulated logging right now.",
+      "expected": "toggle-simulated-logging",
+      "kind": "straightforward",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#straightforward.2",
+      "text": "Please disable simulated random-leveled logging.",
+      "expected": "toggle-simulated-logging",
+      "kind": "straightforward",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#straightforward.3",
+      "text": "Activate the background log generator.",
+      "expected": "toggle-simulated-logging",
+      "kind": "straightforward",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#straightforward.4",
+      "text": "Stop the simulated logging feature.",
+      "expected": "toggle-simulated-logging",
+      "kind": "straightforward",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#paraphrased.1",
+      "text": "make the fake logs start firing off",
+      "expected": "toggle-simulated-logging",
+      "kind": "paraphrased",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#paraphrased.2",
+      "text": "kill that endless stream of dummy output",
+      "expected": "toggle-simulated-logging",
+      "kind": "paraphrased",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#hard_negative.1",
+      "text": "Turn on subscriber updates immediately.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "hard_negative",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-simulated-logging#hard_negative.2",
+      "text": "Stop sending those subscriber alerts to the feed.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "hard_negative",
+      "neighbour": "toggle-subscriber-updates"
+    },
+    {
+      "id": "toggle-subscriber-updates#straightforward.1",
+      "text": "Please turn off the simulated subscription updates right now.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "straightforward",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#straightforward.2",
+      "text": "Toggle the subscription update simulation to enabled.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "straightforward",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#straightforward.3",
+      "text": "Switch on simulated updates for my subscriptions.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "straightforward",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#straightforward.4",
+      "text": "Disable the resource subscription update notifications.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "straightforward",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#paraphrased.1",
+      "text": "stop sending me all those fake email alerts about my feed followers.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "paraphrased",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#paraphrased.2",
+      "text": "flip the switch for incoming client notification feeds so they start coming through again.",
+      "expected": "toggle-subscriber-updates",
+      "kind": "paraphrased",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#hard_negative.1",
+      "text": "Turn off the simulated logging output for my active subscriptions.",
+      "expected": "toggle-simulated-logging",
+      "kind": "hard_negative",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "toggle-subscriber-updates#hard_negative.2",
+      "text": "Toggle the system logging updates to on.",
+      "expected": "toggle-simulated-logging",
+      "kind": "hard_negative",
+      "neighbour": "toggle-simulated-logging"
+    },
+    {
+      "id": "trigger-long-running-operation#straightforward.1",
+      "text": "Start a long operation that lasts for 120 seconds and has 6 progress updates.",
+      "expected": "trigger-long-running-operation",
+      "kind": "straightforward",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#straightforward.2",
+      "text": "Run the progression test for 300 seconds across 10 steps.",
+      "expected": "trigger-long-running-operation",
+      "kind": "straightforward",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#straightforward.3",
+      "text": "Execute the timed task with a duration of 45 seconds divided into 3 steps.",
+      "expected": "trigger-long-running-operation",
+      "kind": "straightforward",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#straightforward.4",
+      "text": "Trigger a progress-enabled job lasting 60 seconds with 5 intervals.",
+      "expected": "trigger-long-running-operation",
+      "kind": "straightforward",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#paraphrased.1",
+      "text": "run a 10 min progress job in 4 chunks",
+      "expected": "trigger-long-running-operation",
+      "kind": "paraphrased",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#paraphrased.2",
+      "text": "kick off a task that takes about two minutes and updates four times",
+      "expected": "trigger-long-running-operation",
+      "kind": "paraphrased",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#hard_negative.1",
+      "text": "Simulate a research query about the 120-second progress metric across 6 steps.",
+      "expected": "simulate-research-query",
+      "kind": "hard_negative",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "trigger-long-running-operation#hard_negative.2",
+      "text": "Run a research query simulating a 300-second duration with 10 steps.",
+      "expected": "simulate-research-query",
+      "kind": "hard_negative",
+      "neighbour": "simulate-research-query"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you compress the backup archive located at /var/backups/db_dump.sql using the 7z format and password protect the output file?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "Please calculate the exact sum of all invoice amounts listed in the CSV file at /home/user/finance/Q3_revenue.csv.",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Can you echo the current system environment variables containing database connection strings to the system output?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "echo#straightforward.1",
+      "chosen": "echo",
+      "arguments": {
+        "message": "System check complete."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.1",
+      "chosen": "echo",
+      "arguments": {
+        "message": "System check complete."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.2",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Ready for deployment."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.1",
+      "chosen": "echo",
+      "arguments": {
+        "message": "System check complete."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.2",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Ready for deployment."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.2",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Ready for deployment."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.3",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Connection established."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.3",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Connection established."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.3",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Connection established."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.4",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Backup successful."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.4",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Backup successful."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#straightforward.4",
+      "chosen": "echo",
+      "arguments": {
+        "message": "Backup successful."
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#paraphrased.1",
+      "chosen": "echo",
+      "arguments": {
+        "message": "alpha Bravo 99"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#paraphrased.1",
+      "chosen": "echo",
+      "arguments": {
+        "message": "alpha Bravo 99"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#paraphrased.2",
+      "chosen": "echo",
+      "arguments": {
+        "message": "update pending"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#paraphrased.1",
+      "chosen": "echo",
+      "arguments": {
+        "message": "alpha Bravo 99"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#paraphrased.2",
+      "chosen": "echo",
+      "arguments": {
+        "message": "update pending"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#paraphrased.2",
+      "chosen": "echo",
+      "arguments": {
+        "message": "update pending"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "echo"
+    },
+    {
+      "query_id": "echo#hard_negative.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 45,
+        "b": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "echo#hard_negative.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 45,
+        "b": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "echo#hard_negative.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 89,
+        "a": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "echo#hard_negative.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 120,
+        "b": 350
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "echo#hard_negative.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 350,
+        "a": 120
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "echo#hard_negative.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 120,
+        "b": 350
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "error",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "error",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "error",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": false,
+        "messageType": "error"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": false,
+        "messageType": "debug"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": false,
+        "messageType": "debug"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.3",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "debug"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.3",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "debug",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.4",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.3",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "debug"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.4",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "error"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#straightforward.4",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "debug",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#paraphrased.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#paraphrased.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#paraphrased.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "success",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#paraphrased.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": false,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#paraphrased.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": false,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#paraphrased.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "success",
+        "includeImage": false
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-annotated-message"
+    },
+    {
+      "query_id": "get-annotated-message#hard_negative.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "error"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-annotated-message#hard_negative.1",
+      "chosen": "get-resource-reference",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-annotated-message#hard_negative.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-annotated-message#hard_negative.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-annotated-message#hard_negative.1",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "messageType": "error",
+        "includeImage": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-annotated-message#hard_negative.2",
+      "chosen": "get-annotated-message",
+      "arguments": {
+        "includeImage": true,
+        "messageType": "success"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-env#straightforward.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.3",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.3",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.4",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.3",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.4",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#paraphrased.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#paraphrased.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#straightforward.4",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#paraphrased.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#paraphrased.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#paraphrased.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#paraphrased.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-env#hard_negative.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-env#hard_negative.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-env#hard_negative.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-env#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-env#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-env#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.2",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.2",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.3",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.3",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.2",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.4",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 6
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.3",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.4",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 6
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#straightforward.4",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 6
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#paraphrased.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#paraphrased.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#paraphrased.2",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#paraphrased.2",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#paraphrased.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#hard_negative.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-links#hard_negative.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-links#paraphrased.2",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-resource-links#hard_negative.2",
+      "chosen": "get-resource-links",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-links#hard_negative.2",
+      "chosen": "get-resource-links",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-links#hard_negative.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-links#hard_negative.2",
+      "chosen": "get-resource-links",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.1",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 45,
+        "resourceType": "Blob"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.1",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Text",
+        "resourceId": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.2",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 102,
+        "resourceType": "Blob"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.2",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Text",
+        "resourceId": 102
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.2",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Blob",
+        "resourceId": 102
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.1",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Text",
+        "resourceId": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.3",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Text",
+        "resourceId": 789
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.3",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Text",
+        "resourceId": 789
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.3",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Text",
+        "resourceId": 789
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.4",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceType": "Blob",
+        "resourceId": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.4",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 5,
+        "resourceType": "Blob"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#straightforward.4",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 5,
+        "resourceType": "Blob"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#paraphrased.1",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 88
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#paraphrased.1",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 88
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#paraphrased.1",
+      "chosen": "get-resource-reference",
+      "arguments": {
+        "resourceId": 88
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#paraphrased.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#paraphrased.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#paraphrased.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-resource-reference#hard_negative.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-resource-reference#hard_negative.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-resource-reference#hard_negative.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-resource-reference#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-resource-reference#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-resource-reference#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.4",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.4",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#straightforward.4",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#paraphrased.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#paraphrased.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#hard_negative.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-structured-content#paraphrased.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-structured-content"
+    },
+    {
+      "query_id": "get-structured-content#hard_negative.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-structured-content#hard_negative.1",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-structured-content#hard_negative.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-structured-content#hard_negative.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-structured-content#hard_negative.2",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-env"
+    },
+    {
+      "query_id": "get-sum#straightforward.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 89,
+        "a": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 45,
+        "b": 89
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 3892,
+        "a": 1056
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 1056,
+        "b": 3892
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 1056,
+        "b": 3892
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 89,
+        "a": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.3",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 7.8,
+        "a": 12.5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.3",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 7.8,
+        "a": 12.5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.4",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 500,
+        "b": 350
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.3",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 7.8,
+        "a": 12.5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.4",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 500,
+        "b": 350
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#straightforward.4",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 350,
+        "a": 500
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#paraphrased.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 9,
+        "a": 14
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#paraphrased.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 9,
+        "a": 14
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#paraphrased.1",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 9,
+        "a": 14
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#paraphrased.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "a": 99,
+        "b": 450
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#paraphrased.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 450,
+        "a": 99
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#paraphrased.2",
+      "chosen": "get-sum",
+      "arguments": {
+        "b": 450,
+        "a": 99
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-sum"
+    },
+    {
+      "query_id": "get-sum#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-sum#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-sum#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-sum#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-sum#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-sum#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-links"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.3",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.3",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.3",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.4",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.4",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#straightforward.4",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#paraphrased.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#paraphrased.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#paraphrased.1",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#paraphrased.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#paraphrased.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#hard_negative.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-tiny-image#paraphrased.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-tiny-image"
+    },
+    {
+      "query_id": "get-tiny-image#hard_negative.1",
+      "chosen": "get-resource-links",
+      "arguments": {
+        "count": 1
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-tiny-image#hard_negative.1",
+      "chosen": "get-resource-links",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-tiny-image#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-tiny-image#hard_negative.2",
+      "chosen": "get-resource-reference",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "get-tiny-image#hard_negative.2",
+      "chosen": "get-tiny-image",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.1",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "name": "report.txt.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.1",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "name": "report.txt.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.1",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "name": "report.txt.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "name": "database.sql.gz",
+        "outputType": "resourceLink",
+        "data": "https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "data": "database.sql",
+        "outputType": "resourceLink",
+        "name": "database.sql.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.3",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resource"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.3",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resource"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "data": "database.sql",
+        "outputType": "resourceLink",
+        "name": "database.sql.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.3",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resource"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.4",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "data": "backup.log",
+        "outputType": "resourceLink",
+        "name": "backup.log.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.4",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resourceLink",
+        "data": "backup.log",
+        "name": "backup.log.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#paraphrased.1",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resourceLink",
+        "data": "https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md",
+        "name": "config.json.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#paraphrased.1",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "data": "file:///config.json",
+        "outputType": "resourceLink",
+        "name": "config.json.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#straightforward.4",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resourceLink",
+        "data": "https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md",
+        "name": "backup.log.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#paraphrased.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "data": "data.csv",
+        "outputType": "resourceLink",
+        "name": "data.csv.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#paraphrased.1",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resourceLink",
+        "name": "config.json.gz",
+        "data": "https://raw.githubusercontent.com/modelcontextprotocol/servers/refs/heads/main/README.md"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#paraphrased.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "outputType": "resourceLink",
+        "data": "data.csv",
+        "name": "data.csv.gz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#hard_negative.1",
+      "chosen": "get-resource-reference",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "gzip-file-as-resource#hard_negative.1",
+      "chosen": "get-resource-reference",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "gzip-file-as-resource#paraphrased.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {
+        "data": "data.csv",
+        "name": "data.csv.gz",
+        "outputType": "resourceLink"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "gzip-file-as-resource"
+    },
+    {
+      "query_id": "gzip-file-as-resource#hard_negative.1",
+      "chosen": "get-resource-reference",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "gzip-file-as-resource#hard_negative.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "gzip-file-as-resource#hard_negative.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "gzip-file-as-resource#hard_negative.2",
+      "chosen": "gzip-file-as-resource",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get-resource-reference"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "economic impacts of quantum computing in the financial sector"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "economic impacts of quantum computing in the financial sector"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "ambiguous": false,
+        "topic": "Current regulatory frameworks for artificial intelligence in the European Union"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "economic impacts of quantum computing in the financial sector"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "ambiguous": false,
+        "topic": "current regulatory frameworks for artificial intelligence in the European Union"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "ambiguous": false,
+        "topic": "current regulatory frameworks for artificial intelligence in the European Union"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.3",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "lithium-ion battery recycling technologies and supply chain bottlenecks"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.3",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "ambiguous": false,
+        "topic": "lithium-ion battery recycling technologies and supply chain bottlenecks"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.3",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "lithium-ion battery recycling technologies and supply chain bottlenecks"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.4",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "history of mRNA vaccine development"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.4",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "history of mRNA vaccine development"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#paraphrased.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "modern microprocessors design and state of the art"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#paraphrased.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "modern microprocessor design state of the art"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#straightforward.4",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "history of mRNA vaccine development"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#paraphrased.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "modern microprocessors design state of the art"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#paraphrased.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "2008 financial crisis root causes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#paraphrased.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "2008 financial crisis root causes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#paraphrased.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "2008 financial crisis root causes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "simulate-research-query#hard_negative.1",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "effects of deep sea mining on marine ecosystems"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "simulate-research-query#hard_negative.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "simulate-research-query#hard_negative.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "global semiconductor manufacturing output"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "simulate-research-query#hard_negative.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 5,
+        "duration": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "simulate-research-query#hard_negative.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "global semiconductor manufacturing output"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "simulate-research-query#hard_negative.2",
+      "chosen": "simulate-research-query",
+      "arguments": {
+        "topic": "global semiconductor manufacturing output"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.3",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.3",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.3",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.4",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.4",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#straightforward.4",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#paraphrased.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#paraphrased.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#paraphrased.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#paraphrased.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#paraphrased.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#paraphrased.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-simulated-logging#hard_negative.1",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-simulated-logging#hard_negative.1",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-simulated-logging#hard_negative.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-simulated-logging#hard_negative.1",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-simulated-logging#hard_negative.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-simulated-logging#hard_negative.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.1",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.1",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.1",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.3",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.3",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.4",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.4",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.4",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#paraphrased.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#paraphrased.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#paraphrased.2",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#hard_negative.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#hard_negative.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#straightforward.3",
+      "chosen": "toggle-subscriber-updates",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-subscriber-updates"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#hard_negative.1",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#hard_negative.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#hard_negative.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "toggle-subscriber-updates#hard_negative.2",
+      "chosen": "toggle-simulated-logging",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "toggle-simulated-logging"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 6,
+        "duration": 120
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 120,
+        "steps": 6
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 6,
+        "duration": 120
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 10,
+        "duration": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 10,
+        "duration": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 300,
+        "steps": 10
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.3",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 45,
+        "steps": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.3",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 3,
+        "duration": 45
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.3",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 45,
+        "steps": 3
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.4",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 60,
+        "steps": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.4",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 60,
+        "steps": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#paraphrased.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 600,
+        "steps": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#paraphrased.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 4,
+        "duration": 600
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#straightforward.4",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 60,
+        "steps": 5
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#paraphrased.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 600,
+        "steps": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#paraphrased.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 120,
+        "steps": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#paraphrased.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 120,
+        "steps": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#paraphrased.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 120,
+        "steps": 4
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "trigger-long-running-operation"
+    },
+    {
+      "query_id": "trigger-long-running-operation#hard_negative.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 6,
+        "duration": 120
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "trigger-long-running-operation#hard_negative.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "duration": 120,
+        "steps": 6
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "trigger-long-running-operation#hard_negative.1",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 6,
+        "duration": 120
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "trigger-long-running-operation#hard_negative.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 10,
+        "duration": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "trigger-long-running-operation#hard_negative.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 10,
+        "duration": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "trigger-long-running-operation#hard_negative.2",
+      "chosen": "trigger-long-running-operation",
+      "arguments": {
+        "steps": 10,
+        "duration": 300
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "simulate-research-query"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "get-env",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "io-github-modelcontextprotocol-server-everything.json",
+    "slug": "io-github-modelcontextprotocol-server-everything",
+    "registry_name": "io.github.modelcontextprotocol/server-everything",
+    "title": "Everything (reference)",
+    "repository": "https://github.com/modelcontextprotocol/servers"
+  }
+}

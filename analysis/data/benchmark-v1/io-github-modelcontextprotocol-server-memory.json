@@ -1,0 +1,5149 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-29",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "io-github-modelcontextprotocol-server-memory",
+      "name": "memory-server",
+      "version": "0.6.3",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "add_observations",
+      "server": null,
+      "title": "Add Observations",
+      "description": "Add new observations to existing entities in the knowledge graph",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entityName": {
+                  "type": "string",
+                  "description": "The name of the entity to add the observations to"
+                },
+                "contents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "An array of observation contents to add"
+                }
+              },
+              "required": [
+                "entityName",
+                "contents"
+              ]
+            }
+          }
+        },
+        "required": [
+          "observations"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "create_entities",
+      "server": null,
+      "title": "Create Entities",
+      "description": "Create multiple new entities in the knowledge graph",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the entity"
+                },
+                "entityType": {
+                  "type": "string",
+                  "description": "The type of the entity"
+                },
+                "observations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "An array of observation contents associated with the entity"
+                }
+              },
+              "required": [
+                "name",
+                "entityType",
+                "observations"
+              ]
+            }
+          }
+        },
+        "required": [
+          "entities"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "create_relations",
+      "server": null,
+      "title": "Create Relations",
+      "description": "Create multiple new relations between entities in the knowledge graph. Relations should be in active voice",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "description": "The name of the entity where the relation starts"
+                },
+                "to": {
+                  "type": "string",
+                  "description": "The name of the entity where the relation ends"
+                },
+                "relationType": {
+                  "type": "string",
+                  "description": "The type of the relation"
+                }
+              },
+              "required": [
+                "from",
+                "to",
+                "relationType"
+              ]
+            }
+          }
+        },
+        "required": [
+          "relations"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "delete_entities",
+      "server": null,
+      "title": "Delete Entities",
+      "description": "Delete multiple entities and their associated relations from the knowledge graph",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "entityNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of entity names to delete"
+          }
+        },
+        "required": [
+          "entityNames"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "delete_observations",
+      "server": null,
+      "title": "Delete Observations",
+      "description": "Delete specific observations from entities in the knowledge graph",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "deletions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "entityName": {
+                  "type": "string",
+                  "description": "The name of the entity containing the observations"
+                },
+                "observations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "An array of observations to delete"
+                }
+              },
+              "required": [
+                "entityName",
+                "observations"
+              ]
+            }
+          }
+        },
+        "required": [
+          "deletions"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "delete_relations",
+      "server": null,
+      "title": "Delete Relations",
+      "description": "Delete multiple relations from the knowledge graph",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "description": "The name of the entity where the relation starts"
+                },
+                "to": {
+                  "type": "string",
+                  "description": "The name of the entity where the relation ends"
+                },
+                "relationType": {
+                  "type": "string",
+                  "description": "The type of the relation"
+                }
+              },
+              "required": [
+                "from",
+                "to",
+                "relationType"
+              ]
+            },
+            "description": "An array of relations to delete"
+          }
+        },
+        "required": [
+          "relations"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "open_nodes",
+      "server": null,
+      "title": "Open Nodes",
+      "description": "Open specific nodes in the knowledge graph by their names",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of entity names to retrieve"
+          }
+        },
+        "required": [
+          "names"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "read_graph",
+      "server": null,
+      "title": "Read Graph",
+      "description": "Read the entire knowledge graph",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "search_nodes",
+      "server": null,
+      "title": "Search Nodes",
+      "description": "Search for nodes in the knowledge graph based on a query",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query to match against entity names, types, and observation content"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "score": 72,
+  "summary": {
+    "accuracy": {
+      "hits": 135,
+      "total": 225,
+      "value": 0.6,
+      "ci95": [
+        0.5348,
+        0.6618
+      ]
+    },
+    "stability": {
+      "hits": 75,
+      "total": 75,
+      "value": 1.0,
+      "ci95": [
+        0.9513,
+        1.0
+      ]
+    },
+    "argumentValidity": {
+      "hits": 214,
+      "total": 222,
+      "value": 0.964,
+      "ci95": [
+        0.9305,
+        0.9816
+      ]
+    },
+    "overTrigger": {
+      "hits": 6,
+      "total": 9,
+      "value": 0.6667,
+      "ci95": [
+        0.3542,
+        0.8794
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 225,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0168
+      ]
+    },
+    "trials": 225,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 991
+  },
+  "confusionMatrix": {
+    "rows": [
+      "add_observations",
+      "create_entities",
+      "create_relations",
+      "delete_entities",
+      "delete_observations",
+      "delete_relations",
+      "open_nodes",
+      "read_graph",
+      "search_nodes",
+      "(none)"
+    ],
+    "columns": [
+      "add_observations",
+      "create_entities",
+      "create_relations",
+      "delete_entities",
+      "delete_observations",
+      "delete_relations",
+      "open_nodes",
+      "read_graph",
+      "search_nodes",
+      "(none)"
+    ],
+    "counts": {
+      "add_observations": {
+        "add_observations": 15,
+        "search_nodes": 9
+      },
+      "create_entities": {
+        "create_entities": 24,
+        "search_nodes": 6
+      },
+      "create_relations": {
+        "create_entities": 3,
+        "search_nodes": 9,
+        "create_relations": 9,
+        "read_graph": 3
+      },
+      "delete_entities": {
+        "delete_entities": 24
+      },
+      "delete_observations": {
+        "delete_observations": 6,
+        "search_nodes": 15,
+        "delete_entities": 3
+      },
+      "delete_relations": {
+        "delete_relations": 9,
+        "read_graph": 15,
+        "search_nodes": 6
+      },
+      "open_nodes": {
+        "open_nodes": 9,
+        "search_nodes": 15
+      },
+      "read_graph": {
+        "read_graph": 18
+      },
+      "search_nodes": {
+        "search_nodes": 18
+      },
+      "(none)": {
+        "(none)": 3,
+        "search_nodes": 6
+      }
+    }
+  },
+  "perTool": {
+    "add_observations": {
+      "recall": {
+        "hits": 15,
+        "total": 24,
+        "value": 0.625,
+        "ci95": [
+          0.4271,
+          0.7884
+        ]
+      },
+      "precision": {
+        "hits": 15,
+        "total": 15,
+        "value": 1.0,
+        "ci95": [
+          0.7961,
+          1.0
+        ]
+      },
+      "f1": 0.7692
+    },
+    "create_entities": {
+      "recall": {
+        "hits": 24,
+        "total": 30,
+        "value": 0.8,
+        "ci95": [
+          0.6269,
+          0.9049
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 27,
+        "value": 0.8889,
+        "ci95": [
+          0.7194,
+          0.9615
+        ]
+      },
+      "f1": 0.8421
+    },
+    "create_relations": {
+      "recall": {
+        "hits": 9,
+        "total": 24,
+        "value": 0.375,
+        "ci95": [
+          0.2116,
+          0.5729
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 9,
+        "value": 1.0,
+        "ci95": [
+          0.7009,
+          1.0
+        ]
+      },
+      "f1": 0.5455
+    },
+    "delete_entities": {
+      "recall": {
+        "hits": 24,
+        "total": 24,
+        "value": 1.0,
+        "ci95": [
+          0.862,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 24,
+        "total": 27,
+        "value": 0.8889,
+        "ci95": [
+          0.7194,
+          0.9615
+        ]
+      },
+      "f1": 0.9412
+    },
+    "delete_observations": {
+      "recall": {
+        "hits": 6,
+        "total": 24,
+        "value": 0.25,
+        "ci95": [
+          0.12,
+          0.449
+        ]
+      },
+      "precision": {
+        "hits": 6,
+        "total": 6,
+        "value": 1.0,
+        "ci95": [
+          0.6097,
+          1.0
+        ]
+      },
+      "f1": 0.4
+    },
+    "delete_relations": {
+      "recall": {
+        "hits": 9,
+        "total": 30,
+        "value": 0.3,
+        "ci95": [
+          0.1666,
+          0.4788
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 9,
+        "value": 1.0,
+        "ci95": [
+          0.7009,
+          1.0
+        ]
+      },
+      "f1": 0.4615
+    },
+    "open_nodes": {
+      "recall": {
+        "hits": 9,
+        "total": 24,
+        "value": 0.375,
+        "ci95": [
+          0.2116,
+          0.5729
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 9,
+        "value": 1.0,
+        "ci95": [
+          0.7009,
+          1.0
+        ]
+      },
+      "f1": 0.5455
+    },
+    "read_graph": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 36,
+        "value": 0.5,
+        "ci95": [
+          0.3447,
+          0.6553
+        ]
+      },
+      "f1": 0.6667
+    },
+    "search_nodes": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 84,
+        "value": 0.2143,
+        "ci95": [
+          0.1401,
+          0.3135
+        ]
+      },
+      "f1": 0.3529
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "delete_observations",
+      "chosen": "search_nodes",
+      "count": 15,
+      "share": 0.625
+    },
+    {
+      "expected": "open_nodes",
+      "chosen": "search_nodes",
+      "count": 15,
+      "share": 0.625
+    },
+    {
+      "expected": "delete_relations",
+      "chosen": "read_graph",
+      "count": 15,
+      "share": 0.5
+    },
+    {
+      "expected": "add_observations",
+      "chosen": "search_nodes",
+      "count": 9,
+      "share": 0.375
+    },
+    {
+      "expected": "create_relations",
+      "chosen": "search_nodes",
+      "count": 9,
+      "share": 0.375
+    },
+    {
+      "expected": "(none)",
+      "chosen": "search_nodes",
+      "count": 6,
+      "share": 0.6667
+    },
+    {
+      "expected": "create_entities",
+      "chosen": "search_nodes",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "delete_relations",
+      "chosen": "search_nodes",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "create_relations",
+      "chosen": "create_entities",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "create_relations",
+      "chosen": "read_graph",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "delete_observations",
+      "chosen": "delete_entities",
+      "count": 3,
+      "share": 0.125
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "delete_observations",
+      "chosen": "search_nodes",
+      "count": 15
+    },
+    {
+      "expected": "open_nodes",
+      "chosen": "search_nodes",
+      "count": 15
+    },
+    {
+      "expected": "delete_relations",
+      "chosen": "read_graph",
+      "count": 15
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 9,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [],
+  "queries": [
+    {
+      "id": "add_observations#straightforward.1",
+      "text": "Please append the finding that project Apollo uses Python 3.11 to the Apollo entity in the graph.",
+      "expected": "add_observations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#straightforward.2",
+      "text": "Add the observation that Sarah's email is sarah@example.com to her profile node.",
+      "expected": "add_observations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#straightforward.3",
+      "text": "Update the database server node with the new note that it runs Ubuntu 22.04 LTS.",
+      "expected": "add_observations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#straightforward.4",
+      "text": "Attach the fact to the Paris entity that the headquarters moved to the 8th arrondissement.",
+      "expected": "add_observations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#paraphrased.1",
+      "text": "drop a note on the staging cluster saying memory usage spiked past 90 percent yesterday",
+      "expected": "add_observations",
+      "kind": "paraphrased",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#paraphrased.2",
+      "text": "log the detail that dev-team-alpha is currently assigned to ticket 409 under their record",
+      "expected": "add_observations",
+      "kind": "paraphrased",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#hard_negative.1",
+      "text": "Add a brand new node for the Acme Corp account along with its initial details and contacts.",
+      "expected": "create_entities",
+      "kind": "hard_negative",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "add_observations#hard_negative.2",
+      "text": "Create a separate entity for the Jenkins CI server and record its server specs as initial notes.",
+      "expected": "create_entities",
+      "kind": "hard_negative",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_entities#straightforward.1",
+      "text": "Please add three new people named Alice, Bob, and Charlie to the database.",
+      "expected": "create_entities",
+      "kind": "straightforward",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#straightforward.2",
+      "text": "Insert a batch of server nodes consisting of web-01, web-02, and db-01 into our system.",
+      "expected": "create_entities",
+      "kind": "straightforward",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#straightforward.3",
+      "text": "Generate new product records for the Q3 release including widget-A and widget-B.",
+      "expected": "create_entities",
+      "kind": "straightforward",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#straightforward.4",
+      "text": "Register multiple corporate clients named Acme Corp, Globex, and Initech.",
+      "expected": "create_entities",
+      "kind": "straightforward",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#paraphrased.1",
+      "text": "Drop in a bunch of new nodes for the London office right away.",
+      "expected": "create_entities",
+      "kind": "paraphrased",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#paraphrased.2",
+      "text": "We onboarded five new hires this morning, so log them all into the directory.",
+      "expected": "create_entities",
+      "kind": "paraphrased",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#hard_negative.1",
+      "text": "Connect the new server nodes web-01 and web-02 together in the system.",
+      "expected": "create_relations",
+      "kind": "hard_negative",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_entities#hard_negative.2",
+      "text": "Link all the newly added people named Alice, Bob, and Charlie into the org chart.",
+      "expected": "create_relations",
+      "kind": "hard_negative",
+      "neighbour": "create_relations"
+    },
+    {
+      "id": "create_relations#straightforward.1",
+      "text": "Link Alice to Acme Corp as an employee and Bob as a manager.",
+      "expected": "create_relations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#straightforward.2",
+      "text": "Connect the Chicago office and the New York headquarters with a supplies route.",
+      "expected": "create_relations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#straightforward.3",
+      "text": "Establish connections showing that Project X depends on Server A and Server B.",
+      "expected": "create_relations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#straightforward.4",
+      "text": "Bind the database cluster to the primary backup node using a replication link.",
+      "expected": "create_relations",
+      "kind": "straightforward",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#paraphrased.1",
+      "text": "map out who reports to who on the executive team before the meeting",
+      "expected": "create_relations",
+      "kind": "paraphrased",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#paraphrased.2",
+      "text": "tie the new servers to their respective racks in the inventory map rq",
+      "expected": "create_relations",
+      "kind": "paraphrased",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#hard_negative.1",
+      "text": "Build the connection nodes for Alice and Bob in the system graph.",
+      "expected": "create_entities",
+      "kind": "hard_negative",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "create_relations#hard_negative.2",
+      "text": "Generate the new entity records for the Chicago office and the New York headquarters.",
+      "expected": "create_entities",
+      "kind": "hard_negative",
+      "neighbour": "create_entities"
+    },
+    {
+      "id": "delete_entities#straightforward.1",
+      "text": "Please delete the nodes for ProjectAlpha, BetaCorp, and GammaSystem from the knowledge graph.",
+      "expected": "delete_entities",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#straightforward.2",
+      "text": "Remove the entities named Server01, DatabaseA, and RouterX along with their connections.",
+      "expected": "delete_entities",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#straightforward.3",
+      "text": "Wipe out the following entries from our database: UserJohn, UserJane, and GuestAccount.",
+      "expected": "delete_entities",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#straightforward.4",
+      "text": "Permanently drop the items designated as LocationNorth, LocationSouth, and LocationEast.",
+      "expected": "delete_entities",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#paraphrased.1",
+      "text": "clean out old nodes node1, node2, node3 rn",
+      "expected": "delete_entities",
+      "kind": "paraphrased",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#paraphrased.2",
+      "text": "get rid of obsolete items apex and zenith so they are completely gone",
+      "expected": "delete_entities",
+      "kind": "paraphrased",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#hard_negative.1",
+      "text": "Delete the connections linking ProjectAlpha to BetaCorp, and GammaSystem to DeltaNode.",
+      "expected": "delete_relations",
+      "kind": "hard_negative",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_entities#hard_negative.2",
+      "text": "Remove the edges connecting Server01, DatabaseA, and RouterX from the graph structure.",
+      "expected": "delete_relations",
+      "kind": "hard_negative",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "delete_observations#straightforward.1",
+      "text": "Please remove the observation ID obs_9921 from the server entity.",
+      "expected": "delete_observations",
+      "kind": "straightforward",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#straightforward.2",
+      "text": "Delete the outdated performance notes attached to the database node.",
+      "expected": "delete_observations",
+      "kind": "straightforward",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#straightforward.3",
+      "text": "Drop the specific data points regarding legacy API endpoints from the service entity.",
+      "expected": "delete_observations",
+      "kind": "straightforward",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#straightforward.4",
+      "text": "Erase observation record rec_4402 from the user profile in the knowledge graph.",
+      "expected": "delete_observations",
+      "kind": "straightforward",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#paraphrased.1",
+      "text": "Clean out that bad data we logged earlier under the project alpha entity.",
+      "expected": "delete_observations",
+      "kind": "paraphrased",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#paraphrased.2",
+      "text": "Get rid of those stale metrics hanging off the customer node.",
+      "expected": "delete_observations",
+      "kind": "paraphrased",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#hard_negative.1",
+      "text": "Append the new observation item regarding uptime stats to the server entity.",
+      "expected": "add_observations",
+      "kind": "hard_negative",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_observations#hard_negative.2",
+      "text": "Attach fresh notes about the memory leak issue directly onto the database node.",
+      "expected": "add_observations",
+      "kind": "hard_negative",
+      "neighbour": "add_observations"
+    },
+    {
+      "id": "delete_relations#straightforward.1",
+      "text": "Please delete the connects_to and depends_on edges from the knowledge graph.",
+      "expected": "delete_relations",
+      "kind": "straightforward",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#straightforward.2",
+      "text": "Remove multiple relations at once using their IDs rel_982 and rel_983.",
+      "expected": "delete_relations",
+      "kind": "straightforward",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#straightforward.3",
+      "text": "I need to wipe out several graph links between Alice and Bob right now.",
+      "expected": "delete_relations",
+      "kind": "straightforward",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#straightforward.4",
+      "text": "Execute the deletion of these connection links from the backend database.",
+      "expected": "delete_relations",
+      "kind": "straightforward",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#paraphrased.1",
+      "text": "drop those links between the nodes before running the sync.",
+      "expected": "delete_relations",
+      "kind": "paraphrased",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#paraphrased.2",
+      "text": "clean up all the dead connections attached to node_44 right away.",
+      "expected": "delete_relations",
+      "kind": "paraphrased",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#hard_negative.1",
+      "text": "Please delete the connects_to and depends_on nodes from the knowledge graph.",
+      "expected": "delete_entities",
+      "kind": "hard_negative",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "delete_relations#hard_negative.2",
+      "text": "Remove multiple nodes at once using their IDs node_982 and node_983.",
+      "expected": "delete_entities",
+      "kind": "hard_negative",
+      "neighbour": "delete_entities"
+    },
+    {
+      "id": "open_nodes#straightforward.1",
+      "text": "Please open the nodes named Alpha and Beta in the knowledge graph.",
+      "expected": "open_nodes",
+      "kind": "straightforward",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#straightforward.2",
+      "text": "Can you display the Project Roadmap node for me?",
+      "expected": "open_nodes",
+      "kind": "straightforward",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#straightforward.3",
+      "text": "Bring up the database schema node right away.",
+      "expected": "open_nodes",
+      "kind": "straightforward",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#straightforward.4",
+      "text": "I need to view the Marketing Strategy node immediately.",
+      "expected": "open_nodes",
+      "kind": "straightforward",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#paraphrased.1",
+      "text": "pull up marketing plan and budget 2024",
+      "expected": "open_nodes",
+      "kind": "paraphrased",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#paraphrased.2",
+      "text": "let's look at customer feedback logs",
+      "expected": "open_nodes",
+      "kind": "paraphrased",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#hard_negative.1",
+      "text": "clear out the old meeting notes node from the graph",
+      "expected": "delete_observations",
+      "kind": "hard_negative",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "open_nodes#hard_negative.2",
+      "text": "remove the obsolete research data node right now",
+      "expected": "delete_observations",
+      "kind": "hard_negative",
+      "neighbour": "delete_observations"
+    },
+    {
+      "id": "read_graph#straightforward.1",
+      "text": "Can you fetch the complete knowledge graph for me?",
+      "expected": "read_graph",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#straightforward.2",
+      "text": "Please output the full database network.",
+      "expected": "read_graph",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#straightforward.3",
+      "text": "Show me the entire system graph right now.",
+      "expected": "read_graph",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#straightforward.4",
+      "text": "I need to view all nodes and connections currently stored.",
+      "expected": "read_graph",
+      "kind": "straightforward",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#paraphrased.1",
+      "text": "Dump the whole web of entities for my review.",
+      "expected": "read_graph",
+      "kind": "paraphrased",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#paraphrased.2",
+      "text": "Give me a complete structural overview of everything mapped out so far.",
+      "expected": "read_graph",
+      "kind": "paraphrased",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#hard_negative.1",
+      "text": "I need to wipe out all connections between the entities in the graph.",
+      "expected": "delete_relations",
+      "kind": "hard_negative",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "read_graph#hard_negative.2",
+      "text": "Please remove every single relation linking the nodes together.",
+      "expected": "delete_relations",
+      "kind": "hard_negative",
+      "neighbour": "delete_relations"
+    },
+    {
+      "id": "search_nodes#straightforward.1",
+      "text": "Find all nodes related to project Orion in the knowledge graph.",
+      "expected": "search_nodes",
+      "kind": "straightforward",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#straightforward.2",
+      "text": "Run a search for any nodes mentioning database migration.",
+      "expected": "search_nodes",
+      "kind": "straightforward",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#straightforward.3",
+      "text": "Search for nodes containing the quarterly budget details.",
+      "expected": "search_nodes",
+      "kind": "straightforward",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#straightforward.4",
+      "text": "Look up nodes associated with Sarah Connor.",
+      "expected": "search_nodes",
+      "kind": "straightforward",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#paraphrased.1",
+      "text": "Pull up anything we have on the Austin office rollout.",
+      "expected": "search_nodes",
+      "kind": "paraphrased",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#paraphrased.2",
+      "text": "Where's that stuff about the legacy API deprecation.",
+      "expected": "search_nodes",
+      "kind": "paraphrased",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#hard_negative.1",
+      "text": "Bring up the nodes for the Alpha team directory.",
+      "expected": "open_nodes",
+      "kind": "hard_negative",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "search_nodes#hard_negative.2",
+      "text": "Access the nodes under marketing assets right away.",
+      "expected": "open_nodes",
+      "kind": "hard_negative",
+      "neighbour": "open_nodes"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Can you summarize the core argument of Karl Marx's Capital Volume 1 in three sentences?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What is the boiling point of ethanol at standard atmospheric pressure in Fahrenheit?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "How do I calculate the compound interest on a principal amount of five thousand dollars over three years at an annual rate of four percent?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "add_observations#straightforward.1",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "project Apollo uses Python 3.11"
+            ],
+            "entityName": "Apollo"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.1",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "Apollo",
+            "contents": [
+              "Project Apollo uses Python 3.11"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.1",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "project Apollo uses Python 3.11"
+            ],
+            "entityName": "Apollo"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.2",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "Sarah's email is sarah@example.com"
+            ],
+            "entityName": "Sarah"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.2",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "Sarah",
+            "contents": [
+              "Sarah's email is sarah@example.com"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.2",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "Sarah",
+            "contents": [
+              "Sarah's email is sarah@example.com"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.3",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "Runs Ubuntu 22.04 LTS"
+            ],
+            "entityName": "database server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.3",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "runs Ubuntu 22.04 LTS"
+            ],
+            "entityName": "database server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.3",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "database server",
+            "contents": [
+              "It runs Ubuntu 22.04 LTS"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.4",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "The headquarters moved to the 8th arrondissement"
+            ],
+            "entityName": "Paris"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.4",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "Paris",
+            "contents": [
+              "Headquarters moved to the 8th arrondissement"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "staging cluster"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#straightforward.4",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "Paris",
+            "contents": [
+              "The headquarters moved to the 8th arrondissement"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "staging cluster"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "staging cluster"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#paraphrased.2",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "currently assigned to ticket 409"
+            ],
+            "entityName": "dev-team-alpha"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#paraphrased.2",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "entityName": "dev-team-alpha",
+            "contents": [
+              "currently assigned to ticket 409"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#paraphrased.2",
+      "chosen": "add_observations",
+      "arguments": {
+        "observations": [
+          {
+            "contents": [
+              "Currently assigned to ticket 409"
+            ],
+            "entityName": "dev-team-alpha"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "add_observations#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityType": "Company",
+            "observations": [
+              "Brand new account with initial details and contacts"
+            ],
+            "name": "Acme Corp",
+            "entityName": "Account"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "add_observations#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityType": "Account",
+            "observations": [
+              "Brand new account",
+              "Contains initial details and contacts"
+            ],
+            "name": "Acme Corp"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "add_observations#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "name": "Acme Corp",
+            "entityType": "Account",
+            "observations": [
+              "Initial account details created",
+              "Includes initial contacts"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "add_observations#hard_negative.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Server specifications recorded as initial notes."
+            ],
+            "name": "Jenkins CI Server",
+            "entityType": "Server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "add_observations#hard_negative.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityType": "Server",
+            "observations": [
+              "Initial server specifications recorded"
+            ],
+            "name": "Jenkins CI Server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "add_observations#hard_negative.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Server specs: Initial notes recorded"
+            ],
+            "name": "Jenkins CI Server",
+            "entityType": "Server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityName": "Person",
+            "observations": [
+              "Person added to the database"
+            ],
+            "name": "Alice"
+          },
+          {
+            "name": "Bob",
+            "observations": [
+              "Person added to the database"
+            ],
+            "entityName": "Person"
+          },
+          {
+            "observations": [
+              "Person added to the database"
+            ],
+            "name": "Charlie",
+            "entityName": "Person"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'entityType' is a required property",
+        "entities.1: 'entityType' is a required property",
+        "entities.2: 'entityType' is a required property"
+      ],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityName": "Person",
+            "name": "Alice",
+            "entityType": "Person",
+            "observations": [
+              "Added to database"
+            ]
+          },
+          {
+            "observations": [
+              "Added to database"
+            ],
+            "entityName": "Person",
+            "name": "Bob",
+            "entityType": "Person"
+          },
+          {
+            "observations": [
+              "Added to database"
+            ],
+            "entityName": "Person",
+            "entityType": "Person",
+            "name": "Charlie"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Web server node"
+            ],
+            "entityType": "Server",
+            "name": "web-01"
+          },
+          {
+            "observations": [
+              "Web server node"
+            ],
+            "name": "web-02",
+            "entityType": "Server"
+          },
+          {
+            "observations": [
+              "Database server node"
+            ],
+            "entityType": "Server",
+            "name": "db-01"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Web server node"
+            ],
+            "name": "web-01",
+            "entityType": "Server"
+          },
+          {
+            "entityType": "Server",
+            "name": "web-02",
+            "observations": [
+              "Web server node"
+            ]
+          },
+          {
+            "entityType": "Server",
+            "name": "db-01",
+            "observations": [
+              "Database server node"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "name": "web-01",
+            "entityType": "Server",
+            "observations": [
+              "Server node in the system"
+            ]
+          },
+          {
+            "observations": [
+              "Server node in the system"
+            ],
+            "name": "web-02",
+            "entityType": "Server"
+          },
+          {
+            "name": "db-01",
+            "observations": [
+              "Server node in the system"
+            ],
+            "entityType": "Server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Added to the database"
+            ],
+            "name": "Alice",
+            "entityType": "Person",
+            "entityName": "Person"
+          },
+          {
+            "observations": [
+              "Added to the database"
+            ],
+            "name": "Bob",
+            "entityType": "Person",
+            "entityName": "Person"
+          },
+          {
+            "entityName": "Person",
+            "entityType": "Person",
+            "name": "Charlie",
+            "observations": [
+              "Added to the database"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.3",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Part of the Q3 release product records"
+            ],
+            "entityType": "Product",
+            "name": "widget-A"
+          },
+          {
+            "name": "widget-B",
+            "entityType": "Product",
+            "observations": [
+              "Part of the Q3 release product records"
+            ]
+          },
+          {
+            "name": "Q3 Release",
+            "entityType": "Release",
+            "observations": [
+              "Includes widget-A and widget-B"
+            ]
+          }
+        ],
+        "relations": [
+          {
+            "relationType": "includes",
+            "from": "Q3 Release",
+            "to": "widget-A"
+          },
+          {
+            "relationType": "includes",
+            "to": "widget-B",
+            "from": "Q3 Release"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.3",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityType": "Product",
+            "name": "widget-A",
+            "observations": [
+              "Part of the Q3 release product records"
+            ]
+          },
+          {
+            "observations": [
+              "Part of the Q3 release product records"
+            ],
+            "entityType": "Product",
+            "name": "widget-B"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.4",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Registered corporate client"
+            ],
+            "entityType": "Corporate Client",
+            "entityName": "Acme Corp"
+          },
+          {
+            "observations": [
+              "Registered corporate client"
+            ],
+            "entityType": "Corporate Client",
+            "entityName": "Globex"
+          },
+          {
+            "entityType": "Corporate Client",
+            "entityName": "Initech",
+            "observations": [
+              "Registered corporate client"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'name' is a required property",
+        "entities.1: 'name' is a required property",
+        "entities.2: 'name' is a required property"
+      ],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.3",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityName": "Q3 release",
+            "observations": [
+              "Includes widget-A and widget-B"
+            ],
+            "entityType": "Release"
+          },
+          {
+            "entityType": "Product",
+            "observations": [
+              "Part of Q3 release"
+            ],
+            "entityName": "widget-A"
+          },
+          {
+            "entityType": "Product",
+            "observations": [
+              "Part of Q3 release"
+            ],
+            "entityName": "widget-B"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'name' is a required property",
+        "entities.1: 'name' is a required property",
+        "entities.2: 'name' is a required property"
+      ],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.4",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityName": "Corporate Client",
+            "observations": [
+              "Acme Corp",
+              "Globex",
+              "Initech"
+            ],
+            "entityType": "Company"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'name' is a required property"
+      ],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "London"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#straightforward.4",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityType": "Corporate Client",
+            "observations": [
+              "Corporate client registered in the system."
+            ],
+            "name": "Acme Corp"
+          },
+          {
+            "observations": [
+              "Corporate client registered in the system."
+            ],
+            "entityType": "Corporate Client",
+            "name": "Globex"
+          },
+          {
+            "name": "Initech",
+            "entityType": "Corporate Client",
+            "observations": [
+              "Corporate client registered in the system."
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "London office"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "new hires"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "London"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "directory"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "directory"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_entities#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "Newly added server node"
+            ],
+            "name": "web-01",
+            "entityType": "Server Node"
+          },
+          {
+            "name": "web-02",
+            "entityType": "Server Node",
+            "observations": [
+              "Newly added server node"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_entities#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "New server node"
+            ],
+            "entityType": "Server",
+            "name": "web-01"
+          },
+          {
+            "entityType": "Server",
+            "observations": [
+              "New server node"
+            ],
+            "name": "web-02"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_entities#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "New server node"
+            ],
+            "name": "web-01",
+            "entityType": "Server"
+          },
+          {
+            "entityType": "Server",
+            "name": "web-02",
+            "observations": [
+              "New server node"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_entities#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_entities#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.1",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "is employee at",
+            "from": "Alice",
+            "to": "Acme Corp"
+          },
+          {
+            "to": "Acme Corp",
+            "relationType": "is manager at",
+            "from": "Bob"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.1",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "from": "Alice",
+            "relationType": "IS_EMPLOYEE_OF",
+            "to": "Acme Corp"
+          },
+          {
+            "relationType": "IS_MANAGER_OF",
+            "to": "Acme Corp",
+            "from": "Bob"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_entities#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.1",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "is employee of",
+            "to": "Acme Corp",
+            "from": "Alice"
+          },
+          {
+            "from": "Bob",
+            "to": "Acme Corp",
+            "relationType": "is manager of"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.2",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "has supplies route to",
+            "to": "New York headquarters",
+            "from": "Chicago office"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.2",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "from": "New York headquarters",
+            "relationType": "connects to",
+            "to": "Chicago office"
+          },
+          {
+            "relationType": "connects to",
+            "from": "Chicago office",
+            "to": "New York headquarters"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.3",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "to": "Server A",
+            "from": "Project X",
+            "relationType": "depends on"
+          },
+          {
+            "relationType": "depends on",
+            "from": "Project X",
+            "to": "Server B"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.3",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "to": "Server A",
+            "relationType": "depends on",
+            "from": "Project X"
+          },
+          {
+            "from": "Project X",
+            "relationType": "depends on",
+            "to": "Server B"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.2",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "CONNECTS_WITH",
+            "to": "New York headquarters",
+            "from": "Chicago office"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.3",
+      "chosen": "create_relations",
+      "arguments": {
+        "relations": [
+          {
+            "from": "Project X",
+            "relationType": "depends on",
+            "to": "Server A"
+          },
+          {
+            "relationType": "depends on",
+            "to": "Server B",
+            "from": "Project X"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "executive team"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "executive team"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "executive team"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "server"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "servers"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityType": "Person",
+            "observations": [
+              "Connection node in the system graph"
+            ],
+            "name": "Alice"
+          },
+          {
+            "entityType": "Person",
+            "observations": [
+              "Connection node in the system graph"
+            ],
+            "name": "Bob"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_relations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "servers"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "create_relations"
+    },
+    {
+      "query_id": "create_relations#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "observations": [
+              "System connection node for Alice"
+            ],
+            "entityName": "Alice",
+            "entityType": "Person"
+          },
+          {
+            "entityType": "Person",
+            "entityName": "Bob",
+            "observations": [
+              "System connection node for Bob"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'name' is a required property",
+        "entities.1: 'name' is a required property"
+      ],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_relations#hard_negative.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          "Chicago office",
+          "New York headquarters"
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'Chicago office' is not of type 'object'",
+        "entities.1: 'New York headquarters' is not of type 'object'"
+      ],
+      "run": 0,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_relations#hard_negative.1",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          {
+            "entityName": "Person",
+            "entityType": "User",
+            "name": "Alice",
+            "observations": [
+              "Connection node in the system graph"
+            ]
+          },
+          {
+            "entityType": "User",
+            "entityName": "Person",
+            "observations": [
+              "Connection node in the system graph"
+            ],
+            "name": "Bob"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_relations#hard_negative.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          "Chicago office",
+          "New York headquarters"
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'Chicago office' is not of type 'object'",
+        "entities.1: 'New York headquarters' is not of type 'object'"
+      ],
+      "run": 1,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "create_relations#hard_negative.2",
+      "chosen": "create_entities",
+      "arguments": {
+        "entities": [
+          "Chicago office",
+          "New York headquarters"
+        ]
+      },
+      "phantom": null,
+      "args_valid": false,
+      "args_errors": [
+        "entities.0: 'Chicago office' is not of type 'object'",
+        "entities.1: 'New York headquarters' is not of type 'object'"
+      ],
+      "run": 2,
+      "error": null,
+      "expected": "create_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "ProjectAlpha",
+          "BetaCorp",
+          "GammaSystem"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "ProjectAlpha",
+          "BetaCorp",
+          "GammaSystem"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "ProjectAlpha",
+          "BetaCorp",
+          "GammaSystem"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "Server01",
+          "DatabaseA",
+          "RouterX"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "Server01",
+          "DatabaseA",
+          "RouterX"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.3",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "UserJohn",
+          "UserJane",
+          "GuestAccount"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "Server01",
+          "DatabaseA",
+          "RouterX"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.3",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "UserJohn",
+          "UserJane",
+          "GuestAccount"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.3",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "UserJohn",
+          "UserJane",
+          "GuestAccount"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.4",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "LocationNorth",
+          "LocationSouth",
+          "LocationEast"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.4",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "LocationNorth",
+          "LocationSouth",
+          "LocationEast"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#straightforward.4",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "LocationNorth",
+          "LocationSouth",
+          "LocationEast"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#paraphrased.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "node1",
+          "node2",
+          "node3"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#paraphrased.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "node1",
+          "node2",
+          "node3"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#paraphrased.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "node1",
+          "node2",
+          "node3"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#paraphrased.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "apex",
+          "zenith"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#paraphrased.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "apex",
+          "zenith"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#paraphrased.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "apex",
+          "zenith"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_entities#hard_negative.1",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "from": "ProjectAlpha",
+            "relationType": "LINKS",
+            "to": "BetaCorp"
+          },
+          {
+            "from": "ProjectAlpha",
+            "relationType": "connected_to",
+            "to": "BetaCorp"
+          },
+          {
+            "from": "ProjectAlpha",
+            "to": "BetaCorp",
+            "relationType": "link"
+          },
+          {
+            "from": "GammaSystem",
+            "relationType": "LINKS",
+            "to": "DeltaNode"
+          },
+          {
+            "from": "GammaSystem",
+            "relationType": "connected_to",
+            "to": "DeltaNode"
+          },
+          {
+            "to": "DeltaNode",
+            "relationType": "link",
+            "from": "GammaSystem"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_entities#hard_negative.1",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "from": "ProjectAlpha",
+            "to": "BetaCorp",
+            "relationType": "links"
+          },
+          {
+            "relationType": "connected_to",
+            "to": "BetaCorp",
+            "from": "ProjectAlpha"
+          },
+          {
+            "from": "ProjectAlpha",
+            "relationType": "connects",
+            "to": "BetaCorp"
+          },
+          {
+            "from": "GammaSystem",
+            "to": "DeltaNode",
+            "relationType": "links"
+          },
+          {
+            "from": "GammaSystem",
+            "to": "DeltaNode",
+            "relationType": "connected_to"
+          },
+          {
+            "from": "GammaSystem",
+            "relationType": "connects",
+            "to": "DeltaNode"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_entities#hard_negative.1",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "links",
+            "to": "BetaCorp",
+            "from": "ProjectAlpha"
+          },
+          {
+            "from": "GammaSystem",
+            "relationType": "links",
+            "to": "DeltaNode"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_entities#hard_negative.2",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "connected_to",
+            "to": "DatabaseA",
+            "from": "Server01"
+          },
+          {
+            "from": "DatabaseA",
+            "to": "Server01",
+            "relationType": "connected_to"
+          },
+          {
+            "relationType": "connected_to",
+            "to": "RouterX",
+            "from": "Server01"
+          },
+          {
+            "to": "Server01",
+            "from": "RouterX",
+            "relationType": "connected_to"
+          },
+          {
+            "relationType": "connected_to",
+            "from": "DatabaseA",
+            "to": "RouterX"
+          },
+          {
+            "relationType": "connected_to",
+            "to": "DatabaseA",
+            "from": "RouterX"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_entities#hard_negative.2",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "connected to",
+            "to": "DatabaseA",
+            "from": "Server01"
+          },
+          {
+            "relationType": "connected to",
+            "to": "Server01",
+            "from": "DatabaseA"
+          },
+          {
+            "to": "RouterX",
+            "relationType": "connected to",
+            "from": "Server01"
+          },
+          {
+            "relationType": "connected to",
+            "from": "RouterX",
+            "to": "Server01"
+          },
+          {
+            "relationType": "connected to",
+            "from": "DatabaseA",
+            "to": "RouterX"
+          },
+          {
+            "to": "DatabaseA",
+            "relationType": "connected to",
+            "from": "RouterX"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_entities#hard_negative.2",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "to": "DatabaseA",
+            "from": "Server01",
+            "relationType": "*"
+          },
+          {
+            "relationType": "*",
+            "to": "RouterX",
+            "from": "Server01"
+          },
+          {
+            "to": "Server01",
+            "relationType": "*",
+            "from": "DatabaseA"
+          },
+          {
+            "from": "DatabaseA",
+            "relationType": "*",
+            "to": "RouterX"
+          },
+          {
+            "relationType": "*",
+            "to": "Server01",
+            "from": "RouterX"
+          },
+          {
+            "relationType": "*",
+            "to": "DatabaseA",
+            "from": "RouterX"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.1",
+      "chosen": "delete_observations",
+      "arguments": {
+        "deletions": [
+          {
+            "observations": [
+              "obs_9921"
+            ],
+            "entityName": "server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.1",
+      "chosen": "delete_observations",
+      "arguments": {
+        "deletions": [
+          {
+            "observations": [
+              "obs_9921"
+            ],
+            "entityName": "server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.1",
+      "chosen": "delete_observations",
+      "arguments": {
+        "deletions": [
+          {
+            "observations": [
+              "obs_9921"
+            ],
+            "entityName": "server"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "service"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "service"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.4",
+      "chosen": "delete_observations",
+      "arguments": {
+        "deletions": [
+          {
+            "entityName": "user profile",
+            "observations": [
+              "rec_4402"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.4",
+      "chosen": "delete_observations",
+      "arguments": {
+        "deletions": [
+          {
+            "entityName": "user profile",
+            "observations": [
+              "rec_4402"
+            ]
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.4",
+      "chosen": "delete_observations",
+      "arguments": {
+        "deletions": [
+          {
+            "observations": [
+              "rec_4402"
+            ],
+            "entityName": "user profile"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "project alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "service"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "customer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "project alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "customer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "customer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "delete_observations#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "server"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "delete_observations#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "server"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "delete_observations#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "server"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "delete_observations#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "delete_observations#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "delete_observations#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "add_observations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.2",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "to": "dummy",
+            "from": "rel_982",
+            "relationType": "related_to"
+          },
+          {
+            "relationType": "related_to",
+            "from": "rel_983",
+            "to": "dummy"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.2",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "from": "rel_982",
+            "to": "rel_982",
+            "relationType": "delete"
+          },
+          {
+            "to": "rel_983",
+            "relationType": "delete",
+            "from": "rel_983"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.2",
+      "chosen": "delete_relations",
+      "arguments": {
+        "relations": [
+          {
+            "relationType": "ID",
+            "to": "",
+            "from": "rel_982"
+          },
+          {
+            "relationType": "ID",
+            "to": "",
+            "from": "rel_983"
+          }
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alice"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#paraphrased.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#paraphrased.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#paraphrased.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "node_44"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "node_44"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "node_44"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "delete_relations#hard_negative.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "connects_to",
+          "depends_on"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_relations#hard_negative.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "connects_to",
+          "depends_on"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_relations#hard_negative.1",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "connects_to",
+          "depends_on"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_relations#hard_negative.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "node_982",
+          "node_983"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_relations#hard_negative.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "node_982",
+          "node_983"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "delete_relations#hard_negative.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "node_982",
+          "node_983"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_entities"
+    },
+    {
+      "query_id": "open_nodes#straightforward.1",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.1",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.2",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Project Roadmap"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.1",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Alpha",
+          "Beta"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.2",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Project Roadmap"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.2",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Project Roadmap"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database schema"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database schema"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database schema"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.4",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Marketing Strategy"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.4",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Marketing Strategy"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#straightforward.4",
+      "chosen": "open_nodes",
+      "arguments": {
+        "names": [
+          "Marketing Strategy"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "marketing plan budget 2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "marketing plan and budget 2024"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "2024 marketing plan budget"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "customer feedback logs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "customer feedback logs"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "meeting notes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "open_nodes#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "customer feedback"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "open_nodes#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "meeting notes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "open_nodes#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "meeting notes"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "open_nodes#hard_negative.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "obsolete research data"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "open_nodes#hard_negative.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "obsolete research data"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "read_graph#straightforward.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "open_nodes#hard_negative.2",
+      "chosen": "delete_entities",
+      "arguments": {
+        "entityNames": [
+          "obsolete research data"
+        ]
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_observations"
+    },
+    {
+      "query_id": "read_graph#straightforward.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.3",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.3",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.3",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#straightforward.4",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#paraphrased.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#paraphrased.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#paraphrased.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#paraphrased.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#paraphrased.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#paraphrased.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "read_graph"
+    },
+    {
+      "query_id": "read_graph#hard_negative.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "read_graph#hard_negative.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "read_graph#hard_negative.1",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "read_graph#hard_negative.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "read_graph#hard_negative.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "read_graph#hard_negative.2",
+      "chosen": "read_graph",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "delete_relations"
+    },
+    {
+      "query_id": "search_nodes#straightforward.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Orion"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Orion"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database migration"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Orion"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database migration"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "database migration"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "quarterly budget"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "quarterly budget details"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "quarterly budget details"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.4",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Sarah Connor"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.4",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Sarah Connor"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#straightforward.4",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Sarah Connor"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Austin office rollout"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Austin office rollout"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#paraphrased.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Austin office rollout"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "legacy API deprecation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "legacy API deprecation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#paraphrased.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "legacy API deprecation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "search_nodes"
+    },
+    {
+      "query_id": "search_nodes#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alpha team directory"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "search_nodes#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alpha team"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "search_nodes#hard_negative.1",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "Alpha team"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "search_nodes#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "marketing assets"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "search_nodes#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "marketing assets"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "search_nodes#hard_negative.2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "marketing assets"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "open_nodes"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "ethanol boiling point"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "ethanol boiling point"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "ethanol boiling point Fahrenheit"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "compound interest"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "compound interest"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": "search_nodes",
+      "arguments": {
+        "query": "compound interest"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "io-github-modelcontextprotocol-server-memory.json",
+    "slug": "io-github-modelcontextprotocol-server-memory",
+    "registry_name": "io.github.modelcontextprotocol/server-memory",
+    "title": "Memory (reference)",
+    "repository": "https://github.com/modelcontextprotocol/servers"
+  }
+}

@@ -1,0 +1,718 @@
+version: 1
+tools:
+  buy:
+    fingerprint: 4b6829d0c9c1068a
+    queries:
+    - id: buy#straightforward.1
+      text: Find and order a medium pepperoni pizza from Mario's Pizzeria delivered
+        to 742 Evergreen Terrace.
+      expected: buy
+      kind: straightforward
+      neighbour: stocks
+    - id: buy#straightforward.2
+      text: Please search for and purchase the latest hardcover edition of The Great
+        Gatsby on Amazon.
+      expected: buy
+      kind: straightforward
+      neighbour: stocks
+    - id: buy#straightforward.3
+      text: Book two economy tickets for the direct flight from Chicago to New York
+        on United Airlines for next Friday.
+      expected: buy
+      kind: straightforward
+      neighbour: stocks
+    - id: buy#straightforward.4
+      text: Buy a 12-month family subscription to Spotify using my default payment
+        method.
+      expected: buy
+      kind: straightforward
+      neighbour: stocks
+    - id: buy#paraphrased.1
+      text: Grab me those concert seats I mentioned earlier before they sell out completely.
+      expected: buy
+      kind: paraphrased
+      neighbour: stocks
+    - id: buy#paraphrased.2
+      text: Get the usual grocery order delivered to my apartment by this evening.
+      expected: buy
+      kind: paraphrased
+      neighbour: stocks
+    - id: buy#hard_negative.1
+      text: Buy five hundred shares of Apple stock immediately at the current market
+        price.
+      expected: stocks
+      kind: hard_negative
+      neighbour: stocks
+    - id: buy#hard_negative.2
+      text: Secure thirty units of Tesla shares for my portfolio right now.
+      expected: stocks
+      kind: hard_negative
+      neighbour: stocks
+  close:
+    fingerprint: 4477708f19664bfd
+    queries:
+    - id: close#straightforward.1
+      text: Shut down sandbox ID sbx_9f8e7d6c5b4a3z2y right now.
+      expected: close
+      kind: straightforward
+      neighbour: session
+    - id: close#straightforward.2
+      text: Please terminate the running execution environment with ID sbx_abc123xyz789.
+      expected: close
+      kind: straightforward
+      neighbour: session
+    - id: close#straightforward.3
+      text: End session sbx_1a2b3c4d5e6f7g8h and stop charging me.
+      expected: close
+      kind: straightforward
+      neighbour: session
+    - id: close#straightforward.4
+      text: Call the cleanup routine for sandbox identifier sbx_9988776655443322.
+      expected: close
+      kind: straightforward
+      neighbour: session
+    - id: close#paraphrased.1
+      text: I'm done with sandbox sbx_eleven2233445566, kill it so charges stop accumulating.
+      expected: close
+      kind: paraphrased
+      neighbour: session
+    - id: close#paraphrased.2
+      text: Cut the power on my test container sbx_alpha77beta88 immediately.
+      expected: close
+      kind: paraphrased
+      neighbour: session
+    - id: close#hard_negative.1
+      text: Close out my current sandbox connection for sandbox sbx_conn99887766 and
+        wipe the cache.
+      expected: session
+      kind: hard_negative
+      neighbour: session
+    - id: close#hard_negative.2
+      text: Close the active sandbox browser tab for session ID sbx_browser112233.
+      expected: session
+      kind: hard_negative
+      neighbour: session
+  consult:
+    fingerprint: cf7482b249fc7a09
+    queries:
+    - id: consult#straightforward.1
+      text: Hey Vaaya, figure out how I can automatically scrape my competitor's pricing
+        page every morning and email the diff to my sales team.
+      expected: consult
+      kind: straightforward
+      neighbour: use
+    - id: consult#straightforward.2
+      text: Consult with the system on the best way to generate photorealistic product
+        mockups for our new organic coffee brand using an AI pipeline.
+      expected: consult
+      kind: straightforward
+      neighbour: use
+    - id: consult#straightforward.3
+      text: I want to run Python code securely in a sandboxed environment to process
+        a massive customer CSV export, so tell me what the platform can do here.
+      expected: consult
+      kind: straightforward
+      neighbour: use
+    - id: consult#straightforward.4
+      text: Help me figure out the optimal workflow to enrich inbound contact leads
+        with their LinkedIn profiles and recent company funding news.
+      expected: consult
+      kind: straightforward
+      neighbour: use
+    - id: consult#paraphrased.1
+      text: Can you check what options exist for automating my daily newsletter workflow
+        so I don't have to write and dispatch every edition manually?
+      expected: consult
+      kind: paraphrased
+      neighbour: use
+    - id: consult#paraphrased.2
+      text: I'm trying to brainstorm the best setup for monitoring brand mentions
+        across the web and piping alerts straight into my Slack workspace.
+      expected: consult
+      kind: paraphrased
+      neighbour: use
+    - id: consult#hard_negative.1
+      text: Go ahead and execute the scraping script on https://example.com/pricing
+        and send the output directly to my inbox right now.
+      expected: use
+      kind: hard_negative
+      neighbour: use
+    - id: consult#hard_negative.2
+      text: Run the sandbox environment with the provided Python script to clean up
+        my database records immediately.
+      expected: use
+      kind: hard_negative
+      neighbour: use
+  docs:
+    fingerprint: 72f2b0bdfec0df62
+    queries:
+    - id: docs#straightforward.1
+      text: Can you pull up the complete setup guide for connecting our Telegram bot
+        to the platform?
+      expected: docs
+      kind: straightforward
+      neighbour: use
+    - id: docs#straightforward.2
+      text: What are the exact parameter requirements and pricing for the image generation
+        endpoints?
+      expected: docs
+      kind: straightforward
+      neighbour: use
+    - id: docs#straightforward.3
+      text: Show me the full reference playbook for lead enrichment and cold outreach
+        sequences.
+      expected: docs
+      kind: straightforward
+      neighbour: use
+    - id: docs#straightforward.4
+      text: Where can I find the documentation listing all available sandbox and browser
+        automation tools?
+      expected: docs
+      kind: straightforward
+      neighbour: use
+    - id: docs#paraphrased.1
+      text: Need the cheat sheet on how to configure agent connections without breaking
+        our existing setup.
+      expected: docs
+      kind: paraphrased
+      neighbour: use
+    - id: docs#paraphrased.2
+      text: Pull up the specs for scraping social platforms and handling compliance
+        before we start building.
+      expected: docs
+      kind: paraphrased
+      neighbour: use
+    - id: docs#hard_negative.1
+      text: Execute the setup routine to connect our production Slack workspace to
+        the agent right now.
+      expected: use
+      kind: hard_negative
+      neighbour: use
+    - id: docs#hard_negative.2
+      text: Run the GTM outreach sequence using the prospecting playbook we saved
+        last week.
+      expected: use
+      kind: hard_negative
+      neighbour: use
+  llm:
+    fingerprint: fcba7304b81664b4
+    queries:
+    - id: llm#straightforward.1
+      text: Send this exact paragraph over to Claude through the proxy and ask it
+        to rewrite the tone to be much warmer.
+      expected: llm
+      kind: straightforward
+      neighbour: consult
+    - id: llm#straightforward.2
+      text: Query the Kimi model with the prompt 'Translate these release notes into
+        Mandarin' and return the result.
+      expected: llm
+      kind: straightforward
+      neighbour: consult
+    - id: llm#straightforward.3
+      text: Run a quick one-shot query using the cheap tier to get a second opinion
+        on whether this bug fix looks safe.
+      expected: llm
+      kind: straightforward
+      neighbour: consult
+    - id: llm#straightforward.4
+      text: Pass this massive JSON payload to a different LLM set to the best tier
+        and ask it to find any missing schema fields.
+      expected: llm
+      kind: straightforward
+      neighbour: consult
+    - id: llm#paraphrased.1
+      text: Kick this rough draft over to a rival intelligence to see if they can
+        punch up the ending.
+      expected: llm
+      kind: paraphrased
+      neighbour: consult
+    - id: llm#paraphrased.2
+      text: Get an outside perspective from another engine on whether this pricing
+        strategy makes sense.
+      expected: llm
+      kind: paraphrased
+      neighbour: consult
+    - id: llm#hard_negative.1
+      text: I need to consult someone about the architectural tradeoffs for this database
+        migration.
+      expected: consult
+      kind: hard_negative
+      neighbour: consult
+    - id: llm#hard_negative.2
+      text: Consult with the team leads on whether we should push this hotfix to production
+        tonight.
+      expected: consult
+      kind: hard_negative
+      neighbour: consult
+  logout:
+    fingerprint: 0addc14c0fda9e4f
+    queries:
+    - id: logout#straightforward.1
+      text: Disconnect my Vaaya session right now.
+      expected: logout
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: logout#straightforward.2
+      text: Clear my local Vaaya credentials.
+      expected: logout
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: logout#straightforward.3
+      text: End the active Vaaya link.
+      expected: logout
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: logout#straightforward.4
+      text: Sign me out of the Vaaya network.
+      expected: logout
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: logout#paraphrased.1
+      text: Wipe my tokens and drop the current Vaaya hookup.
+      expected: logout
+      kind: paraphrased
+      neighbour: vaaya_logout
+    - id: logout#paraphrased.2
+      text: Scrap my stored keys and kill the active Vaaya stream.
+      expected: logout
+      kind: paraphrased
+      neighbour: vaaya_logout
+    - id: logout#hard_negative.1
+      text: Execute the vaaya_logout protocol.
+      expected: vaaya_logout
+      kind: hard_negative
+      neighbour: vaaya_logout
+    - id: logout#hard_negative.2
+      text: Run vaaya_logout to terminate the session.
+      expected: vaaya_logout
+      kind: hard_negative
+      neighbour: vaaya_logout
+  reauthorize:
+    fingerprint: f4c05ef2d1d02ca0
+    queries:
+    - id: reauthorize#straightforward.1
+      text: Please re-run the authorization flow against the Vaaya backend.
+      expected: reauthorize
+      kind: straightforward
+      neighbour: logout
+    - id: reauthorize#straightforward.2
+      text: Trigger the reauthorize process for the Vaaya backend right now.
+      expected: reauthorize
+      kind: straightforward
+      neighbour: logout
+    - id: reauthorize#straightforward.3
+      text: Execute a fresh authorization check against Vaaya.
+      expected: reauthorize
+      kind: straightforward
+      neighbour: logout
+    - id: reauthorize#straightforward.4
+      text: Run the reauthorize command targeting the Vaaya backend.
+      expected: reauthorize
+      kind: straightforward
+      neighbour: logout
+    - id: reauthorize#paraphrased.1
+      text: My connection to Vaaya dropped, fix the auth connection again.
+      expected: reauthorize
+      kind: paraphrased
+      neighbour: logout
+    - id: reauthorize#paraphrased.2
+      text: Refresh my credentials so I can talk to the Vaaya servers.
+      expected: reauthorize
+      kind: paraphrased
+      neighbour: logout
+    - id: reauthorize#hard_negative.1
+      text: Revoke my active credentials and re-authenticate my session on the Vaaya
+        backend.
+      expected: logout
+      kind: hard_negative
+      neighbour: logout
+    - id: reauthorize#hard_negative.2
+      text: Clear out my current token and terminate my connection to Vaaya.
+      expected: logout
+      kind: hard_negative
+      neighbour: logout
+  result:
+    fingerprint: d5624bf26a2a6084
+    queries:
+    - id: result#straightforward.1
+      text: Check on job ID job_98234 to see if my video render is finished yet.
+      expected: result
+      kind: straightforward
+      neighbour: session
+    - id: result#straightforward.2
+      text: What is the current status and output for the background task with ID
+        task_55412?
+      expected: result
+      kind: straightforward
+      neighbour: session
+    - id: result#straightforward.3
+      text: Retrieve the final result for process reference prc_77190.
+      expected: result
+      kind: straightforward
+      neighbour: session
+    - id: result#straightforward.4
+      text: Fetch the completion data for the export job 44891-xyz.
+      expected: result
+      kind: straightforward
+      neighbour: session
+    - id: result#paraphrased.1
+      text: Is that big animation task finished rendering yet, check code rnd_8832.
+      expected: result
+      kind: paraphrased
+      neighbour: session
+    - id: result#paraphrased.2
+      text: Pull up whatever came out of the batch processing request I kicked off
+        earlier under ref_991.
+      expected: result
+      kind: paraphrased
+      neighbour: session
+    - id: result#hard_negative.1
+      text: Bring up the active workspace session identified by id_98234.
+      expected: session
+      kind: hard_negative
+      neighbour: session
+    - id: result#hard_negative.2
+      text: Connect me to the ongoing remote user session for task_55412.
+      expected: session
+      kind: hard_negative
+      neighbour: session
+  session:
+    fingerprint: 8a1e6b98ee2f935c
+    queries:
+    - id: session#straightforward.1
+      text: Execute npm test inside my active testing environment using identifier
+        9f8e7d6c.
+      expected: session
+      kind: straightforward
+      neighbour: close
+    - id: session#straightforward.2
+      text: Run the script parse_logs.py inside the existing container abc123xyz.
+      expected: session
+      kind: straightforward
+      neighbour: close
+    - id: session#straightforward.3
+      text: Send the bash command pip install pandas to the running sandbox session
+        dev_box_01.
+      expected: session
+      kind: straightforward
+      neighbour: close
+    - id: session#straightforward.4
+      text: Evaluate this JavaScript snippet `console.log(process.versions)` in my
+        live Node REPL session named node_env_7.
+      expected: session
+      kind: straightforward
+      neighbour: close
+    - id: session#paraphrased.1
+      text: Fire off a quick python one-liner to print out os.environ inside whatever
+        sandbox is currently spinning.
+      expected: session
+      kind: paraphrased
+      neighbour: close
+    - id: session#paraphrased.2
+      text: Keep typing make build into the active terminal box without losing the
+        previous state.
+      expected: session
+      kind: paraphrased
+      neighbour: close
+    - id: session#hard_negative.1
+      text: Shut down sandbox session 9f8e7d6c right now so I stop getting billed
+        for it.
+      expected: close
+      kind: hard_negative
+      neighbour: close
+    - id: session#hard_negative.2
+      text: Terminate active terminal instance dev_box_01 and clean up all lingering
+        background processes.
+      expected: close
+      kind: hard_negative
+      neighbour: close
+  stocks:
+    fingerprint: f99ef960708d15aa
+    queries:
+    - id: stocks#straightforward.1
+      text: Can you buy fifty dollars worth of Apple stock using my prepaid balance?
+      expected: stocks
+      kind: straightforward
+      neighbour: buy
+    - id: stocks#straightforward.2
+      text: Please check my current stock portfolio and available buying power.
+      expected: stocks
+      kind: straightforward
+      neighbour: buy
+    - id: stocks#straightforward.3
+      text: Show me a price quote for two hundred cents of Microsoft shares right
+        now.
+      expected: stocks
+      kind: straightforward
+      neighbour: buy
+    - id: stocks#straightforward.4
+      text: What are all the tokenized stock tickers currently supported for purchase?
+      expected: stocks
+      kind: straightforward
+      neighbour: buy
+    - id: stocks#paraphrased.1
+      text: Grab me twenty bucks of Tesla equity real quick.
+      expected: stocks
+      kind: paraphrased
+      neighbour: buy
+    - id: stocks#paraphrased.2
+      text: Check on the status of that transaction ID 98765 to see if it went through.
+      expected: stocks
+      kind: paraphrased
+      neighbour: buy
+    - id: stocks#hard_negative.1
+      text: Purchase a new domain name for my personal portfolio website.
+      expected: buy
+      kind: hard_negative
+      neighbour: buy
+    - id: stocks#hard_negative.2
+      text: Checkout my shopping cart items and pay for the pending order.
+      expected: buy
+      kind: hard_negative
+      neighbour: buy
+  use:
+    fingerprint: d29f94ef779e2320
+    queries:
+    - id: use#straightforward.1
+      text: Generate a high-resolution portrait of a cyberpunk cat wearing neon sunglasses
+        using the standard image generation service with a budget limit of fifty cents.
+      expected: use
+      kind: straightforward
+      neighbour: docs
+    - id: use#straightforward.2
+      text: Perform a web search for the latest quarterly financial results of Tesla
+        and cap the expenditure at ten cents.
+      expected: use
+      kind: straightforward
+      neighbour: docs
+    - id: use#straightforward.3
+      text: Extract all tabular data from the uploaded invoice PDF located at reports/q3_bill.pdf
+        while keeping the cost under twenty cents.
+      expected: use
+      kind: straightforward
+      neighbour: docs
+    - id: use#straightforward.4
+      text: Execute Python code in the sandbox to calculate the first ten thousand
+        prime numbers and set the maximum cost to thirty cents.
+      expected: use
+      kind: straightforward
+      neighbour: docs
+    - id: use#paraphrased.1
+      text: Quickly grab the contents of https://news.ycombinator.com before my meeting
+        starts and bill it to my account.
+      expected: use
+      kind: paraphrased
+      neighbour: docs
+    - id: use#paraphrased.2
+      text: Run that audio transcription on the voice memo file from my desktop right
+        now.
+      expected: use
+      kind: paraphrased
+      neighbour: docs
+    - id: use#hard_negative.1
+      text: Pull up the reference manuals for executing external third-party API calls
+        so I can check the required parameters.
+      expected: docs
+      kind: hard_negative
+      neighbour: docs
+    - id: use#hard_negative.2
+      text: Show me the technical specifications and schema guidelines for making
+        service requests.
+      expected: docs
+      kind: hard_negative
+      neighbour: docs
+  vaaya_account:
+    fingerprint: f0dfb5c5ed164147
+    queries:
+    - id: vaaya_account#straightforward.1
+      text: Can you tell me which Vaaya account is currently linked?
+      expected: vaaya_account
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: vaaya_account#straightforward.2
+      text: What is my current Vaaya balance right now?
+      expected: vaaya_account
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: vaaya_account#straightforward.3
+      text: How much credit do I have left in my Vaaya profile?
+      expected: vaaya_account
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: vaaya_account#straightforward.4
+      text: Show me the instructions on how to switch my active Vaaya account.
+      expected: vaaya_account
+      kind: straightforward
+      neighbour: vaaya_logout
+    - id: vaaya_account#paraphrased.1
+      text: need to check funds in the payment profile before running this script
+      expected: vaaya_account
+      kind: paraphrased
+      neighbour: vaaya_logout
+    - id: vaaya_account#paraphrased.2
+      text: hey quick q, whose email is tied to the current billing session?
+      expected: vaaya_account
+      kind: paraphrased
+      neighbour: vaaya_logout
+    - id: vaaya_account#hard_negative.1
+      text: Please disconnect my Vaaya account right now.
+      expected: vaaya_logout
+      kind: hard_negative
+      neighbour: vaaya_logout
+    - id: vaaya_account#hard_negative.2
+      text: I want to log out of the current Vaaya session and clear my balance data.
+      expected: vaaya_logout
+      kind: hard_negative
+      neighbour: vaaya_logout
+  vaaya_logout:
+    fingerprint: bd614fdd19f18e86
+    queries:
+    - id: vaaya_logout#straightforward.1
+      text: Please log me out of my Vaaya account right now.
+      expected: vaaya_logout
+      kind: straightforward
+      neighbour: vaaya_account
+    - id: vaaya_logout#straightforward.2
+      text: Sign me out of Vaaya.
+      expected: vaaya_logout
+      kind: straightforward
+      neighbour: vaaya_account
+    - id: vaaya_logout#straightforward.3
+      text: Disconnect this device from Vaaya.
+      expected: vaaya_logout
+      kind: straightforward
+      neighbour: vaaya_account
+    - id: vaaya_logout#straightforward.4
+      text: I need to terminate my current Vaaya session.
+      expected: vaaya_logout
+      kind: straightforward
+      neighbour: vaaya_account
+    - id: vaaya_logout#paraphrased.1
+      text: end session vaaya
+      expected: vaaya_logout
+      kind: paraphrased
+      neighbour: vaaya_account
+    - id: vaaya_logout#paraphrased.2
+      text: need to get off this vaaya profile so i can jump onto a different one
+      expected: vaaya_logout
+      kind: paraphrased
+      neighbour: vaaya_account
+    - id: vaaya_logout#hard_negative.1
+      text: I need to check my Vaaya account settings and profile details.
+      expected: vaaya_account
+      kind: hard_negative
+      neighbour: vaaya_account
+    - id: vaaya_logout#hard_negative.2
+      text: Can you open my Vaaya account dashboard and show me my current plan?
+      expected: vaaya_account
+      kind: hard_negative
+      neighbour: vaaya_account
+  vaaya_onboard:
+    fingerprint: 645e3b6017b675f2
+    queries:
+    - id: vaaya_onboard#straightforward.1
+      text: Can you give me the link to connect my account to Vaaya?
+      expected: vaaya_onboard
+      kind: straightforward
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#straightforward.2
+      text: Where do I go to sign up and link myself to Vaaya?
+      expected: vaaya_onboard
+      kind: straightforward
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#straightforward.3
+      text: I need the instructions to get my profile hooked up with Vaaya.
+      expected: vaaya_onboard
+      kind: straightforward
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#straightforward.4
+      text: Show me the onboarding steps for connecting to Vaaya.
+      expected: vaaya_onboard
+      kind: straightforward
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#paraphrased.1
+      text: How do I get my stuff tied into Vaaya when I'm starting from scratch?
+      expected: vaaya_onboard
+      kind: paraphrased
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#paraphrased.2
+      text: Point me toward whatever page lets me bind my identity to Vaaya.
+      expected: vaaya_onboard
+      kind: paraphrased
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#hard_negative.1
+      text: Can you run a check on my Vaaya connection status right now?
+      expected: vaaya_test_connection
+      kind: hard_negative
+      neighbour: vaaya_test_connection
+    - id: vaaya_onboard#hard_negative.2
+      text: I want to verify if my current session with Vaaya is still responding.
+      expected: vaaya_test_connection
+      kind: hard_negative
+      neighbour: vaaya_test_connection
+  vaaya_test_connection:
+    fingerprint: 82ccd4830f2892ee
+    queries:
+    - id: vaaya_test_connection#straightforward.1
+      text: Run a test ping to check my Vaaya connection status.
+      expected: vaaya_test_connection
+      kind: straightforward
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#straightforward.2
+      text: Please check if my account is currently linked to Vaaya.
+      expected: vaaya_test_connection
+      kind: straightforward
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#straightforward.3
+      text: Can you verify the connection between the agent and Vaaya?
+      expected: vaaya_test_connection
+      kind: straightforward
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#straightforward.4
+      text: Execute a test connection to see if Vaaya is working.
+      expected: vaaya_test_connection
+      kind: straightforward
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#paraphrased.1
+      text: Is my profile linked up yet, let's run a quick diagnostic check.
+      expected: vaaya_test_connection
+      kind: paraphrased
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#paraphrased.2
+      text: Check if everything is talking to Vaaya properly on your end.
+      expected: vaaya_test_connection
+      kind: paraphrased
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#hard_negative.1
+      text: I need to run the Vaaya onboarding process right now.
+      expected: vaaya_onboard
+      kind: hard_negative
+      neighbour: vaaya_onboard
+    - id: vaaya_test_connection#hard_negative.2
+      text: Please start the Vaaya onboarding routine to set up my account.
+      expected: vaaya_onboard
+      kind: hard_negative
+      neighbour: vaaya_onboard
+no_tool:
+- id: (none)#1
+  text: Can you summarize the quarterly earnings report for Apple into three bullet
+    points?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the capital city of Australia and what is the current local time there?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Could you write a Python script that parses a CSV file and calculates the
+    average of column B?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-21'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

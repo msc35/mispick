@@ -1,0 +1,1073 @@
+version: 1
+tools:
+  find_references:
+    fingerprint: 9165d2c14f7ea36a
+    queries:
+    - id: find_references#straightforward.1
+      text: Find everyone that calls the function validateUserSession.
+      expected: find_references
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: find_references#straightforward.2
+      text: Show me all the files that import the module auth_utils.
+      expected: find_references
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: find_references#straightforward.3
+      text: List every place where the constant MAX_RETRY_LIMIT is used.
+      expected: find_references
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: find_references#straightforward.4
+      text: Run a reference search on the class PaymentProcessor to see who uses it.
+      expected: find_references
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: find_references#paraphrased.1
+      text: Who is going to break if I delete old_config_loader?
+      expected: find_references
+      kind: paraphrased
+      neighbour: graph_neighborhood
+    - id: find_references#paraphrased.2
+      text: Need a quick list of all dependents pointing at the logger service.
+      expected: find_references
+      kind: paraphrased
+      neighbour: graph_neighborhood
+    - id: find_references#hard_negative.1
+      text: Map out the immediate local connections and edges surrounding the user_profile
+        node.
+      expected: graph_neighborhood
+      kind: hard_negative
+      neighbour: graph_neighborhood
+    - id: find_references#hard_negative.2
+      text: Pull up the direct network neighborhood and adjacent links for database_pool.
+      expected: graph_neighborhood
+      kind: hard_negative
+      neighbour: graph_neighborhood
+  get_context_pack:
+    fingerprint: a987675af815a515
+    queries:
+    - id: get_context_pack#straightforward.1
+      text: Please assemble a comprehensive context bundle for the user profile service
+        with a strict token budget of four thousand.
+      expected: get_context_pack
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: get_context_pack#straightforward.2
+      text: Pull together all relevant focal bodies, signatures, and routing details
+        for the payment gateway module using depth two.
+      expected: get_context_pack
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: get_context_pack#straightforward.3
+      text: Gather the necessary background information around the authentication
+        subsystem so I have everything ready under six thousand characters.
+      expected: get_context_pack
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: get_context_pack#straightforward.4
+      text: Build a bundled context package covering both the database connector and
+        the cache layer without exceeding three thousand tokens.
+      expected: get_context_pack
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: get_context_pack#paraphrased.1
+      text: Grab me a quick brain dump on the notification worker with all its wiring
+        before I start hacking.
+      expected: get_context_pack
+      kind: paraphrased
+      neighbour: impact_analysis
+    - id: get_context_pack#paraphrased.2
+      text: Stuff everything I need to know about the checkout flow into a single
+        bounded pack right now.
+      expected: get_context_pack
+      kind: paraphrased
+      neighbour: impact_analysis
+    - id: get_context_pack#hard_negative.1
+      text: Analyze the downstream breakage for the user profile service when we modify
+        the core authentication signatures.
+      expected: impact_analysis
+      kind: hard_negative
+      neighbour: impact_analysis
+    - id: get_context_pack#hard_negative.2
+      text: Run an impact check on the payment gateway module to see what breaks if
+        we alter those routing rules.
+      expected: impact_analysis
+      kind: hard_negative
+      neighbour: impact_analysis
+  get_entity_source:
+    fingerprint: 487e7448e4154e74
+    queries:
+    - id: get_entity_source#straightforward.1
+      text: Fetch the full text for node graph_node_8492 so I can inspect its complete
+        body.
+      expected: get_entity_source
+      kind: straightforward
+      neighbour: kin_artifact_read
+    - id: get_entity_source#straightforward.2
+      text: I need the exact graph-owned body for entity identity_record_992.
+      expected: get_entity_source
+      kind: straightforward
+      neighbour: kin_artifact_read
+    - id: get_entity_source#straightforward.3
+      text: Call get_entity_source using the identifier item_core_3311.
+      expected: get_entity_source
+      kind: straightforward
+      neighbour: kin_artifact_read
+    - id: get_entity_source#straightforward.4
+      text: Retrieve the complete content associated with entity reference ent_7781.
+      expected: get_entity_source
+      kind: straightforward
+      neighbour: kin_artifact_read
+    - id: get_entity_source#paraphrased.1
+      text: Need the whole thing for user_profile_44 right now, snippets are cutting
+        off the important parts.
+      expected: get_entity_source
+      kind: paraphrased
+      neighbour: kin_artifact_read
+    - id: get_entity_source#paraphrased.2
+      text: Pull up the full unabridged record for customer_node_105 because the preview
+        is useless.
+      expected: get_entity_source
+      kind: paraphrased
+      neighbour: kin_artifact_read
+    - id: get_entity_source#hard_negative.1
+      text: Grab the entire source record for graph_node_8492 since I can't see the
+        full contents through the usual view.
+      expected: kin_artifact_read
+      kind: hard_negative
+      neighbour: kin_artifact_read
+    - id: get_entity_source#hard_negative.2
+      text: Open up the full body source for identity_record_992 so I can review every
+        single line.
+      expected: kin_artifact_read
+      kind: hard_negative
+      neighbour: kin_artifact_read
+  graph_neighborhood:
+    fingerprint: 83850de46292e0f9
+    queries:
+    - id: graph_neighborhood#straightforward.1
+      text: Show me everything connected to the authentication_service component up
+        to two steps away in both directions.
+      expected: graph_neighborhood
+      kind: straightforward
+      neighbour: find_references
+    - id: graph_neighborhood#straightforward.2
+      text: What are all the upstream dependencies and downstream impacts for the
+        payment_gateway module?
+      expected: graph_neighborhood
+      kind: straightforward
+      neighbour: find_references
+    - id: graph_neighborhood#straightforward.3
+      text: Get the local dependency network around user_profile_v2 with a depth setting
+        of three.
+      expected: graph_neighborhood
+      kind: straightforward
+      neighbour: find_references
+    - id: graph_neighborhood#straightforward.4
+      text: I need to analyze the neighborhood graph for inventory_database focusing
+        on outgoing relationships only.
+      expected: graph_neighborhood
+      kind: straightforward
+      neighbour: find_references
+    - id: graph_neighborhood#paraphrased.1
+      text: Give me the full web of things linked to session_manager before we refactor
+        it.
+      expected: graph_neighborhood
+      kind: paraphrased
+      neighbour: find_references
+    - id: graph_neighborhood#paraphrased.2
+      text: Map out who talks to email_notification_worker and what that worker relies
+        on across the whole tree.
+      expected: graph_neighborhood
+      kind: paraphrased
+      neighbour: find_references
+    - id: graph_neighborhood#hard_negative.1
+      text: Find where billing_service is used across the entire codebase.
+      expected: find_references
+      kind: hard_negative
+      neighbour: find_references
+    - id: graph_neighborhood#hard_negative.2
+      text: Show me just the callers of database_connection_pool without any extra
+        neighborhood data.
+      expected: find_references
+      kind: hard_negative
+      neighbour: find_references
+  impact_analysis:
+    fingerprint: 2bb1b001569448ba
+    queries:
+    - id: impact_analysis#straightforward.1
+      text: Run an impact analysis using change ID CHG-9842 to see what breaks.
+      expected: impact_analysis
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: impact_analysis#straightforward.2
+      text: Calculate the downstream effects for entity_id AUTH_SERVICE_01.
+      expected: impact_analysis
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: impact_analysis#straightforward.3
+      text: Trace the potential effects of modifications made to src/auth/login.py.
+      expected: impact_analysis
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: impact_analysis#straightforward.4
+      text: Check what is affected between base main and head feature-branch.
+      expected: impact_analysis
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: impact_analysis#paraphrased.1
+      text: Show me everything that's going to blow up if I merge this patch.
+      expected: impact_analysis
+      kind: paraphrased
+      neighbour: list_file_entities
+    - id: impact_analysis#paraphrased.2
+      text: Quickly map out all the dependencies touching those recent modifications.
+      expected: impact_analysis
+      kind: paraphrased
+      neighbour: list_file_entities
+    - id: impact_analysis#hard_negative.1
+      text: List every code object contained inside src/auth/login.py.
+      expected: list_file_entities
+      kind: hard_negative
+      neighbour: list_file_entities
+    - id: impact_analysis#hard_negative.2
+      text: Scan the specified file path to output all the defined functions and classes.
+      expected: list_file_entities
+      kind: hard_negative
+      neighbour: list_file_entities
+  kin_artifact_list:
+    fingerprint: 1a60237f6f7f8523
+    queries:
+    - id: kin_artifact_list#straightforward.1
+      text: Show me all tracked repository files for the semantic change 4b89f2 with
+        an offset of zero.
+      expected: kin_artifact_list
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: kin_artifact_list#straightforward.2
+      text: List every file tracked in the repository at semantic change abc123 using
+        a limit of fifty.
+      expected: kin_artifact_list
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: kin_artifact_list#straightforward.3
+      text: Fetch the files present in the repository at code revision 789xyz with
+        pagination offset set to ten.
+      expected: kin_artifact_list
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: kin_artifact_list#straightforward.4
+      text: Display all tracked items at change id def456 with a limit of twenty-five
+        and offset zero.
+      expected: kin_artifact_list
+      kind: straightforward
+      neighbour: list_file_entities
+    - id: kin_artifact_list#paraphrased.1
+      text: grab the file inventory for rev 99a88b, skip the first ten
+      expected: kin_artifact_list
+      kind: paraphrased
+      neighbour: list_file_entities
+    - id: kin_artifact_list#paraphrased.2
+      text: what files were tracked in change 33cc22? cap it at twenty
+      expected: kin_artifact_list
+      kind: paraphrased
+      neighbour: list_file_entities
+    - id: kin_artifact_list#hard_negative.1
+      text: List the parsed code elements for every file tracked at semantic change
+        4b89f2.
+      expected: list_file_entities
+      kind: hard_negative
+      neighbour: list_file_entities
+    - id: kin_artifact_list#hard_negative.2
+      text: Show all file entities parsed from the repository state at change id abc123.
+      expected: list_file_entities
+      kind: hard_negative
+      neighbour: list_file_entities
+  kin_artifact_read:
+    fingerprint: 0d8af4cb3a5b7bcc
+    queries:
+    - id: kin_artifact_read#straightforward.1
+      text: Please retrieve the exact contents of src/main.rs using its file identifier.
+      expected: kin_artifact_read
+      kind: straightforward
+      neighbour: get_entity_source
+    - id: kin_artifact_read#straightforward.2
+      text: Fetch the file data for artifact art_883291 so I can check its implementation.
+      expected: kin_artifact_read
+      kind: straightforward
+      neighbour: get_entity_source
+    - id: kin_artifact_read#straightforward.3
+      text: Read the tracked source file located at config/settings.json right now.
+      expected: kin_artifact_read
+      kind: straightforward
+      neighbour: get_entity_source
+    - id: kin_artifact_read#straightforward.4
+      text: Show me the base64 encoded bytes for the binary file tied to change chg_9941.
+      expected: kin_artifact_read
+      kind: straightforward
+      neighbour: get_entity_source
+    - id: kin_artifact_read#paraphrased.1
+      text: Pull up what is currently sitting in package.json.
+      expected: kin_artifact_read
+      kind: paraphrased
+      neighbour: get_entity_source
+    - id: kin_artifact_read#paraphrased.2
+      text: Grab the raw text out of that core logic module real quick.
+      expected: kin_artifact_read
+      kind: paraphrased
+      neighbour: get_entity_source
+    - id: kin_artifact_read#hard_negative.1
+      text: Pull the implementation source code for the UserAuthentication service
+        module.
+      expected: get_entity_source
+      kind: hard_negative
+      neighbour: get_entity_source
+    - id: kin_artifact_read#hard_negative.2
+      text: Get the original definition file for the PaymentGateway class entity.
+      expected: get_entity_source
+      kind: hard_negative
+      neighbour: get_entity_source
+  kin_graph_status:
+    fingerprint: c8c25b0cc053c00e
+    queries:
+    - id: kin_graph_status#straightforward.1
+      text: How many total entities are currently embedded in the graph?
+      expected: kin_graph_status
+      kind: straightforward
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#straightforward.2
+      text: Can you run the kin_graph_status tool to get the counts for the current
+        graph?
+      expected: kin_graph_status
+      kind: straightforward
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#straightforward.3
+      text: What are the counts for the graph I am answering from, including pending
+        and unindexed items?
+      expected: kin_graph_status
+      kind: straightforward
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#straightforward.4
+      text: Retrieve the graph status with sampling set to the last settled selected
+        graph.
+      expected: kin_graph_status
+      kind: straightforward
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#paraphrased.1
+      text: Check if everything in the network database is done indexing yet.
+      expected: kin_graph_status
+      kind: paraphrased
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#paraphrased.2
+      text: Gimme the backlog numbers for the current workspace structure real quick.
+      expected: kin_graph_status
+      kind: paraphrased
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#hard_negative.1
+      text: List all the artifacts in the graph this call is answered from.
+      expected: kin_artifact_list
+      kind: hard_negative
+      neighbour: kin_artifact_list
+    - id: kin_graph_status#hard_negative.2
+      text: Show me the artifact list for the last settled selected graph.
+      expected: kin_artifact_list
+      kind: hard_negative
+      neighbour: kin_artifact_list
+  kin_mutate:
+    fingerprint: 30ae0650770397bb
+    queries:
+    - id: kin_mutate#straightforward.1
+      text: Please validate and commit a batch of graph mutations to update users.json,
+        inventory.json, and settings.json in one atomic call.
+      expected: kin_mutate
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: kin_mutate#straightforward.2
+      text: Run a batch mutation across auth.py and session.py, naming the file each
+        operation changes and providing the new body it gets.
+      expected: kin_mutate
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: kin_mutate#straightforward.3
+      text: Execute a single atomic operation to validate and commit changes for customer_model.go
+        and billing_model.go.
+      expected: kin_mutate
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: kin_mutate#straightforward.4
+      text: I need to atomically commit a batch of graph updates for index.ts and
+        server.ts with a proper summary.
+      expected: kin_mutate
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: kin_mutate#paraphrased.1
+      text: Push through these file swaps real quick and make sure the whole bunch
+        lands together or not at all.
+      expected: kin_mutate
+      kind: paraphrased
+      neighbour: impact_analysis
+    - id: kin_mutate#paraphrased.2
+      text: Batch up all these schema rewrites into one atomic shot and drop them
+        into the repo.
+      expected: kin_mutate
+      kind: paraphrased
+      neighbour: impact_analysis
+    - id: kin_mutate#hard_negative.1
+      text: Check what happens to the rest of the system if I modify user_profile.json
+        and permissions.json all at once.
+      expected: impact_analysis
+      kind: hard_negative
+      neighbour: impact_analysis
+    - id: kin_mutate#hard_negative.2
+      text: Evaluate the cascading effects if I apply this batch of graph mutations
+        across database.go and cache.go simultaneously.
+      expected: impact_analysis
+      kind: hard_negative
+      neighbour: impact_analysis
+  kin_provenance_query:
+    fingerprint: fa12dc77a41683c9
+    queries:
+    - id: kin_provenance_query#straightforward.1
+      text: Show me the change count and latest modification for server-789.
+      expected: kin_provenance_query
+      kind: straightforward
+      neighbour: kin_mutate
+    - id: kin_provenance_query#straightforward.2
+      text: Who approved the last update to policy-document-v4?
+      expected: kin_provenance_query
+      kind: straightforward
+      neighbour: kin_mutate
+    - id: kin_provenance_query#straightforward.3
+      text: Pull up the audit trail and recent changes for database-instance-auth.
+      expected: kin_provenance_query
+      kind: straightforward
+      neighbour: kin_mutate
+    - id: kin_provenance_query#straightforward.4
+      text: I need a list of all modifications made to user-profile-schema-9.
+      expected: kin_provenance_query
+      kind: straightforward
+      neighbour: kin_mutate
+    - id: kin_provenance_query#paraphrased.1
+      text: Did anyone sign off on the recent edits to payment-gateway-config?
+      expected: kin_provenance_query
+      kind: paraphrased
+      neighbour: kin_mutate
+    - id: kin_provenance_query#paraphrased.2
+      text: Check who touched encryption-key-beta and if it went through proper review.
+      expected: kin_provenance_query
+      kind: paraphrased
+      neighbour: kin_mutate
+    - id: kin_provenance_query#hard_negative.1
+      text: Apply the latest modifications to network-firewall-rule-alpha.
+      expected: kin_mutate
+      kind: hard_negative
+      neighbour: kin_mutate
+    - id: kin_provenance_query#hard_negative.2
+      text: Execute the pending change request for access-control-list-v2.
+      expected: kin_mutate
+      kind: hard_negative
+      neighbour: kin_mutate
+  kin_session_end:
+    fingerprint: a5e52d435d068d99
+    queries:
+    - id: kin_session_end#straightforward.1
+      text: Close out writing session sess_99812 before I log off for the day.
+      expected: kin_session_end
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#straightforward.2
+      text: Please run kin_session_end for the active write session token writew_4419.
+      expected: kin_session_end
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#straightforward.3
+      text: Shut down the open editing session 8832-alpha so other processes can access
+        the database.
+      expected: kin_session_end
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#straightforward.4
+      text: Call kin_session_end using session identifier tok_7712.
+      expected: kin_session_end
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#paraphrased.1
+      text: Wrap up my open writing locks on customer_ledger_v2 since I'm done updating
+        records.
+      expected: kin_session_end
+      kind: paraphrased
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#paraphrased.2
+      text: Drop the active data-entry connection 909-beta so the deployment pipeline
+        can proceed.
+      expected: kin_session_end
+      kind: paraphrased
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#hard_negative.1
+      text: Close out write session roll_3321 to discard all uncommitted changes we
+        just made.
+      expected: kin_transaction_abort
+      kind: hard_negative
+      neighbour: kin_transaction_abort
+    - id: kin_session_end#hard_negative.2
+      text: Terminate writing session id_5541 and roll back everything processed during
+        it.
+      expected: kin_transaction_abort
+      kind: hard_negative
+      neighbour: kin_transaction_abort
+  kin_session_heartbeat:
+    fingerprint: d91da9e436cc6d34
+    queries:
+    - id: kin_session_heartbeat#straightforward.1
+      text: Please run a heartbeat for session_abc123 to keep my connection alive.
+      expected: kin_session_heartbeat
+      kind: straightforward
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#straightforward.2
+      text: Renew session ID tok_98765 so it doesn't expire.
+      expected: kin_session_heartbeat
+      kind: straightforward
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#straightforward.3
+      text: Keep my active session alive using session_uuid_55543.
+      expected: kin_session_heartbeat
+      kind: straightforward
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#straightforward.4
+      text: Send a keep-alive signal for the current session sess_xyz789.
+      expected: kin_session_heartbeat
+      kind: straightforward
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#paraphrased.1
+      text: I'm taking a long break, make sure sess_long_job doesn't time out on me.
+      expected: kin_session_heartbeat
+      kind: paraphrased
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#paraphrased.2
+      text: Don't let my connection drop while I finish typing this massive batch
+        upload for sess_active_42.
+      expected: kin_session_heartbeat
+      kind: paraphrased
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#hard_negative.1
+      text: Please kill session_abc123 right now so it doesn't stay open.
+      expected: kin_session_end
+      kind: hard_negative
+      neighbour: kin_session_end
+    - id: kin_session_heartbeat#hard_negative.2
+      text: End my active session tok_98765 because I am done working.
+      expected: kin_session_end
+      kind: hard_negative
+      neighbour: kin_session_end
+  kin_session_start:
+    fingerprint: afd5959d55a444f4
+    queries:
+    - id: kin_session_start#straightforward.1
+      text: Please initialize a new logging session for the desktop client running
+        in my workspace at /home/developer/projects/core with process ID 4512.
+      expected: kin_session_start
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#straightforward.2
+      text: Start up a tracking session under the name visual-studio-plugin using
+        directory /var/www/html/app and process identifier 8920.
+      expected: kin_session_start
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#straightforward.3
+      text: Open a tracking context for client frontend-app working out of /Users/alex/code/site
+        with PID 1024.
+      expected: kin_session_start
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#straightforward.4
+      text: Establish a fresh activity channel for terminal-tool anchored at C:\Workspace\Backend
+        with process ID 3301.
+      expected: kin_session_start
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#paraphrased.1
+      text: Spin up my telemetry hook for the mobile client in /opt/app-root/src using
+        PID 5542.
+      expected: kin_session_start
+      kind: paraphrased
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#paraphrased.2
+      text: Boot up the audit pipe for deployment-bot currently running inside /srv/www/api
+        under PID 7719.
+      expected: kin_session_start
+      kind: paraphrased
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#hard_negative.1
+      text: Kick off a new logging session and start the first transaction inside
+        /var/log/app with process ID 1234.
+      expected: kin_transaction_begin
+      kind: hard_negative
+      neighbour: kin_transaction_begin
+    - id: kin_session_start#hard_negative.2
+      text: Initialize the tracking context and begin transaction execution for workspace
+        /home/user/src using PID 9988.
+      expected: kin_transaction_begin
+      kind: hard_negative
+      neighbour: kin_transaction_begin
+  kin_transaction_abort:
+    fingerprint: 4fa4e6775ccad484
+    queries:
+    - id: kin_transaction_abort#straightforward.1
+      text: Discard everything currently staged on session 9940 and close transaction
+        tx_7731.
+      expected: kin_transaction_abort
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#straightforward.2
+      text: Drop all uncommitted changes under session alpha and transaction 5529
+        right now.
+      expected: kin_transaction_abort
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#straightforward.3
+      text: Wipe out the staged writes for session root_user on transaction xact_8812
+        and shut it down.
+      expected: kin_transaction_abort
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#straightforward.4
+      text: Cancel the open transaction batch_4491 in session beta and throw away
+        everything pending.
+      expected: kin_transaction_abort
+      kind: straightforward
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#paraphrased.1
+      text: Never mind about the pending stuff in session gamma on tx_1122, just scrap
+        it and close up.
+      expected: kin_transaction_abort
+      kind: paraphrased
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#paraphrased.2
+      text: Toss out whatever we just staged for session delta under transaction 9900
+        and terminate the session's write state.
+      expected: kin_transaction_abort
+      kind: paraphrased
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#hard_negative.1
+      text: Start a brand new transaction for session omega so we can begin staging
+        some new edits.
+      expected: kin_transaction_begin
+      kind: hard_negative
+      neighbour: kin_transaction_begin
+    - id: kin_transaction_abort#hard_negative.2
+      text: Open up a fresh transaction context under session epsilon using identifier
+        tx_3321.
+      expected: kin_transaction_begin
+      kind: hard_negative
+      neighbour: kin_transaction_begin
+  kin_transaction_begin:
+    fingerprint: 03c748770eb7949f
+    queries:
+    - id: kin_transaction_begin#straightforward.1
+      text: I need to open a new transaction for scope user_settings with session
+        ID sess_98124.
+      expected: kin_transaction_begin
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#straightforward.2
+      text: Start a transaction for scope billing using session ID auth_session_442.
+      expected: kin_transaction_begin
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#straightforward.3
+      text: Please initialize a transaction for the inventory scope under session
+        7734_abc.
+      expected: kin_transaction_begin
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#straightforward.4
+      text: Open up a write transaction for scope analytics with session id sess_xyz_99.
+      expected: kin_transaction_begin
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#paraphrased.1
+      text: Spin up a session token for auth_session_12 with scope profile real quick.
+      expected: kin_transaction_begin
+      kind: paraphrased
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#paraphrased.2
+      text: Kick off a write session for scope logs using token beta_sess_88.
+      expected: kin_transaction_begin
+      kind: paraphrased
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#hard_negative.1
+      text: Discard the open transaction for scope user_settings and session sess_98124
+        immediately.
+      expected: kin_transaction_abort
+      kind: hard_negative
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_begin#hard_negative.2
+      text: Cancel that active transaction for scope billing under session auth_session_442.
+      expected: kin_transaction_abort
+      kind: hard_negative
+      neighbour: kin_transaction_abort
+  kin_transaction_commit:
+    fingerprint: a85ee26e798db773
+    queries:
+    - id: kin_transaction_commit#straightforward.1
+      text: Please push the staged batch for session sess_98234 using the commit message
+        final billing update.
+      expected: kin_transaction_commit
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#straightforward.2
+      text: Run the kin_transaction_commit tool with session_id act_5512, message
+        sync catalog, and my staged operations list.
+      expected: kin_transaction_commit
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#straightforward.3
+      text: Execute the atomic write for session user_session_44 with message apply
+        schema migration and include the queued array.
+      expected: kin_transaction_commit
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#straightforward.4
+      text: Finalize transaction tx_7741 under session_8899 with the commit message
+        push user profile edits and the pending operations.
+      expected: kin_transaction_commit
+      kind: straightforward
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#paraphrased.1
+      text: flush everything queued up for sess_3321 right now, call the note batch
+        sync, and make sure it lands all at once.
+      expected: kin_transaction_commit
+      kind: paraphrased
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#paraphrased.2
+      text: push the staged stuff for account_99 before timeout, title it weekend
+        deploy, and run it safely even if retried.
+      expected: kin_transaction_commit
+      kind: paraphrased
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#hard_negative.1
+      text: Please roll back the staged batch for session sess_98234 using the abort
+        message final billing update.
+      expected: kin_transaction_abort
+      kind: hard_negative
+      neighbour: kin_transaction_abort
+    - id: kin_transaction_commit#hard_negative.2
+      text: Finalize transaction tx_7741 under session_8899 with the cancel message
+        push user profile edits and the pending operations.
+      expected: kin_transaction_abort
+      kind: hard_negative
+      neighbour: kin_transaction_abort
+  kin_transaction_stage:
+    fingerprint: a53668e41e2f5677
+    queries:
+    - id: kin_transaction_stage#straightforward.1
+      text: Add a new record for client_alpha using kin_transaction_stage with session
+        test_sess_01 and transaction tx_999.
+      expected: kin_transaction_stage
+      kind: straightforward
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#straightforward.2
+      text: 'Please stage an update for user_profile in session sess_abc under transaction
+        tx_456, replacing the old entry with the complete new text: status active.'
+      expected: kin_transaction_stage
+      kind: straightforward
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#straightforward.3
+      text: Delete the old configuration node inside transaction tx_789 for session
+        dev_session using the transaction staging tool.
+      expected: kin_transaction_stage
+      kind: straightforward
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#straightforward.4
+      text: Rename the ledger entry from old_name to new_name under transaction tx_321
+        and session auth_session.
+      expected: kin_transaction_stage
+      kind: straightforward
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#paraphrased.1
+      text: Drop this whole block into the ongoing write buffer for session work_02
+        under transaction batch_88, overwriting whatever was there with this complete
+        text.
+      expected: kin_transaction_stage
+      kind: paraphrased
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#paraphrased.2
+      text: Queue up a rename for the main settings file inside our active session
+        44la using transaction 12bb.
+      expected: kin_transaction_stage
+      kind: paraphrased
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#hard_negative.1
+      text: Begin a fresh editing session right now so I can prepare my transaction
+        writes.
+      expected: kin_session_start
+      kind: hard_negative
+      neighbour: kin_session_start
+    - id: kin_transaction_stage#hard_negative.2
+      text: Open up a new workspace session to kick off the transaction pipeline.
+      expected: kin_session_start
+      kind: hard_negative
+      neighbour: kin_session_start
+  list_file_entities:
+    fingerprint: a632c20c3f56d371
+    queries:
+    - id: list_file_entities#straightforward.1
+      text: Call list_file_entities with path set to src/auth/login.py.
+      expected: list_file_entities
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: list_file_entities#straightforward.2
+      text: Show me every function and class defined inside backend/models/user.py.
+      expected: list_file_entities
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: list_file_entities#straightforward.3
+      text: Retrieve the full inventory of code objects stored in utils/helpers.js.
+      expected: list_file_entities
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: list_file_entities#straightforward.4
+      text: Run list_file_entities for tests/api/v1/test_users.py using a page size
+        of 50.
+      expected: list_file_entities
+      kind: straightforward
+      neighbour: impact_analysis
+    - id: list_file_entities#paraphrased.1
+      text: Pull up everything we've got indexed for frontend/components/Button.tsx
+        because I need to audit its exports.
+      expected: list_file_entities
+      kind: paraphrased
+      neighbour: impact_analysis
+    - id: list_file_entities#paraphrased.2
+      text: Dump all the symbols registered under core/engine.go so I can check what's
+        actually in there.
+      expected: list_file_entities
+      kind: paraphrased
+      neighbour: impact_analysis
+    - id: list_file_entities#hard_negative.1
+      text: List the impact of modifying utils/helpers.js across the codebase.
+      expected: impact_analysis
+      kind: hard_negative
+      neighbour: impact_analysis
+    - id: list_file_entities#hard_negative.2
+      text: Run impact_analysis for the file src/auth/login.py.
+      expected: impact_analysis
+      kind: hard_negative
+      neighbour: impact_analysis
+  semantic_locate:
+    fingerprint: 357f247a94d65b88
+    queries:
+    - id: semantic_locate#straightforward.1
+      text: Find where the user authentication logic is handled in the codebase.
+      expected: semantic_locate
+      kind: straightforward
+      neighbour: semantic_search
+    - id: semantic_locate#straightforward.2
+      text: Locate the functions responsible for parsing incoming JSON payloads.
+      expected: semantic_locate
+      kind: straightforward
+      neighbour: semantic_search
+    - id: semantic_locate#straightforward.3
+      text: Where is the database connection pool initialized?
+      expected: semantic_locate
+      kind: straightforward
+      neighbour: semantic_search
+    - id: semantic_locate#straightforward.4
+      text: Point me to the code that calculates shipping rates.
+      expected: semantic_locate
+      kind: straightforward
+      neighbour: semantic_search
+    - id: semantic_locate#paraphrased.1
+      text: show me how error handling works around line 45 in the main payment file
+      expected: semantic_locate
+      kind: paraphrased
+      neighbour: semantic_search
+    - id: semantic_locate#paraphrased.2
+      text: find that bit that checks if user is admin before deleting stuff
+      expected: semantic_locate
+      kind: paraphrased
+      neighbour: semantic_search
+    - id: semantic_locate#hard_negative.1
+      text: Search for the exact function named calculate_total_tax_inclusive.
+      expected: semantic_search
+      kind: hard_negative
+      neighbour: semantic_search
+    - id: semantic_locate#hard_negative.2
+      text: Find the precise identifier for the SessionManager class.
+      expected: semantic_search
+      kind: hard_negative
+      neighbour: semantic_search
+  semantic_search:
+    fingerprint: 89c9f90e48eedd88
+    queries:
+    - id: semantic_search#straightforward.1
+      text: Find functions named validateUser in the typescript codebase with a limit
+        of ten results.
+      expected: semantic_search
+      kind: straightforward
+      neighbour: semantic_locate
+    - id: semantic_search#straightforward.2
+      text: Search for any class declarations matching PaymentProcessor written in
+        python.
+      expected: semantic_search
+      kind: straightforward
+      neighbour: semantic_locate
+    - id: semantic_search#straightforward.3
+      text: Run a filter for interface declarations called DatabaseConnection restricted
+        to go.
+      expected: semantic_search
+      kind: straightforward
+      neighbour: semantic_locate
+    - id: semantic_search#straightforward.4
+      text: Look up exact struct names matching ConfigReader inside the rust files.
+      expected: semantic_search
+      kind: straightforward
+      neighbour: semantic_locate
+    - id: semantic_search#paraphrased.1
+      text: pull up AuthController in ts fast
+      expected: semantic_search
+      kind: paraphrased
+      neighbour: semantic_locate
+    - id: semantic_search#paraphrased.2
+      text: need exact matches for parseToken methods in py
+      expected: semantic_search
+      kind: paraphrased
+      neighbour: semantic_locate
+    - id: semantic_search#hard_negative.1
+      text: Find where we actually check if the user has admin permissions by reading
+        through the authentication logic.
+      expected: semantic_locate
+      kind: hard_negative
+      neighbour: semantic_locate
+    - id: semantic_search#hard_negative.2
+      text: Search for code that handles stripe webhook retries when the payment gateway
+        times out.
+      expected: semantic_locate
+      kind: hard_negative
+      neighbour: semantic_locate
+  trace_data_flow:
+    fingerprint: 394164ea304a0e3a
+    queries:
+    - id: trace_data_flow#straightforward.1
+      text: Walk the entire call chain starting from the processPayment function to
+        see where the execution flows.
+      expected: trace_data_flow
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#straightforward.2
+      text: Trace all outbound data flow and import dependencies starting at the authenticateUser
+        method up to a depth of four.
+      expected: trace_data_flow
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#straightforward.3
+      text: Show me the complete ordered path of calls originating from the databaseConnector
+        module.
+      expected: trace_data_flow
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#straightforward.4
+      text: Execute a data flow trace beginning at the userSessionManager component
+        without compacting the output.
+      expected: trace_data_flow
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#paraphrased.1
+      text: where does stuff go when it leaves the main controller
+      expected: trace_data_flow
+      kind: paraphrased
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#paraphrased.2
+      text: unroll the whole chain coming out of the logger service so I can inspect
+        every downstream hop
+      expected: trace_data_flow
+      kind: paraphrased
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#hard_negative.1
+      text: Map out the surrounding graph neighborhood around the paymentGateway module
+        by walking its immediate edges.
+      expected: graph_neighborhood
+      kind: hard_negative
+      neighbour: graph_neighborhood
+    - id: trace_data_flow#hard_negative.2
+      text: Retrieve the local graph neighborhood for the userAuthentication class
+        to see its connected nodes.
+      expected: graph_neighborhood
+      kind: hard_negative
+      neighbour: graph_neighborhood
+  trace_path:
+    fingerprint: 296706f6f219abfc
+    queries:
+    - id: trace_path#straightforward.1
+      text: Find the exact sequence of hops from the payment gateway module to the
+        legacy database.
+      expected: trace_path
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_path#straightforward.2
+      text: Run a path trace from the user authentication service to the third-party
+        analytics endpoint with a depth limit of five.
+      expected: trace_path
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_path#straightforward.3
+      text: Show me how data flows step by step from the login controller straight
+        through to the notification queue.
+      expected: trace_path
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_path#straightforward.4
+      text: Determine the chain of intermediate nodes connecting the shopping cart
+        service to the inventory database.
+      expected: trace_path
+      kind: straightforward
+      neighbour: graph_neighborhood
+    - id: trace_path#paraphrased.1
+      text: Can you track down the complete chain linking our main API router all
+        the way down to the deprecated billing function?
+      expected: trace_path
+      kind: paraphrased
+      neighbour: graph_neighborhood
+    - id: trace_path#paraphrased.2
+      text: I need to see every single intermediate step between the frontend load
+        balancer and the internal Redis cache.
+      expected: trace_path
+      kind: paraphrased
+      neighbour: graph_neighborhood
+    - id: trace_path#hard_negative.1
+      text: Map out all the immediate connections surrounding the payment gateway
+        module so I can inspect its local neighborhood.
+      expected: graph_neighborhood
+      kind: hard_negative
+      neighbour: graph_neighborhood
+    - id: trace_path#hard_negative.2
+      text: Get the local graph neighborhood for the user authentication service to
+        see what nodes sit right next to it.
+      expected: graph_neighborhood
+      kind: hard_negative
+      neighbour: graph_neighborhood
+no_tool:
+- id: (none)#1
+  text: Can you summarize the main architectural takeaways from the design doc at
+    docs/architecture/v2-overview.md so I can share them with the team?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the standard syntax for writing a custom filter plugin in our configuration
+    language?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Could you translate this error stack trace from our staging logs into plain
+    English and explain the root cause?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-19'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

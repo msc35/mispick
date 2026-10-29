@@ -1,0 +1,492 @@
+version: 1
+tools:
+  cancel_journey:
+    fingerprint: 7d47e23aa18ab9a8
+    queries:
+    - id: cancel_journey#straightforward.1
+      text: Please cancel my active commute session with journey id J-88392 because
+        my meeting got rescheduled.
+      expected: cancel_journey
+      kind: straightforward
+      neighbour: get_journey_status
+    - id: cancel_journey#straightforward.2
+      text: Terminate journey session 4491-X immediately due to a sudden vehicle breakdown.
+      expected: cancel_journey
+      kind: straightforward
+      neighbour: get_journey_status
+    - id: cancel_journey#straightforward.3
+      text: I need to stop the ongoing trip tracker for ID 7720-Alpha right now.
+      expected: cancel_journey
+      kind: straightforward
+      neighbour: get_journey_status
+    - id: cancel_journey#straightforward.4
+      text: Abort the current navigation session 10928 because I am staying home instead.
+      expected: cancel_journey
+      kind: straightforward
+      neighbour: get_journey_status
+    - id: cancel_journey#paraphrased.1
+      text: Kill session 9934 before it goes any further, plans changed completely.
+      expected: cancel_journey
+      kind: paraphrased
+      neighbour: get_journey_status
+    - id: cancel_journey#paraphrased.2
+      text: Dump the active route 3321-beta right this second, I'm done traveling
+        today.
+      expected: cancel_journey
+      kind: paraphrased
+      neighbour: get_journey_status
+    - id: cancel_journey#hard_negative.1
+      text: Check where journey session J-55412 stands right now before I decide to
+        abort it.
+      expected: get_journey_status
+      kind: hard_negative
+      neighbour: get_journey_status
+    - id: cancel_journey#hard_negative.2
+      text: Pull up the current progress report for trip ID 992-delta to see if I
+        should kill it.
+      expected: get_journey_status
+      kind: hard_negative
+      neighbour: get_journey_status
+  get_journey_status:
+    fingerprint: 6b0bbc69e17083fd
+    queries:
+    - id: get_journey_status#straightforward.1
+      text: Can you check the current state of journey session jrn_99812a?
+      expected: get_journey_status
+      kind: straightforward
+      neighbour: cancel_journey
+    - id: get_journey_status#straightforward.2
+      text: What are the remaining steps and completed tasks for journey id jrn_4432b?
+      expected: get_journey_status
+      kind: straightforward
+      neighbour: cancel_journey
+    - id: get_journey_status#straightforward.3
+      text: Show me the progress and collected outputs for journey jrn_77190x.
+      expected: get_journey_status
+      kind: straightforward
+      neighbour: cancel_journey
+    - id: get_journey_status#straightforward.4
+      text: I need to see where journey session jrn_1102c is currently at.
+      expected: get_journey_status
+      kind: straightforward
+      neighbour: cancel_journey
+    - id: get_journey_status#paraphrased.1
+      text: Where am I at in jrn_55431f right now?
+      expected: get_journey_status
+      kind: paraphrased
+      neighbour: cancel_journey
+    - id: get_journey_status#paraphrased.2
+      text: Pull up the latest progress report on session jrn_8834k.
+      expected: get_journey_status
+      kind: paraphrased
+      neighbour: cancel_journey
+    - id: get_journey_status#hard_negative.1
+      text: Can you stop and terminate journey session jrn_33219d right now?
+      expected: cancel_journey
+      kind: hard_negative
+      neighbour: cancel_journey
+    - id: get_journey_status#hard_negative.2
+      text: I need to halt the progress on journey id jrn_6654e immediately.
+      expected: cancel_journey
+      kind: hard_negative
+      neighbour: cancel_journey
+  list_dossiers:
+    fingerprint: 1b1e76f77224c690
+    queries:
+    - id: list_dossiers#straightforward.1
+      text: Can you scan the documents folder and show me all the available dossiers?
+      expected: list_dossiers
+      kind: straightforward
+      neighbour: search_dossiers
+    - id: list_dossiers#straightforward.2
+      text: Please list every dossier file located inside the project directory.
+      expected: list_dossiers
+      kind: straightforward
+      neighbour: search_dossiers
+    - id: list_dossiers#straightforward.3
+      text: I need to see the metadata for all dossiers in the root path.
+      expected: list_dossiers
+      kind: straightforward
+      neighbour: search_dossiers
+    - id: list_dossiers#straightforward.4
+      text: Run a scan on the archive folder to discover all existing dossiers.
+      expected: list_dossiers
+      kind: straightforward
+      neighbour: search_dossiers
+    - id: list_dossiers#paraphrased.1
+      text: pull up all dossier files in my notes folder including subdirectories
+      expected: list_dossiers
+      kind: paraphrased
+      neighbour: search_dossiers
+    - id: list_dossiers#paraphrased.2
+      text: what dossiers do we have sitting in the workspace right now
+      expected: list_dossiers
+      kind: paraphrased
+      neighbour: search_dossiers
+    - id: list_dossiers#hard_negative.1
+      text: Can you find all dossiers containing the word budget in the finance folder?
+      expected: search_dossiers
+      kind: hard_negative
+      neighbour: search_dossiers
+    - id: list_dossiers#hard_negative.2
+      text: Please look up dossiers matching the quarterly review in the documents
+        path.
+      expected: search_dossiers
+      kind: hard_negative
+      neighbour: search_dossiers
+  read_dossier:
+    fingerprint: e3c1ce7730c3ee51
+    queries:
+    - id: read_dossier#straightforward.1
+      text: Please open and parse the dossier file located at /home/user/cases/case_441.json.
+      expected: read_dossier
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: read_dossier#straightforward.2
+      text: I need to read the dossier at /var/data/dossiers/client_alpha.dat and
+        check its contents.
+      expected: read_dossier
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: read_dossier#straightforward.3
+      text: Run the read_dossier function on the file /storage/records/project_delta.json.
+      expected: read_dossier
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: read_dossier#straightforward.4
+      text: Can you fetch the metadata and content from the dossier at /docs/investigations/target_zero.json?
+      expected: read_dossier
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: read_dossier#paraphrased.1
+      text: Pull up everything inside /records/archive_99.json so I can review the
+        notes.
+      expected: read_dossier
+      kind: paraphrased
+      neighbour: verify_dossier
+    - id: read_dossier#paraphrased.2
+      text: Show me what's written in that dossier at /shared/files/audit_2024.dat
+        right away.
+      expected: read_dossier
+      kind: paraphrased
+      neighbour: verify_dossier
+    - id: read_dossier#hard_negative.1
+      text: Go ahead and read the dossier at /secure/vault/suspect_88.json now.
+      expected: verify_dossier
+      kind: hard_negative
+      neighbour: verify_dossier
+    - id: read_dossier#hard_negative.2
+      text: I want you to read through the dossier stored at /audits/quarterly_review.dat
+        immediately.
+      expected: verify_dossier
+      kind: hard_negative
+      neighbour: verify_dossier
+  resolve_graph:
+    fingerprint: dc1501bb20be71c1
+    queries:
+    - id: resolve_graph#straightforward.1
+      text: Please run resolve_graph on the project dossier located at dossiers/alpha_release.json.
+      expected: resolve_graph
+      kind: straightforward
+      neighbour: verify_graph
+    - id: resolve_graph#straightforward.2
+      text: Call the resolve_graph tool using the input dossier path records/q3_financials.yaml.
+      expected: resolve_graph
+      kind: straightforward
+      neighbour: verify_graph
+    - id: resolve_graph#straightforward.3
+      text: Execute resolve_graph for the target dossier named migration_plan_v2.
+      expected: resolve_graph
+      kind: straightforward
+      neighbour: verify_graph
+    - id: resolve_graph#straightforward.4
+      text: Can you use resolve_graph on the dossier at data/customer_onboarding.json?
+      expected: resolve_graph
+      kind: straightforward
+      neighbour: verify_graph
+    - id: resolve_graph#paraphrased.1
+      text: Figure out the execution sequence for project_omega based on its dependency
+        connections.
+      expected: resolve_graph
+      kind: paraphrased
+      neighbour: verify_graph
+    - id: resolve_graph#paraphrased.2
+      text: Turn the supply_chain_2024 dossier into a sequenced timeline of tasks
+        and bottlenecks.
+      expected: resolve_graph
+      kind: paraphrased
+      neighbour: verify_graph
+    - id: resolve_graph#hard_negative.1
+      text: Check the dependency graph integrity for the deployment dossier stored
+        at audits/v4_release.json.
+      expected: verify_graph
+      kind: hard_negative
+      neighbour: verify_graph
+    - id: resolve_graph#hard_negative.2
+      text: Validate the structural soundness of the dossier connections found in
+        security_patch_audit.yaml.
+      expected: verify_graph
+      kind: hard_negative
+      neighbour: verify_graph
+  search_dossiers:
+    fingerprint: 74f8a353bd215578
+    queries:
+    - id: search_dossiers#straightforward.1
+      text: Search the dossier registry for files related to Project Vanguard.
+      expected: search_dossiers
+      kind: straightforward
+      neighbour: list_dossiers
+    - id: search_dossiers#straightforward.2
+      text: Find any dossiers containing the keyword budget audit in the financial
+        category.
+      expected: search_dossiers
+      kind: straightforward
+      neighbour: list_dossiers
+    - id: search_dossiers#straightforward.3
+      text: Can you look up dossiers matching the query security protocols?
+      expected: search_dossiers
+      kind: straightforward
+      neighbour: list_dossiers
+    - id: search_dossiers#straightforward.4
+      text: Query the dossier database for personnel records under the HR tag.
+      expected: search_dossiers
+      kind: straightforward
+      neighbour: list_dossiers
+    - id: search_dossiers#paraphrased.1
+      text: pull up whatever you've got on the Henderson merger
+      expected: search_dossiers
+      kind: paraphrased
+      neighbour: list_dossiers
+    - id: search_dossiers#paraphrased.2
+      text: need to dig up those old safety incident files from last quarter
+      expected: search_dossiers
+      kind: paraphrased
+      neighbour: list_dossiers
+    - id: search_dossiers#hard_negative.1
+      text: Search the dossier registry to show every single file we currently have
+        on record.
+      expected: list_dossiers
+      kind: hard_negative
+      neighbour: list_dossiers
+    - id: search_dossiers#hard_negative.2
+      text: Find and display the entire index of dossiers currently stored in the
+        system.
+      expected: list_dossiers
+      kind: hard_negative
+      neighbour: list_dossiers
+  start_journey:
+    fingerprint: 31b1157ee23c5bc1
+    queries:
+    - id: start_journey#straightforward.1
+      text: Please initiate a journey session using the verified graph g_prod_9921.
+      expected: start_journey
+      kind: straightforward
+      neighbour: step_complete
+    - id: start_journey#straightforward.2
+      text: Call start_journey with graph_id set to net_topology_v4.
+      expected: start_journey
+      kind: straightforward
+      neighbour: step_complete
+    - id: start_journey#straightforward.3
+      text: Launch the new session for the validated execution graph identified by
+        node_sequence_77.
+      expected: start_journey
+      kind: straightforward
+      neighbour: step_complete
+    - id: start_journey#straightforward.4
+      text: Execute start_journey passing financial_audit_graph_v2 as the graph ID.
+      expected: start_journey
+      kind: straightforward
+      neighbour: step_complete
+    - id: start_journey#paraphrased.1
+      text: Kick off the onboarding workflow using our locked-in graph structure for
+        Acme Corp.
+      expected: start_journey
+      kind: paraphrased
+      neighbour: step_complete
+    - id: start_journey#paraphrased.2
+      text: Fire up the pipeline session already mapped out in enterprise_migration_final.
+      expected: start_journey
+      kind: paraphrased
+      neighbour: step_complete
+    - id: start_journey#hard_negative.1
+      text: We just finished this phase of the onboarding workflow, so kick off the
+        next one using graph_id onboarding_flow_v3.
+      expected: step_complete
+      kind: hard_negative
+      neighbour: step_complete
+    - id: start_journey#hard_negative.2
+      text: Go ahead and initiate the subsequent phase of the journey for graph_id
+        pipeline_v2 now that we're past the block.
+      expected: step_complete
+      kind: hard_negative
+      neighbour: step_complete
+  step_complete:
+    fingerprint: a776376afc3fa461
+    queries:
+    - id: step_complete#straightforward.1
+      text: Mark step 3 of journey_884 as complete and save the output score as 95.
+      expected: step_complete
+      kind: straightforward
+      neighbour: start_journey
+    - id: step_complete#straightforward.2
+      text: Please update journey_id j-100 with status complete and pass the final
+        review text in the outputs payload.
+      expected: step_complete
+      kind: straightforward
+      neighbour: start_journey
+    - id: step_complete#straightforward.3
+      text: Record that journey 402 failed at the validation phase due to a schema
+        mismatch.
+      expected: step_complete
+      kind: straightforward
+      neighbour: start_journey
+    - id: step_complete#straightforward.4
+      text: The current task in journey_909 is finished successfully, so send the
+        confirmation response data now.
+      expected: step_complete
+      kind: straightforward
+      neighbour: start_journey
+    - id: step_complete#paraphrased.1
+      text: Wrap up job 772 right now, it passed all checks.
+      expected: step_complete
+      kind: paraphrased
+      neighbour: start_journey
+    - id: step_complete#paraphrased.2
+      text: I'm done with this phase of proc_331, log the final payload and push it
+        forward.
+      expected: step_complete
+      kind: paraphrased
+      neighbour: start_journey
+    - id: step_complete#hard_negative.1
+      text: Begin a brand new journey with ID journey_773 using the onboarding template.
+      expected: start_journey
+      kind: hard_negative
+      neighbour: start_journey
+    - id: step_complete#hard_negative.2
+      text: Kick off the initial setup for journey_441 and load the first step dossier.
+      expected: start_journey
+      kind: hard_negative
+      neighbour: start_journey
+  verify_dossier:
+    fingerprint: 34921fc34e4e7286
+    queries:
+    - id: verify_dossier#straightforward.1
+      text: Can you run a security check on the dossier located at /secure/records/dossier_402.enc
+        to confirm its signature and checksum?
+      expected: verify_dossier
+      kind: straightforward
+      neighbour: verify_graph
+    - id: verify_dossier#straightforward.2
+      text: Verify the integrity and authenticity of the dossier file at /var/data/incoming/target_dossier.dat.
+      expected: verify_dossier
+      kind: straightforward
+      neighbour: verify_graph
+    - id: verify_dossier#straightforward.3
+      text: Please execute the verify_dossier check for /home/analyst/evidence/dossier_99.bin.
+      expected: verify_dossier
+      kind: straightforward
+      neighbour: verify_graph
+    - id: verify_dossier#straightforward.4
+      text: I need to run the verification process on the dossier at /opt/audit/files/subject_alpha.dossier.
+      expected: verify_dossier
+      kind: straightforward
+      neighbour: verify_graph
+    - id: verify_dossier#paraphrased.1
+      text: Check if /mnt/storage/top_secret.enc is untampered and properly signed
+        before I open it.
+      expected: verify_dossier
+      kind: paraphrased
+      neighbour: verify_graph
+    - id: verify_dossier#paraphrased.2
+      text: Quickly validate the hashes and credentials on /var/log/dossiers/batch_seven.dat
+        so we can proceed.
+      expected: verify_dossier
+      kind: paraphrased
+      neighbour: verify_graph
+    - id: verify_dossier#hard_negative.1
+      text: Please check the signature and checksum for the dossier graph stored at
+        /graphs/network_v2.json.
+      expected: verify_graph
+      kind: hard_negative
+      neighbour: verify_graph
+    - id: verify_dossier#hard_negative.2
+      text: Run the integrity and authenticity verification on the dossier dependency
+        graph located at /data/relations/node_map.dot.
+      expected: verify_graph
+      kind: hard_negative
+      neighbour: verify_graph
+  verify_graph:
+    fingerprint: b71a6b0620d7e7c0
+    queries:
+    - id: verify_graph#straightforward.1
+      text: Run a batch security verification on the dependency graph identified by
+        graph-9982 for the deployment dossier called payment-service.
+      expected: verify_graph
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: verify_graph#straightforward.2
+      text: Please execute verify_graph using graph id net-topo-441 and the dossier
+        target auth-module.
+      expected: verify_graph
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: verify_graph#straightforward.3
+      text: I need to check the entire dossier dependency graph 773a-b2c9 for the
+        microservices dossier to get an aggregate security report.
+      expected: verify_graph
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: verify_graph#straightforward.4
+      text: Perform a complete security check on dependency graph alpha-v1 using the
+        core-api dossier specification.
+      expected: verify_graph
+      kind: straightforward
+      neighbour: verify_dossier
+    - id: verify_graph#paraphrased.1
+      text: Can you sweep through graph 339-beta and run the security pipeline for
+        the billing component?
+      expected: verify_graph
+      kind: paraphrased
+      neighbour: verify_dossier
+    - id: verify_graph#paraphrased.2
+      text: Check all nodes in the database-cluster graph against the user-service
+        spec and give me the final sign-off.
+      expected: verify_graph
+      kind: paraphrased
+      neighbour: verify_dossier
+    - id: verify_graph#hard_negative.1
+      text: Run a security check on the dependency graph identified by graph-9982
+        for just the single payment-service dossier without doing the whole batch.
+      expected: verify_dossier
+      kind: hard_negative
+      neighbour: verify_dossier
+    - id: verify_graph#hard_negative.2
+      text: Please execute the safety verification using graph id net-topo-441 focusing
+        exclusively on the auth-module dossier rather than the aggregated tree.
+      expected: verify_dossier
+      kind: hard_negative
+      neighbour: verify_dossier
+no_tool:
+- id: (none)#1
+  text: Can you summarize the company policy on remote work expenses outlined in the
+    employee handbook PDF on my desktop?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the capital of Australia and how many time zones does the country
+    span?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: Draft a professional email to my manager requesting two weeks of parental
+    leave starting on November first.
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-18'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.

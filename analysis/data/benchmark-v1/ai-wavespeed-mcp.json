@@ -1,0 +1,3260 @@
+{
+  "schemaVersion": 1,
+  "tool": "mispick",
+  "run": {
+    "model": "gemini/gemini-3.5-flash-lite",
+    "n": 8,
+    "k": 3,
+    "date": "2026-10-22",
+    "temperature": 0.0,
+    "seed": 1,
+    "deterministic": false,
+    "caveat": "Results depend on the model. A different model, or the same model at a different temperature, will produce different numbers. These are measurements of one model's behaviour on this tool list, not a property of the server."
+  },
+  "servers": [
+    {
+      "label": "ai-wavespeed-mcp",
+      "name": "wavespeed",
+      "version": "1.0.7",
+      "protocol_version": "2025-11-25",
+      "source": "snapshot"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_balance",
+      "server": null,
+      "title": null,
+      "description": "Show the WaveSpeed account credit balance.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_model_schema",
+      "server": null,
+      "title": null,
+      "description": "Get a model's real input schema (required fields, properties, defaults). Call this before run_model so inputs match what the model actually accepts.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from list_models, e.g. bytedance/seedream-v5.0-pro"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_prediction",
+      "server": null,
+      "title": null,
+      "description": "Fetch the status and outputs of a past or in-flight prediction by id \u2014 use to recover a run that hit the wait limit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Prediction id returned by run_model"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_price",
+      "server": null,
+      "title": null,
+      "description": "Estimate the cost of a run before executing it (no charge). Provide the same input you would pass to run_model \u2014 pricing often depends on inputs like duration or resolution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from list_models"
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": {},
+            "default": {},
+            "description": "Inputs the quote should account for"
+          }
+        },
+        "required": [
+          "model"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "list_models",
+      "server": null,
+      "title": null,
+      "description": "Search the live WaveSpeed model catalog (image, video, audio, 3D). Returns model IDs usable with run_model. Do not invent model IDs \u2014 always pick one returned by this tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Free-text filter on id/name/description"
+          },
+          "type": {
+            "type": "string",
+            "description": "Filter by modality type, e.g. text-to-image, image-to-video"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 30,
+            "description": "Max results"
+          },
+          "refresh": {
+            "type": "boolean",
+            "default": false,
+            "description": "Bypass the 1h catalog cache"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "run_model",
+      "server": null,
+      "title": null,
+      "description": "Run any WaveSpeed model. input keys come from get_model_schema. Local files: pass \"@./path\" string values \u2014 they are uploaded and replaced with hosted URLs (bare paths are NOT uploaded). Returns output URLs. If the wait limit is hit, the task keeps running; recover it with get_prediction.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID from list_models"
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": {},
+            "description": "Model inputs per its schema (e.g. {\"prompt\": \"...\", \"aspect_ratio\": \"16:9\"})"
+          },
+          "wait_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1800,
+            "default": 600,
+            "description": "Max seconds to wait; 0 = submit only and return the prediction id"
+          }
+        },
+        "required": [
+          "model",
+          "input"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "upload_file",
+      "server": null,
+      "title": null,
+      "description": "Upload a local file to WaveSpeed and get its hosted URL (identical bytes reuse the same upload for 24h). Usually unnecessary \u2014 run_model handles \"@./path\" inputs itself.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Local file path"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    }
+  ],
+  "score": 69,
+  "summary": {
+    "accuracy": {
+      "hits": 99,
+      "total": 177,
+      "value": 0.5593,
+      "ci95": [
+        0.4857,
+        0.6304
+      ]
+    },
+    "stability": {
+      "hits": 58,
+      "total": 59,
+      "value": 0.9831,
+      "ci95": [
+        0.91,
+        0.997
+      ]
+    },
+    "argumentValidity": {
+      "hits": 161,
+      "total": 161,
+      "value": 1.0,
+      "ci95": [
+        0.9767,
+        1.0
+      ]
+    },
+    "overTrigger": {
+      "hits": 0,
+      "total": 9,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.2991
+      ]
+    },
+    "phantomRate": {
+      "hits": 0,
+      "total": 177,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0212
+      ]
+    },
+    "trials": 177,
+    "erroredTrials": 0,
+    "toolListTokensEstimate": 837
+  },
+  "confusionMatrix": {
+    "rows": [
+      "get_balance",
+      "get_model_schema",
+      "get_prediction",
+      "get_price",
+      "list_models",
+      "run_model",
+      "upload_file",
+      "(none)"
+    ],
+    "columns": [
+      "get_balance",
+      "get_model_schema",
+      "get_prediction",
+      "get_price",
+      "list_models",
+      "run_model",
+      "upload_file",
+      "(none)"
+    ],
+    "counts": {
+      "get_balance": {
+        "get_balance": 18
+      },
+      "get_model_schema": {
+        "get_model_schema": 9,
+        "list_models": 12,
+        "(none)": 3
+      },
+      "get_prediction": {
+        "get_prediction": 21,
+        "list_models": 3
+      },
+      "get_price": {
+        "get_model_schema": 6,
+        "list_models": 15,
+        "get_balance": 3,
+        "upload_file": 6
+      },
+      "list_models": {
+        "list_models": 18
+      },
+      "run_model": {
+        "(none)": 1,
+        "list_models": 26,
+        "run_model": 3
+      },
+      "upload_file": {
+        "upload_file": 21,
+        "(none)": 3
+      },
+      "(none)": {
+        "(none)": 9
+      }
+    }
+  },
+  "perTool": {
+    "get_balance": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 21,
+        "value": 0.8571,
+        "ci95": [
+          0.6536,
+          0.9502
+        ]
+      },
+      "f1": 0.9231
+    },
+    "get_model_schema": {
+      "recall": {
+        "hits": 9,
+        "total": 24,
+        "value": 0.375,
+        "ci95": [
+          0.2116,
+          0.5729
+        ]
+      },
+      "precision": {
+        "hits": 9,
+        "total": 15,
+        "value": 0.6,
+        "ci95": [
+          0.3575,
+          0.8018
+        ]
+      },
+      "f1": 0.4615
+    },
+    "get_prediction": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 21,
+        "value": 1.0,
+        "ci95": [
+          0.8454,
+          1.0
+        ]
+      },
+      "f1": 0.9333
+    },
+    "get_price": {
+      "recall": {
+        "hits": 0,
+        "total": 30,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.1135
+        ]
+      },
+      "precision": {
+        "hits": 0,
+        "total": 0,
+        "value": null,
+        "ci95": null
+      },
+      "f1": 0.0
+    },
+    "list_models": {
+      "recall": {
+        "hits": 18,
+        "total": 18,
+        "value": 1.0,
+        "ci95": [
+          0.8241,
+          1.0
+        ]
+      },
+      "precision": {
+        "hits": 18,
+        "total": 74,
+        "value": 0.2432,
+        "ci95": [
+          0.1598,
+          0.3521
+        ]
+      },
+      "f1": 0.3913
+    },
+    "run_model": {
+      "recall": {
+        "hits": 3,
+        "total": 30,
+        "value": 0.1,
+        "ci95": [
+          0.0346,
+          0.2562
+        ]
+      },
+      "precision": {
+        "hits": 3,
+        "total": 3,
+        "value": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "f1": 0.1818
+    },
+    "upload_file": {
+      "recall": {
+        "hits": 21,
+        "total": 24,
+        "value": 0.875,
+        "ci95": [
+          0.69,
+          0.9566
+        ]
+      },
+      "precision": {
+        "hits": 21,
+        "total": 27,
+        "value": 0.7778,
+        "ci95": [
+          0.5924,
+          0.8939
+        ]
+      },
+      "f1": 0.8235
+    }
+  },
+  "confusedPairs": [
+    {
+      "expected": "run_model",
+      "chosen": "list_models",
+      "count": 26,
+      "share": 0.8667
+    },
+    {
+      "expected": "get_price",
+      "chosen": "list_models",
+      "count": 15,
+      "share": 0.5
+    },
+    {
+      "expected": "get_model_schema",
+      "chosen": "list_models",
+      "count": 12,
+      "share": 0.5
+    },
+    {
+      "expected": "get_price",
+      "chosen": "get_model_schema",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "get_price",
+      "chosen": "upload_file",
+      "count": 6,
+      "share": 0.2
+    },
+    {
+      "expected": "get_model_schema",
+      "chosen": "(none)",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "get_prediction",
+      "chosen": "list_models",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "upload_file",
+      "chosen": "(none)",
+      "count": 3,
+      "share": 0.125
+    },
+    {
+      "expected": "get_price",
+      "chosen": "get_balance",
+      "count": 3,
+      "share": 0.1
+    },
+    {
+      "expected": "run_model",
+      "chosen": "(none)",
+      "count": 1,
+      "share": 0.0333
+    }
+  ],
+  "topConfusedPairs": [
+    {
+      "expected": "run_model",
+      "chosen": "list_models",
+      "count": 26
+    },
+    {
+      "expected": "get_price",
+      "chosen": "list_models",
+      "count": 15
+    },
+    {
+      "expected": "get_model_schema",
+      "chosen": "list_models",
+      "count": 12
+    }
+  ],
+  "crossServer": {
+    "isMultiServer": false,
+    "crossServerRate": {
+      "hits": 0,
+      "total": 0,
+      "value": null,
+      "ci95": null
+    },
+    "nameCollisions": [],
+    "servers": [
+      {
+        "label": "(unlabelled)",
+        "toolCount": 7,
+        "accuracy": {
+          "hits": 0,
+          "total": 0,
+          "value": null,
+          "ci95": null
+        },
+        "lost": 0,
+        "stolen": 0
+      }
+    ],
+    "leaks": []
+  },
+  "unstableQueries": [
+    "get_prediction#hard_negative.1"
+  ],
+  "queries": [
+    {
+      "id": "get_balance#straightforward.1",
+      "text": "How many credits do I have left in my WaveSpeed account?",
+      "expected": "get_balance",
+      "kind": "straightforward",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#straightforward.2",
+      "text": "Check my current WaveSpeed balance.",
+      "expected": "get_balance",
+      "kind": "straightforward",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#straightforward.3",
+      "text": "Can you show me my remaining WaveSpeed credit?",
+      "expected": "get_balance",
+      "kind": "straightforward",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#straightforward.4",
+      "text": "What is my account balance on WaveSpeed right now?",
+      "expected": "get_balance",
+      "kind": "straightforward",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#paraphrased.1",
+      "text": "Check my funds.",
+      "expected": "get_balance",
+      "kind": "paraphrased",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#paraphrased.2",
+      "text": "balance check wave",
+      "expected": "get_balance",
+      "kind": "paraphrased",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#hard_negative.1",
+      "text": "Upload my credit report to WaveSpeed.",
+      "expected": "upload_file",
+      "kind": "hard_negative",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_balance#hard_negative.2",
+      "text": "Send the balance sheet file to WaveSpeed.",
+      "expected": "upload_file",
+      "kind": "hard_negative",
+      "neighbour": "upload_file"
+    },
+    {
+      "id": "get_model_schema#straightforward.1",
+      "text": "Can you fetch the required fields for the gpt-4o predictor?",
+      "expected": "get_model_schema",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#straightforward.2",
+      "text": "Show me the property details and input parameters for stable-diffusion-v3.",
+      "expected": "get_model_schema",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#straightforward.3",
+      "text": "What are the default values and expected format for claude-3-opus?",
+      "expected": "get_model_schema",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#straightforward.4",
+      "text": "Pull up the schema definition for whisper-large-v3 so I can see what it accepts.",
+      "expected": "get_model_schema",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#paraphrased.1",
+      "text": "What do I need to send to llama-3-70b to make it work?",
+      "expected": "get_model_schema",
+      "kind": "paraphrased",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#paraphrased.2",
+      "text": "Check the exact payload structure for embedding-v2 before I submit.",
+      "expected": "get_model_schema",
+      "kind": "paraphrased",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#hard_negative.1",
+      "text": "What are the required parameters and properties for gpt-4o?",
+      "expected": "get_price",
+      "kind": "hard_negative",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_model_schema#hard_negative.2",
+      "text": "Show me the input schema defaults for claude-3-opus.",
+      "expected": "get_price",
+      "kind": "hard_negative",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "get_prediction#straightforward.1",
+      "text": "Can you check the progress of prediction abc-123-xyz?",
+      "expected": "get_prediction",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#straightforward.2",
+      "text": "Retrieve the final output for run ID pred_987654.",
+      "expected": "get_prediction",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#straightforward.3",
+      "text": "What is the current status of job 4521-uuid?",
+      "expected": "get_prediction",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#straightforward.4",
+      "text": "Fetch the results for the task with ID 7890-alpha.",
+      "expected": "get_prediction",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#paraphrased.1",
+      "text": "Did my text generation finish yet, my reference code is batch-555?",
+      "expected": "get_prediction",
+      "kind": "paraphrased",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#paraphrased.2",
+      "text": "Pull up the timed-out execution 332211 so I can see if it finally completed.",
+      "expected": "get_prediction",
+      "kind": "paraphrased",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#hard_negative.1",
+      "text": "Please start a new execution for the sentiment analysis pipeline using model v2.",
+      "expected": "run_model",
+      "kind": "hard_negative",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_prediction#hard_negative.2",
+      "text": "Execute the image upscaler on the photo located at s3://bucket/photo.jpg with id set to 44.",
+      "expected": "run_model",
+      "kind": "hard_negative",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "get_price#straightforward.1",
+      "text": "How much will it cost to run the video-enhancer model using the file at s3://bucket/input.mp4?",
+      "expected": "get_price",
+      "kind": "straightforward",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#straightforward.2",
+      "text": "Calculate the fee for executing speech-to-text on the audio recording located at /home/user/podcast.wav.",
+      "expected": "get_price",
+      "kind": "straightforward",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#straightforward.3",
+      "text": "What is the estimated charge for processing the image data with the stable-diffusion-xl model?",
+      "expected": "get_price",
+      "kind": "straightforward",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#straightforward.4",
+      "text": "Run a price check for the translation pipeline using the text document stored at /data/corpus.txt.",
+      "expected": "get_price",
+      "kind": "straightforward",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#paraphrased.1",
+      "text": "Check expenses for rendering a 1080p clip with the cinematic-renderer engine.",
+      "expected": "get_price",
+      "kind": "paraphrased",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#paraphrased.2",
+      "text": "How much cash do I need in my account before hitting go on this text summarizer job?",
+      "expected": "get_price",
+      "kind": "paraphrased",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#hard_negative.1",
+      "text": "What are the pricing inputs required for the whisper-large-v3 model so I can figure out the budget?",
+      "expected": "get_model_schema",
+      "kind": "hard_negative",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "get_price#hard_negative.2",
+      "text": "How do I format the cost estimation payload for the gpt-4o endpoint?",
+      "expected": "get_model_schema",
+      "kind": "hard_negative",
+      "neighbour": "get_model_schema"
+    },
+    {
+      "id": "list_models#straightforward.1",
+      "text": "Can you search the WaveSpeed catalog for available image generation models?",
+      "expected": "list_models",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#straightforward.2",
+      "text": "What video models are currently listed in the WaveSpeed repository?",
+      "expected": "list_models",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#straightforward.3",
+      "text": "Find me the model ID for an audio synthesizer using the list_models tool.",
+      "expected": "list_models",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#straightforward.4",
+      "text": "List the top five 3D asset generation models from WaveSpeed with a fresh cache.",
+      "expected": "list_models",
+      "kind": "straightforward",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#paraphrased.1",
+      "text": "show me what audio stuff is on wavespeed right now",
+      "expected": "list_models",
+      "kind": "paraphrased",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#paraphrased.2",
+      "text": "pull up the latest video generators real quick before i start",
+      "expected": "list_models",
+      "kind": "paraphrased",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#hard_negative.1",
+      "text": "Execute the video generation model ID stable-video-v2 with my prompt about a sunset.",
+      "expected": "run_model",
+      "kind": "hard_negative",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "list_models#hard_negative.2",
+      "text": "Run the audio model voice-synth-pro using the text file located at inputs/speech.txt.",
+      "expected": "run_model",
+      "kind": "hard_negative",
+      "neighbour": "run_model"
+    },
+    {
+      "id": "run_model#straightforward.1",
+      "text": "Please execute the stable-diffusion-xl model using the prompt a cyberpunk city in neon rain and set the wait time to sixty seconds.",
+      "expected": "run_model",
+      "kind": "straightforward",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#straightforward.2",
+      "text": "Run the whisper-large-v3 model with the audio file located at @./audio/interview.mp3 as the input source.",
+      "expected": "run_model",
+      "kind": "straightforward",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#straightforward.3",
+      "text": "Generate an image with flux-schnell passing prompt a golden retriever wearing sunglasses and a wait limit of thirty.",
+      "expected": "run_model",
+      "kind": "straightforward",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#straightforward.4",
+      "text": "Execute the llama-3-70b-instruct model with the input text set to explain quantum physics to a five year old.",
+      "expected": "run_model",
+      "kind": "straightforward",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#paraphrased.1",
+      "text": "Fire up that image generator for a futuristic sports car using @./sketches/car.png and don't wait around too long for it.",
+      "expected": "run_model",
+      "kind": "paraphrased",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#paraphrased.2",
+      "text": "Process my voice memo at @./notes/meeting.wav through the speech recognition engine right now.",
+      "expected": "run_model",
+      "kind": "paraphrased",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#hard_negative.1",
+      "text": "Can you check on that generation task we started earlier for the stable-diffusion-xl prompt to see if it finally finished?",
+      "expected": "get_prediction",
+      "kind": "hard_negative",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "run_model#hard_negative.2",
+      "text": "Go grab the results for the whisper-large-v3 audio transcription job I kicked off a few minutes ago.",
+      "expected": "get_prediction",
+      "kind": "hard_negative",
+      "neighbour": "get_prediction"
+    },
+    {
+      "id": "upload_file#straightforward.1",
+      "text": "Send the local archive located at ~/documents/archive.zip to the cloud storage.",
+      "expected": "upload_file",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#straightforward.2",
+      "text": "Put my dataset at /data/train_set.csv onto the server so I have a link for it.",
+      "expected": "upload_file",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#straightforward.3",
+      "text": "Transfer the local installation package at C:\\Downloads\\setup.exe to WaveSpeed.",
+      "expected": "upload_file",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#straightforward.4",
+      "text": "I need a public web link for the local photo at /home/user/images/banner.png.",
+      "expected": "upload_file",
+      "kind": "straightforward",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#paraphrased.1",
+      "text": "Push my presentation over to the remote bucket quick.",
+      "expected": "upload_file",
+      "kind": "paraphrased",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#paraphrased.2",
+      "text": "Get this audio track onto the server so I can grab the URL.",
+      "expected": "upload_file",
+      "kind": "paraphrased",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#hard_negative.1",
+      "text": "Send the pricing sheet file at ~/docs/rates.pdf to the system.",
+      "expected": "get_price",
+      "kind": "hard_negative",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "upload_file#hard_negative.2",
+      "text": "Upload the cost breakdown document located at /data/pricing.csv.",
+      "expected": "get_price",
+      "kind": "hard_negative",
+      "neighbour": "get_price"
+    },
+    {
+      "id": "(none)#1",
+      "text": "Could you analyze the customer churn data in my local spreadsheet to find the main drivers of cancellation?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#2",
+      "text": "What are the exact pricing tiers and API rate limits for the enterprise subscription?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    },
+    {
+      "id": "(none)#3",
+      "text": "Can you write a Python script using the pandas library to clean up missing values in my dataset?",
+      "expected": null,
+      "kind": "no_tool",
+      "neighbour": null
+    }
+  ],
+  "trials": [
+    {
+      "query_id": "get_balance#straightforward.1",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.1",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.1",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.3",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.3",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.3",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.4",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.4",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#straightforward.4",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#paraphrased.1",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#paraphrased.1",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#paraphrased.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#paraphrased.1",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#paraphrased.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#paraphrased.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_balance"
+    },
+    {
+      "query_id": "get_balance#hard_negative.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "./credit report"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "get_balance#hard_negative.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "./credit report"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "get_balance#hard_negative.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "./credit report"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "get_balance#hard_negative.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "balance sheet"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "get_balance#hard_negative.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "balance sheet"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "get_balance#hard_negative.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "balance sheet"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "gpt-4o"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "gpt-4o"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "gpt-4o"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "claude-3-opus"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "claude-3-opus"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "claude-3-opus"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.4",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.4",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#straightforward.4",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "llama-3-70b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "llama-3-70b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "llama-3-70b"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "embedding-v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "embedding-v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "embedding-v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_model_schema#hard_negative.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "gpt-4o"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_model_schema#hard_negative.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "gpt-4o"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_model_schema#hard_negative.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "gpt-4o"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_model_schema#hard_negative.2",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "claude-3-opus"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_model_schema#hard_negative.2",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "claude-3-opus"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_model_schema#hard_negative.2",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "claude-3-opus"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_prediction#straightforward.1",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "abc-123-xyz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.1",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "abc-123-xyz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.1",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "abc-123-xyz"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "pred_987654"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "pred_987654"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "pred_987654"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.3",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "4521-uuid"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.3",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "4521-uuid"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.4",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "7890-alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.3",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "4521-uuid"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.4",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "7890-alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#paraphrased.1",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "batch-555"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#straightforward.4",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "7890-alpha"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#paraphrased.1",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "batch-555"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#paraphrased.1",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "batch-555"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#paraphrased.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "332211"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#paraphrased.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "332211"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#paraphrased.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "332211"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "get_prediction#hard_negative.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "get_prediction#hard_negative.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "sentiment"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "get_prediction#hard_negative.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "sentiment"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "get_prediction#hard_negative.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "upscale",
+        "type": "image-to-image"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "get_prediction#hard_negative.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "upscale"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "get_prediction#hard_negative.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "upscale"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "get_price#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "video-enhancer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "video-enhancer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "audio",
+        "query": "speech-to-text"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "video-enhancer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "speech-to-text"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "speech-to-text"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "translation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "translation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "translation"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "cinematic-renderer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "cinematic-renderer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "cinematic-renderer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#paraphrased.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#paraphrased.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#paraphrased.2",
+      "chosen": "get_balance",
+      "arguments": {},
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "get_price#hard_negative.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "openai/whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_price#hard_negative.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "openai/whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_price#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_price#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "get_price#hard_negative.2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "list_models#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "text-to-image"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "get_price#hard_negative.1",
+      "chosen": "get_model_schema",
+      "arguments": {
+        "model": "openai/whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_model_schema"
+    },
+    {
+      "query_id": "list_models#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "text-to-image"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "text-to-image",
+        "query": "image"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "video"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "video"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "audio synthesizer",
+        "type": "audio"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "audio synthesizer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "video"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "refresh": true,
+        "limit": 5,
+        "type": "3d"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "audio",
+        "query": "audio synthesizer"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "refresh": true,
+        "limit": 5,
+        "type": "3d"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "limit": 5,
+        "type": "3d",
+        "refresh": true
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "audio"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "audio"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "text-to-video"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "video",
+        "type": "text-to-video"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "audio"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#hard_negative.1",
+      "chosen": "run_model",
+      "arguments": {
+        "input": {
+          "prompt": "a sunset"
+        },
+        "model": "stable-video-v2"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "list_models#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "text-to-video"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "list_models"
+    },
+    {
+      "query_id": "list_models#hard_negative.1",
+      "chosen": "run_model",
+      "arguments": {
+        "model": "stable-video-v2",
+        "input": {
+          "prompt": "a sunset"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "list_models#hard_negative.1",
+      "chosen": "run_model",
+      "arguments": {
+        "model": "stable-video-v2",
+        "input": {
+          "prompt": "a sunset"
+        }
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "list_models#hard_negative.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "voice-synth-pro"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "list_models#hard_negative.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "voice-synth-pro"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "list_models#hard_negative.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "voice-synth-pro"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "flux-schnell"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "flux-schnell"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "llama-3-70b-instruct"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.3",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "flux-schnell"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "llama-3-70b-instruct"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#straightforward.4",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "llama-3-70b-instruct"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "image-to-image",
+        "type": "image-to-image"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "image-to-image",
+        "query": "car"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "speech",
+        "type": "audio"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "speech recognition"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#paraphrased.1",
+      "chosen": "list_models",
+      "arguments": {
+        "type": "image-to-image",
+        "query": "image"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#paraphrased.2",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "speech recognition",
+        "type": "audio"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "run_model"
+    },
+    {
+      "query_id": "run_model#hard_negative.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "run_model#hard_negative.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "run_model#hard_negative.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "run_model#hard_negative.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "run_model#hard_negative.2",
+      "chosen": "get_prediction",
+      "arguments": {
+        "id": "whisper-large-v3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "upload_file#straightforward.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "~/documents/archive.zip"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "run_model#hard_negative.1",
+      "chosen": "list_models",
+      "arguments": {
+        "query": "stable-diffusion-xl"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_prediction"
+    },
+    {
+      "query_id": "upload_file#straightforward.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "~/documents/archive.zip"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "~/documents/archive.zip"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/data/train_set.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/data/train_set.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.3",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "C:\\Downloads\\setup.exe"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/data/train_set.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.3",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "C:\\Downloads\\setup.exe"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.3",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "C:\\Downloads\\setup.exe"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.4",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/home/user/images/banner.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.4",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/home/user/images/banner.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#straightforward.4",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/home/user/images/banner.png"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#paraphrased.1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#paraphrased.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "./audio.mp3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#paraphrased.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "audio.mp3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#paraphrased.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "audio.mp3"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "upload_file"
+    },
+    {
+      "query_id": "upload_file#hard_negative.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "~/docs/rates.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "upload_file#hard_negative.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "~/docs/rates.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "upload_file#hard_negative.1",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "~/docs/rates.pdf"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "upload_file#hard_negative.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/data/pricing.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "upload_file#hard_negative.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/data/pricing.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "upload_file#hard_negative.2",
+      "chosen": "upload_file",
+      "arguments": {
+        "path": "/data/pricing.csv"
+      },
+      "phantom": null,
+      "args_valid": true,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": "get_price"
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#1",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#2",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 0,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 2,
+      "error": null,
+      "expected": null
+    },
+    {
+      "query_id": "(none)#3",
+      "chosen": null,
+      "arguments": {},
+      "phantom": null,
+      "args_valid": null,
+      "args_errors": [],
+      "run": 1,
+      "error": null,
+      "expected": null
+    }
+  ],
+  "backendErrors": [],
+  "benchmark": {
+    "snapshot": "ai-wavespeed-mcp.json",
+    "slug": "ai-wavespeed-mcp",
+    "registry_name": "ai.wavespeed/mcp",
+    "title": "ai.wavespeed/mcp",
+    "repository": "https://github.com/WaveSpeedAI/mcp-server"
+  }
+}

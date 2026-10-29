@@ -1,0 +1,437 @@
+version: 1
+tools:
+  add_observations:
+    fingerprint: e2fcccf71af57cbf
+    queries:
+    - id: add_observations#straightforward.1
+      text: Please append the finding that project Apollo uses Python 3.11 to the
+        Apollo entity in the graph.
+      expected: add_observations
+      kind: straightforward
+      neighbour: create_entities
+    - id: add_observations#straightforward.2
+      text: Add the observation that Sarah's email is sarah@example.com to her profile
+        node.
+      expected: add_observations
+      kind: straightforward
+      neighbour: create_entities
+    - id: add_observations#straightforward.3
+      text: Update the database server node with the new note that it runs Ubuntu
+        22.04 LTS.
+      expected: add_observations
+      kind: straightforward
+      neighbour: create_entities
+    - id: add_observations#straightforward.4
+      text: Attach the fact to the Paris entity that the headquarters moved to the
+        8th arrondissement.
+      expected: add_observations
+      kind: straightforward
+      neighbour: create_entities
+    - id: add_observations#paraphrased.1
+      text: drop a note on the staging cluster saying memory usage spiked past 90
+        percent yesterday
+      expected: add_observations
+      kind: paraphrased
+      neighbour: create_entities
+    - id: add_observations#paraphrased.2
+      text: log the detail that dev-team-alpha is currently assigned to ticket 409
+        under their record
+      expected: add_observations
+      kind: paraphrased
+      neighbour: create_entities
+    - id: add_observations#hard_negative.1
+      text: Add a brand new node for the Acme Corp account along with its initial
+        details and contacts.
+      expected: create_entities
+      kind: hard_negative
+      neighbour: create_entities
+    - id: add_observations#hard_negative.2
+      text: Create a separate entity for the Jenkins CI server and record its server
+        specs as initial notes.
+      expected: create_entities
+      kind: hard_negative
+      neighbour: create_entities
+  create_entities:
+    fingerprint: 3bd65dd27f7355e4
+    queries:
+    - id: create_entities#straightforward.1
+      text: Please add three new people named Alice, Bob, and Charlie to the database.
+      expected: create_entities
+      kind: straightforward
+      neighbour: create_relations
+    - id: create_entities#straightforward.2
+      text: Insert a batch of server nodes consisting of web-01, web-02, and db-01
+        into our system.
+      expected: create_entities
+      kind: straightforward
+      neighbour: create_relations
+    - id: create_entities#straightforward.3
+      text: Generate new product records for the Q3 release including widget-A and
+        widget-B.
+      expected: create_entities
+      kind: straightforward
+      neighbour: create_relations
+    - id: create_entities#straightforward.4
+      text: Register multiple corporate clients named Acme Corp, Globex, and Initech.
+      expected: create_entities
+      kind: straightforward
+      neighbour: create_relations
+    - id: create_entities#paraphrased.1
+      text: Drop in a bunch of new nodes for the London office right away.
+      expected: create_entities
+      kind: paraphrased
+      neighbour: create_relations
+    - id: create_entities#paraphrased.2
+      text: We onboarded five new hires this morning, so log them all into the directory.
+      expected: create_entities
+      kind: paraphrased
+      neighbour: create_relations
+    - id: create_entities#hard_negative.1
+      text: Connect the new server nodes web-01 and web-02 together in the system.
+      expected: create_relations
+      kind: hard_negative
+      neighbour: create_relations
+    - id: create_entities#hard_negative.2
+      text: Link all the newly added people named Alice, Bob, and Charlie into the
+        org chart.
+      expected: create_relations
+      kind: hard_negative
+      neighbour: create_relations
+  create_relations:
+    fingerprint: cb048abc7bebd23c
+    queries:
+    - id: create_relations#straightforward.1
+      text: Link Alice to Acme Corp as an employee and Bob as a manager.
+      expected: create_relations
+      kind: straightforward
+      neighbour: create_entities
+    - id: create_relations#straightforward.2
+      text: Connect the Chicago office and the New York headquarters with a supplies
+        route.
+      expected: create_relations
+      kind: straightforward
+      neighbour: create_entities
+    - id: create_relations#straightforward.3
+      text: Establish connections showing that Project X depends on Server A and Server
+        B.
+      expected: create_relations
+      kind: straightforward
+      neighbour: create_entities
+    - id: create_relations#straightforward.4
+      text: Bind the database cluster to the primary backup node using a replication
+        link.
+      expected: create_relations
+      kind: straightforward
+      neighbour: create_entities
+    - id: create_relations#paraphrased.1
+      text: map out who reports to who on the executive team before the meeting
+      expected: create_relations
+      kind: paraphrased
+      neighbour: create_entities
+    - id: create_relations#paraphrased.2
+      text: tie the new servers to their respective racks in the inventory map rq
+      expected: create_relations
+      kind: paraphrased
+      neighbour: create_entities
+    - id: create_relations#hard_negative.1
+      text: Build the connection nodes for Alice and Bob in the system graph.
+      expected: create_entities
+      kind: hard_negative
+      neighbour: create_entities
+    - id: create_relations#hard_negative.2
+      text: Generate the new entity records for the Chicago office and the New York
+        headquarters.
+      expected: create_entities
+      kind: hard_negative
+      neighbour: create_entities
+  delete_entities:
+    fingerprint: e8e55610d210c192
+    queries:
+    - id: delete_entities#straightforward.1
+      text: Please delete the nodes for ProjectAlpha, BetaCorp, and GammaSystem from
+        the knowledge graph.
+      expected: delete_entities
+      kind: straightforward
+      neighbour: delete_relations
+    - id: delete_entities#straightforward.2
+      text: Remove the entities named Server01, DatabaseA, and RouterX along with
+        their connections.
+      expected: delete_entities
+      kind: straightforward
+      neighbour: delete_relations
+    - id: delete_entities#straightforward.3
+      text: 'Wipe out the following entries from our database: UserJohn, UserJane,
+        and GuestAccount.'
+      expected: delete_entities
+      kind: straightforward
+      neighbour: delete_relations
+    - id: delete_entities#straightforward.4
+      text: Permanently drop the items designated as LocationNorth, LocationSouth,
+        and LocationEast.
+      expected: delete_entities
+      kind: straightforward
+      neighbour: delete_relations
+    - id: delete_entities#paraphrased.1
+      text: clean out old nodes node1, node2, node3 rn
+      expected: delete_entities
+      kind: paraphrased
+      neighbour: delete_relations
+    - id: delete_entities#paraphrased.2
+      text: get rid of obsolete items apex and zenith so they are completely gone
+      expected: delete_entities
+      kind: paraphrased
+      neighbour: delete_relations
+    - id: delete_entities#hard_negative.1
+      text: Delete the connections linking ProjectAlpha to BetaCorp, and GammaSystem
+        to DeltaNode.
+      expected: delete_relations
+      kind: hard_negative
+      neighbour: delete_relations
+    - id: delete_entities#hard_negative.2
+      text: Remove the edges connecting Server01, DatabaseA, and RouterX from the
+        graph structure.
+      expected: delete_relations
+      kind: hard_negative
+      neighbour: delete_relations
+  delete_observations:
+    fingerprint: 8c0566136c5c59a9
+    queries:
+    - id: delete_observations#straightforward.1
+      text: Please remove the observation ID obs_9921 from the server entity.
+      expected: delete_observations
+      kind: straightforward
+      neighbour: add_observations
+    - id: delete_observations#straightforward.2
+      text: Delete the outdated performance notes attached to the database node.
+      expected: delete_observations
+      kind: straightforward
+      neighbour: add_observations
+    - id: delete_observations#straightforward.3
+      text: Drop the specific data points regarding legacy API endpoints from the
+        service entity.
+      expected: delete_observations
+      kind: straightforward
+      neighbour: add_observations
+    - id: delete_observations#straightforward.4
+      text: Erase observation record rec_4402 from the user profile in the knowledge
+        graph.
+      expected: delete_observations
+      kind: straightforward
+      neighbour: add_observations
+    - id: delete_observations#paraphrased.1
+      text: Clean out that bad data we logged earlier under the project alpha entity.
+      expected: delete_observations
+      kind: paraphrased
+      neighbour: add_observations
+    - id: delete_observations#paraphrased.2
+      text: Get rid of those stale metrics hanging off the customer node.
+      expected: delete_observations
+      kind: paraphrased
+      neighbour: add_observations
+    - id: delete_observations#hard_negative.1
+      text: Append the new observation item regarding uptime stats to the server entity.
+      expected: add_observations
+      kind: hard_negative
+      neighbour: add_observations
+    - id: delete_observations#hard_negative.2
+      text: Attach fresh notes about the memory leak issue directly onto the database
+        node.
+      expected: add_observations
+      kind: hard_negative
+      neighbour: add_observations
+  delete_relations:
+    fingerprint: 9a9b1a819a98e761
+    queries:
+    - id: delete_relations#straightforward.1
+      text: Please delete the connects_to and depends_on edges from the knowledge
+        graph.
+      expected: delete_relations
+      kind: straightforward
+      neighbour: delete_entities
+    - id: delete_relations#straightforward.2
+      text: Remove multiple relations at once using their IDs rel_982 and rel_983.
+      expected: delete_relations
+      kind: straightforward
+      neighbour: delete_entities
+    - id: delete_relations#straightforward.3
+      text: I need to wipe out several graph links between Alice and Bob right now.
+      expected: delete_relations
+      kind: straightforward
+      neighbour: delete_entities
+    - id: delete_relations#straightforward.4
+      text: Execute the deletion of these connection links from the backend database.
+      expected: delete_relations
+      kind: straightforward
+      neighbour: delete_entities
+    - id: delete_relations#paraphrased.1
+      text: drop those links between the nodes before running the sync.
+      expected: delete_relations
+      kind: paraphrased
+      neighbour: delete_entities
+    - id: delete_relations#paraphrased.2
+      text: clean up all the dead connections attached to node_44 right away.
+      expected: delete_relations
+      kind: paraphrased
+      neighbour: delete_entities
+    - id: delete_relations#hard_negative.1
+      text: Please delete the connects_to and depends_on nodes from the knowledge
+        graph.
+      expected: delete_entities
+      kind: hard_negative
+      neighbour: delete_entities
+    - id: delete_relations#hard_negative.2
+      text: Remove multiple nodes at once using their IDs node_982 and node_983.
+      expected: delete_entities
+      kind: hard_negative
+      neighbour: delete_entities
+  open_nodes:
+    fingerprint: 839b6c8495ce7281
+    queries:
+    - id: open_nodes#straightforward.1
+      text: Please open the nodes named Alpha and Beta in the knowledge graph.
+      expected: open_nodes
+      kind: straightforward
+      neighbour: delete_observations
+    - id: open_nodes#straightforward.2
+      text: Can you display the Project Roadmap node for me?
+      expected: open_nodes
+      kind: straightforward
+      neighbour: delete_observations
+    - id: open_nodes#straightforward.3
+      text: Bring up the database schema node right away.
+      expected: open_nodes
+      kind: straightforward
+      neighbour: delete_observations
+    - id: open_nodes#straightforward.4
+      text: I need to view the Marketing Strategy node immediately.
+      expected: open_nodes
+      kind: straightforward
+      neighbour: delete_observations
+    - id: open_nodes#paraphrased.1
+      text: pull up marketing plan and budget 2024
+      expected: open_nodes
+      kind: paraphrased
+      neighbour: delete_observations
+    - id: open_nodes#paraphrased.2
+      text: let's look at customer feedback logs
+      expected: open_nodes
+      kind: paraphrased
+      neighbour: delete_observations
+    - id: open_nodes#hard_negative.1
+      text: clear out the old meeting notes node from the graph
+      expected: delete_observations
+      kind: hard_negative
+      neighbour: delete_observations
+    - id: open_nodes#hard_negative.2
+      text: remove the obsolete research data node right now
+      expected: delete_observations
+      kind: hard_negative
+      neighbour: delete_observations
+  read_graph:
+    fingerprint: 239591dd4f3110c3
+    queries:
+    - id: read_graph#straightforward.1
+      text: Can you fetch the complete knowledge graph for me?
+      expected: read_graph
+      kind: straightforward
+      neighbour: delete_relations
+    - id: read_graph#straightforward.2
+      text: Please output the full database network.
+      expected: read_graph
+      kind: straightforward
+      neighbour: delete_relations
+    - id: read_graph#straightforward.3
+      text: Show me the entire system graph right now.
+      expected: read_graph
+      kind: straightforward
+      neighbour: delete_relations
+    - id: read_graph#straightforward.4
+      text: I need to view all nodes and connections currently stored.
+      expected: read_graph
+      kind: straightforward
+      neighbour: delete_relations
+    - id: read_graph#paraphrased.1
+      text: Dump the whole web of entities for my review.
+      expected: read_graph
+      kind: paraphrased
+      neighbour: delete_relations
+    - id: read_graph#paraphrased.2
+      text: Give me a complete structural overview of everything mapped out so far.
+      expected: read_graph
+      kind: paraphrased
+      neighbour: delete_relations
+    - id: read_graph#hard_negative.1
+      text: I need to wipe out all connections between the entities in the graph.
+      expected: delete_relations
+      kind: hard_negative
+      neighbour: delete_relations
+    - id: read_graph#hard_negative.2
+      text: Please remove every single relation linking the nodes together.
+      expected: delete_relations
+      kind: hard_negative
+      neighbour: delete_relations
+  search_nodes:
+    fingerprint: af81aaf6ddd9ae97
+    queries:
+    - id: search_nodes#straightforward.1
+      text: Find all nodes related to project Orion in the knowledge graph.
+      expected: search_nodes
+      kind: straightforward
+      neighbour: open_nodes
+    - id: search_nodes#straightforward.2
+      text: Run a search for any nodes mentioning database migration.
+      expected: search_nodes
+      kind: straightforward
+      neighbour: open_nodes
+    - id: search_nodes#straightforward.3
+      text: Search for nodes containing the quarterly budget details.
+      expected: search_nodes
+      kind: straightforward
+      neighbour: open_nodes
+    - id: search_nodes#straightforward.4
+      text: Look up nodes associated with Sarah Connor.
+      expected: search_nodes
+      kind: straightforward
+      neighbour: open_nodes
+    - id: search_nodes#paraphrased.1
+      text: Pull up anything we have on the Austin office rollout.
+      expected: search_nodes
+      kind: paraphrased
+      neighbour: open_nodes
+    - id: search_nodes#paraphrased.2
+      text: Where's that stuff about the legacy API deprecation.
+      expected: search_nodes
+      kind: paraphrased
+      neighbour: open_nodes
+    - id: search_nodes#hard_negative.1
+      text: Bring up the nodes for the Alpha team directory.
+      expected: open_nodes
+      kind: hard_negative
+      neighbour: open_nodes
+    - id: search_nodes#hard_negative.2
+      text: Access the nodes under marketing assets right away.
+      expected: open_nodes
+      kind: hard_negative
+      neighbour: open_nodes
+no_tool:
+- id: (none)#1
+  text: Can you summarize the core argument of Karl Marx's Capital Volume 1 in three
+    sentences?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#2
+  text: What is the boiling point of ethanol at standard atmospheric pressure in Fahrenheit?
+  expected: null
+  kind: no_tool
+  neighbour: null
+- id: (none)#3
+  text: How do I calculate the compound interest on a principal amount of five thousand
+    dollars over three years at an annual rate of four percent?
+  expected: null
+  kind: no_tool
+  neighbour: null
+generator: gemini/gemini-3.5-flash-lite
+generated: '2026-10-29'
+_comment: Edit these queries freely - they are your test set. A tool's queries are
+  regenerated only when that tool's name, description or schema changes.
