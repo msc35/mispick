@@ -15,7 +15,7 @@
 - **It can suggest fixes**, and it re-tests each suggested rewrite. It keeps only the ones that
   measurably helped.
 - **Free by default.** It runs on a local model through Ollama. Cloud models are optional.
-- **Status:** v0.1.0 is [on PyPI](https://pypi.org/project/mispick/). A
+- **Status:** v0.2.0 is [on PyPI](https://pypi.org/project/mispick/). A
   [public benchmark](#benchmark) of real MCP servers is running now. A
   [research study](#research-study) built on it is pre-registered, with first results in.
 

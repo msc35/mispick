@@ -6,6 +6,6 @@ mispick never calls a tool. It runs `initialize` and `tools/list`, asks a model 
 
 from mispick.types import Choice, Query, ServerInfo, Tool, ToolSet
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = ["Choice", "Query", "ServerInfo", "Tool", "ToolSet", "__version__"]
